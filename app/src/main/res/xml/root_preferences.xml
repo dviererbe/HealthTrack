@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="@string/settings_general_header">
+        <ListPreference
+            android:key="theme"
+            android:title="@string/settings_theme_title"
+            android:summary="%s"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:defaultValue="system"/>
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:title="@string/settings_widgets_header"
+        app:summary="@string/settings_widgets_summary">
+
+        <SwitchPreferenceCompat
+            app:key="widgets_stepcounter_enabled"
+            app:title="@string/settings_widgets_stepcounter"
+            app:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            app:key="widgets_weight_enabled"
+            app:title="@string/settings_widgets_weight"
+            app:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            app:key="widgets_food_enabled"
+            app:title="@string/settings_widgets_food"
+            app:summary="@string/WIP"
+            android:enabled="false"
+            app:defaultValue="false"/>
+
+        <SwitchPreferenceCompat
+            app:key="widgets_bloodpressure_enabled"
+            app:title="@string/settings_widgets_bloodpressure"
+            app:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            app:key="widgets_bloodsugar_enabled"
+            app:title="@string/settings_widgets_bloodsugar"
+            app:summary="@string/WIP"
+            android:enabled="false"
+            app:defaultValue="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/settings_units_header">
+        <ListPreference
+            android:key="unit_energy"
+            android:title="@string/settings_units_energy"
+            android:summary="%s"
+            android:entries="@array/units_energy_entries"
+            android:entryValues="@array/units_energy_values"
+            android:defaultValue="Kilojoule"/>
+
+        <ListPreference
+            android:key="unit_mass"
+            android:title="@string/settings_units_mass"
+            android:summary="%s"
+            android:entries="@array/units_mass_entries"
+            android:entryValues="@array/units_mass_values"
+            android:defaultValue="Kilogram"/>
+
+        <ListPreference
+            android:key="unit_bloodpressure"
+            android:title="@string/settings_units_bloodpressure"
+            android:summary="%s"
+            android:entries="@array/units_bloodpressure_entries"
+            android:entryValues="@array/units_bloodpressure_values"
+            android:defaultValue="Kilopascal"/>
+
+        <ListPreference
+            android:key="unit_bloodsugar"
+            android:title="@string/settings_units_bloodsugar"
+            android:summary="%s"
+            android:entries="@array/units_bloodsugar_entries"
+            android:entryValues="@array/units_bloodsugar_values"
+            android:defaultValue="MilligramPerDecilitre"/>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/settings_user_data_header">
+        <Preference
+            app:key="widgets_user_data_export"
+            app:title="@string/settings_user_data_export_button"
+            app:persistent="false" />
+        <Preference
+            app:key="widgets_user_data_delete"
+            app:title="@string/settings_user_data_delete_button"
+            app:persistent="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

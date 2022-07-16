@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="WIP">Hieran wird noch gearbeitet</string>
+
+    <string name="format_date">dd.MM.yyyy</string>
+    <string name="format_time">HH:mm:ss</string>
+    <string name="format_datetime">dd.MM.yyyy HH:mm:ss</string>
+
+    <string name="fragment_feedback_header">Feedback zu HealthTrack</string>
+    <string name="fragment_feedback_content">Haben Sie Fragen, Vorschläge oder benötigen Sie Hilfe? Schreiben Sie eine E-Mail an healthtrack@dviererbe.de oder eröffnen Sie ein GitHub Issue und wir werden gemeinsam eine Lösung finden. Sie können auch auf unserer GitHub Issue Seite nach Antworten auf ähnliche Probleme von anderen Nutzern suchen.</string>
+
+    <string name="action_settings">Einstellungen</string>
+    <string name="nav_header_desc">Navigations-Überschrift</string>
+    <string name="navigation_drawer_open">öffne Navigations-Menü</string>
+    <string name="navigation_drawer_close">schließe Navigations-Menü</string>
+
+    <string name="intent_title_send_email">E-Mail senden...</string>
+    <string name="menu_home">Übersicht</string>
+    <string name="menu_food">Essen</string>
+    <string name="menu_stepcounter">Schritte</string>
+    <string name="menu_weight">Gewicht</string>
+    <string name="menu_bloodpressure">Blutdruck</string>
+    <string name="menu_bloodsugar">Blutzucker</string>
+    <string name="menu_settings">Einstellungen</string>
+    <string name="menu_about">Über</string>
+    <string name="menu_send_feedback">Feedback senden</string>
+    <string name="fragment_feedback_button_send_email">E-Mail schreiben</string>
+    <string name="fragment_feedback_button_open_github_issues">Öffne GitHub Issues</string>
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <string name="today">Heute</string>
+    <string name="yesterday">Gestern</string>
+    <string name="kilogram_short">kg</string>
+    <string name="pound_short">lb</string>
+    <string name="kilopascal_short">kPa</string>
+    <string name="millimetreofmercury_short">mmHg</string>
+
+    <string name="weight_list_actions_create">Hinzufügen</string>
+    <string name="weight_list_actions_reset">Alle löschen</string>
+    <string name="weight_list_notifications_delete_success">Alle Datensätze wurden gelöscht.</string>
+    <string name="weight_list_notifications_delete_failure">Die Datensätze konnten nicht gelöscht werden.</string>
+    <string name="weight_list_dialog_delete_title">Alle Gewicht-Datensätze löschen?</string>
+    <string name="weight_list_dialog_delete_message">Sollen wirklich alle Gewicht-Datensätze gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="weight_list_dialog_delete_confirm">Bestätigen</string>
+    <string name="weight_list_dialog_delete_cancel">Abbrechen</string>
+    <string name="weight_list_item_converted">(Umgerechnet)</string>
+
+    <string name="weight_details_actions_edit">Bearbeiten</string>
+    <string name="weight_details_actions_delete">Löschen</string>
+    <string name="weight_details_header">Details</string>
+    <string name="weight_details_title_weight">Gewicht:</string>
+    <string name="weight_details_title_created">Erstellt:</string>
+    <string name="weight_details_notifications_delete_failure">Der Datensatz konnte aufgrund eines fehlers nicht gelöscht werden.</string>
+    <string name="weight_details_dialog_delete_title">Datensatz löschen?</string>
+    <string name="weight_details_dialog_delete_message">Willst du den Datensatz wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="weight_details_dialog_delete_confirm">Bestätigen</string>
+    <string name="weight_details_dialog_delete_cancel">Abbrechen</string>
+
+    <string name="weight_merge_header_create">Hinzufügen</string>
+    <string name="weight_merge_header_update">Bearbeiten</string>
+    <string name="weight_merge_title_Value">Gewicht</string>
+    <string name="weight_merge_title_DateTime">Datum &amp; Uhrzeit</string>
+    <string name="weight_merge_error_Value">Der eingegebe Wert ist keine gültige Nummer.</string>
+    <string name="weight_merge_button_now">Jetzt</string>
+    <string name="weight_merge_button_pick">Auswählen</string>
+    <string name="weight_merge_button_create">Speichern</string>
+    <string name="weight_merge_button_update">Speichern</string>
+    <string name="weight_merge_information_loading_failed">Beim laden des Datensatzes ist ein Fehler aufgetreten.</string>
+    <string name="weight_merge_notifications_creation_failed">Beim speichern ist ein Fehler aufgetreten.</string>
+    <string name="weight_merge_notifications_update_failed">Beim speichern ist ein Fehler aufgetreten.</string>
+
+    <string name="food_list_actions_create">Hinzufügen</string>
+    <string name="food_list_actions_reset">Alle löschen</string>
+
+    <string name="steps_list_actions_create">Hinzufügen</string>
+    <string name="steps_list_actions_reset">Alle löschen</string>
+    <string name="steps_list_actions_change_default_stepgoal">Standard Schrittanzahl Ziel ändern</string>
+    <string name="steps_list_notifications_delete_success">Alle Datensätze wurden gelöscht.</string>
+    <string name="steps_list_notifications_delete_failure">Die Datensätze konnten nicht gelöscht werden.</string>
+    <string name="steps_list_dialog_delete_title">Alle Schritt-Datensätze löschen?</string>
+    <string name="steps_list_dialog_delete_message">Sollen wirklich alle Schritt-Datensätze gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="steps_list_dialog_delete_confirm">Bestätigen</string>
+    <string name="steps_list_dialog_delete_cancel">Abbrechen</string>
+
+    <string name="bloodpressure_list_actions_create">Hinzufügen</string>
+    <string name="bloodpressure_list_actions_reset">Alle löschen</string>
+
+    <string name="bloodsugar_list_actions_create">Hinzufügen</string>
+    <string name="bloodsugar_list_actions_reset">Alle löschen</string>
+
+    <!-- SETTINGS -->
+
+    <string name="settings_general_header">Allgemein</string>
+
+    <string name="settings_theme_title">Design</string>
+
+    <string name="settings_widgets_header">Widgets</string>
+    <string name="settings_widgets_summary">Deaktiviere Widgets, die du nicht benutzt.</string>
+    <string name="settings_widgets_stepcounter">Schrittzähler</string>
+    <string name="settings_widgets_weight">Gewicht</string>
+    <string name="settings_widgets_food">Ernährung</string>
+    <string name="settings_widgets_bloodpressure">Blutdruck</string>
+    <string name="settings_widgets_bloodsugar">Blutzucker</string>
+
+    <string name="settings_units_header">Maßeinheiten</string>
+    <string name="settings_units_energy">Energie</string>
+    <string name="settings_units_mass">Gewicht</string>
+    <string name="settings_units_bloodpressure">Blutdruck</string>
+    <string name="settings_units_bloodsugar">Blutzucker</string>
+
+    <string name="settings_user_data_header">Benutzerdaten</string>
+
+    <string name="settings_user_data_export_button">Exportieren</string>
+    <string name="settings_user_data_export_dialog_header">Benutzerdaten exportieren</string>
+    <string name="settings_user_data_export_dialog_description">Wähle die Daten-Kategorien aus, die du exportieren möchtest.</string>
+    <string name="settings_user_data_export_dialog_checkbox_steps">Strittanzahl bezogene Daten</string>
+    <string name="settings_user_data_export_dialog_checkbox_weight">Gewicht bezogene Daten</string>
+    <string name="settings_user_data_export_dialog_checkbox_food">Ernährung bezogene Daten</string>
+    <string name="settings_user_data_export_dialog_checkbox_bloodpressure">Blutdruck bezogene Daten</string>
+    <string name="settings_user_data_export_dialog_checkbox_bloodsugar">Blutzucker bezogene Daten</string>
+    <string name="settings_user_data_export_dialog_button_export">Exportieren</string>
+    <string name="settings_user_data_export_dialog_button_cancel">Abbrechen</string>
+    <string name="settings_user_data_export_dialog_notifications_save_success">Benutzerdaten wurden erfolgreich exportiert.</string>
+    <string name="settings_user_data_export_dialog_notifications_save_failure">Beim exportierender der Benutzerdaten ist ein Fehler aufgetreten.</string>
+
+    <string name="settings_user_data_delete_button">Löschen</string>
+    <string name="settings_user_data_delete_dialog_title">Benutzerdaten löschen?</string>
+    <string name="settings_user_data_delete_dialog_message">Möchtest du wirklich alle Benutzerdaten löschen? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="settings_user_data_delete_dialog_button_confirm">Bestätigen</string>
+    <string name="settings_user_data_delete_dialog_button_cancel">Abbrechen</string>
+    <string name="settings_user_data_delete_notification_success">Alle Benutzerdaten wurden erfolgreich gelöscht.</string>
+    <string name="settings_user_data_delete_notification_failure">Beim löschen der Benutzerdaten ist ein Fehler aufgetreten.</string>
+
+    <string name="day_summary_unknown_day">Unbekannter Tag</string>
+    <string name="day_summary_food">Essen</string>
+    <string name="day_summary_steps">Schritte</string>
+    <string name="day_summary_weight">Gewicht</string>
+    <string name="day_summary_bloodpressure">Blutdruck</string>
+    <string name="day_summary_bloodsugar">Blutzucker</string>
+
+    <string name="about_description_tabtitle">Über HealthTrack</string>
+    <string name="about_description_content">
+        "Health Track ist eine Android-App, mit der Sie gesundheitsbezogene "
+        "Daten aufzeichnen können. Hier sind fünf Argumente, warum du Health "
+        "Track benutzen solltest:\n\n"
+
+        "1. Kostenlos und werbefrei!\n"
+        "Du kannst HealthTrack kostenlos nutzen. Die App enthält weder Werbung "
+        "noch erzwingt Sie interne Käufe.\n\n"
+
+        "2. Kein Online-/Cloudblödsinn! Du hast volle Kontrolle über deine Daten.\n"
+        "Um die Funktionen von HealthTrack nutzen zu können, musst du kein "
+        "Online-Konto erstellen oder irgendwelche Online-Dienste nutzen. "
+        "HealthTrack arbeitet komplett offline. Alle deine Daten werden auf deinem "
+        "Gerät verarbeitet und gespeichert und du kannst deine Daten jederzeit "
+        "bearbeiten, exportieren oder löschen.\n\n"
+
+        "3. Anpassbar\n"
+        "Du kannst das Design von HealthTrack konfigurieren und bestimmte Funktionen "
+        "auf deinen Wünschen aktivieren/deaktivieren.\n\n"
+
+        "4. Mehrsprachig\n"
+        "HealthTrack passt sich der Systemsprache an. HealthTrack kann seine "
+        "Benutzeroberfläche in Deutsch oder Englisch anzeigen.\n\n"
+
+        "5. Open-Source\n"
+        "Der Quellcode von HealthTrack ist auf Github unter https://github.com/dviererbe/HealthTrack "
+        "verfügbar und ist unter der GNU Affero General Public License Version 3 lizenziert. "
+        "Wirf einen Blick darauf, öffnen ein Issue, mach einen Pull Request oder forke den Quellcode.\n\n"
+
+        "Tracke deine Gesundheit einfach und kostenlos mit HealthTrack!"
+    </string>
+
+    <string name="about_privacy_policy_tabtitle">Datenschutzbestimmung</string>
+    <string name="about_privacy_policy_content">
+        "1. Allgemeine Bestimmungen\n\n"
+
+        "1.1 Die Anwendung verlangt vom Nutzer nicht die Angabe personenbezogener "
+        "oder vertraulicher Informationen. Alle gesammelten Informationen werden "
+        "lokal auf Ihrem Gerät gespeichert.\n\n"
+
+        "1.2 Die gesammelten Informationen können auf Wunsch des Nutzers teilweise "
+        "oder vollständig gelöscht werden.\n\n"
+
+        "1.3 Die gesammelten Informationen können auf Wunsch des Nutzers exportiert "
+        "werden; hierfür ist die Erlaubnis zum Zugriff auf das Dateisystem erforderlich. "
+        "Die Anwendung wird bestehende Dateien nicht lesen, verändern, verschieben "
+        "oder weiterleiten.\n\n\n"
+
+
+        "2. Weitergabe von Informationen an Dritte\n\n"
+
+        "2.1 Die Anwendung gibt die gesammelten Informationen nicht an Dritte weiter.\n\n"
+
+        "2.2 Durch die Nutzung von GitHub können persönliche Informationen wie Ihre "
+        "IP-Adresse oder Geräteeinstellungen an GitHub, Inc. weitergegeben werden. Lesen "
+        "Sie die GitHub-Datenschutzrichtlinie für weitere Details.\n\n\n"
+
+
+        "3. Kontaktinformationen\n"
+        "Wenn Sie Fragen haben, kontaktieren Sie uns unter: healthtrack@dviererbe.de oder "
+        "auf GitHub unter https://github.com/dviererbe/HealthTrack."
+    </string>
+
+    <string name="about_license_tabtitle">Lizenz</string>
+
+    <string name="about_credits_tabtitle">Credits</string>
+    <string name="about_credits_content">Credits</string>
+
+    <string name="about_unknown_tabtitle">Unbekannt</string>
+</resources>

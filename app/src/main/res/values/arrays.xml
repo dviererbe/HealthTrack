@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string-array name="weight_units">
+        <item>kg</item>
+        <item>lb</item>
+    </string-array>
+
+    <string-array name="bloodpressure_units">
+        <item>mmHg</item>
+        <item>kPa</item>
+    </string-array>
+
+    <string-array name="bloodpressure_medication">
+        <item>None</item>
+        <item>Taken</item>
+        <item>Not Taken</item>
+    </string-array>
+
+    <string-array name="theme_entries">
+        <item>System default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>system</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
+    <string-array name="units_energy_entries">
+        <item>Kilocalories (kcal)</item>
+        <item>Kilojoule (kJ)</item>
+    </string-array>
+    <string-array name="units_energy_values">
+        <item>Kilocalories</item>
+        <item>Kilojoule</item>
+    </string-array>
+
+    <string-array name="units_mass_entries">
+        <item>Kilogram (kg)</item>
+        <item>Pound (lb)</item>
+    </string-array>
+    <string-array name="units_mass_values">
+        <item>Kilogram</item>
+        <item>Pound</item>
+    </string-array>
+
+    <string-array name="units_bloodpressure_entries">
+        <item>Millimetre of Mercury (mmHg)</item>
+        <item>Kilopascal (kPa)</item>
+    </string-array>
+    <string-array name="units_bloodpressure_values">
+        <item>MillimetreOfMercury</item>
+        <item>Kilopascal</item>
+    </string-array>
+
+    <string-array name="units_bloodsugar_entries">
+        <item>Milligram per Decilitre</item>
+        <item>Millimol per litre</item>
+    </string-array>
+    <string-array name="units_bloodsugar_values">
+        <item>MilligramPerDecilitre</item>
+        <item>MillimolPerLitre</item>
+    </string-array>
+</resources>

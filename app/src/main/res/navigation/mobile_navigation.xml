@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/mobile_navigation"
+            app:startDestination="@+id/nav_home">
+    <fragment
+            android:id="@+id/nav_home"
+            android:name="de.dviererbe.healthtrack.presentation.main.home.HomeFragment"
+            android:label="@string/menu_home"
+            tools:layout="@layout/fragment_home">
+        <action android:id="@+id/action_nav_home_to_nav_weight" app:destination="@id/nav_weight"/>
+        <action android:id="@+id/action_nav_home_to_nav_stepcounter" app:destination="@id/nav_stepcounter"/>
+        <action android:id="@+id/action_nav_home_to_nav_food" app:destination="@id/nav_food"/>
+        <action android:id="@+id/action_nav_home_to_nav_bloodsugar" app:destination="@id/nav_bloodsugar"/>
+        <action android:id="@+id/action_nav_home_to_nav_bloodpressure" app:destination="@id/nav_bloodpressure"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_food"
+            android:name="de.dviererbe.healthtrack.presentation.main.food.FoodListFragment"
+            android:label="@string/menu_food"
+            tools:layout="@layout/fragment_food_list">
+        <action android:id="@+id/action_nav_food_to_foodDetailsFragment" app:destination="@id/foodDetailsFragment"/>
+        <action android:id="@+id/action_nav_food_to_foodMergeFragment" app:destination="@id/foodMergeFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_stepcounter"
+            android:name="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListFragment"
+            android:label="@string/menu_stepcounter"
+            tools:layout="@layout/fragment_stepcount_list">
+        <action android:id="@+id/action_nav_stepcounter_to_stepCountMergeFragment"
+                app:destination="@id/stepCountMergeFragment"/>
+        <action android:id="@+id/action_nav_stepcounter_to_stepCountDetailsFragment"
+                app:destination="@id/stepCountDetailsFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_weight"
+            android:name="de.dviererbe.healthtrack.presentation.main.weight.WeightListFragment"
+            android:label="@string/menu_weight"
+            tools:layout="@layout/fragment_weight_list">
+        <action android:id="@+id/action_nav_weight_to_weightDetailsFragment"
+                app:destination="@id/weightDetailsFragment"/>
+        <action android:id="@+id/action_nav_weight_to_weightMergeFragment" app:destination="@id/weightMergeFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_bloodpressure"
+            android:name="de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureListFragment"
+            android:label="@string/menu_bloodpressure"
+            tools:layout="@layout/fragment_bloodpressure_list">
+        <action android:id="@+id/action_nav_bloodpressure_to_bloodPressureMergeFragment"
+                app:destination="@id/bloodPressureMergeFragment"/>
+        <action android:id="@+id/action_nav_bloodpressure_to_bloodPressureDetailsFragment"
+                app:destination="@id/bloodPressureDetailsFragment"/>
+    </fragment>
+
+    <fragment
+            android:id="@+id/nav_bloodsugar"
+            android:name="de.dviererbe.healthtrack.presentation.main.bloodsugar.BloodSugarListFragment"
+            android:label="@string/menu_bloodsugar"
+            tools:layout="@layout/fragment_bloodsugar_list">
+        <action android:id="@+id/action_nav_bloodsugar_to_bloodSugarMergeFragment"
+                app:destination="@id/bloodSugarMergeFragment"/>
+        <action android:id="@+id/action_nav_bloodsugar_to_bloodSugarDetailsFragment"
+                app:destination="@id/bloodSugarDetailsFragment"/>
+    </fragment>
+
+    <fragment android:id="@+id/nav_about"
+              android:name="de.dviererbe.healthtrack.presentation.main.about.AboutFragment"
+              android:label="@string/menu_about"
+              tools:layout="@layout/fragment_about"/>
+    <fragment android:id="@+id/weightDetailsFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.weight.WeightDetailsFragment"
+              android:label="@string/weight_details_header" tools:layout="@layout/fragment_weight_details">
+        <action android:id="@+id/action_nav_weightDetailsFragment_to_weightMergeFragment"
+                app:destination="@id/weightMergeFragment"/>
+    </fragment>
+    <fragment android:id="@+id/weightMergeFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.weight.WeightMergeFragment"
+              tools:layout="@layout/fragment_weight_merge"/>
+    <fragment android:id="@+id/stepCountDetailsFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountDetailsFragment"
+              android:label="fragment_stepcount_details" tools:layout="@layout/fragment_stepcount_details">
+        <action android:id="@+id/action_nav_stepCountDetailsFragment_to_stepCountMergeFragment"
+                app:destination="@id/stepCountMergeFragment"/>
+    </fragment>
+    <fragment android:id="@+id/stepCountMergeFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountMergeFragment"
+              android:label="fragment_stepcount_merge" tools:layout="@layout/fragment_stepcount_merge"/>
+    <fragment android:id="@+id/bloodPressureDetailsFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureDetailsFragment"
+              android:label="fragment_bloodpressure_details" tools:layout="@layout/fragment_bloodpressure_details">
+        <action android:id="@+id/action_nav_bloodPressureDetailsFragment_to_bloodPressureMergeFragment"
+                app:destination="@id/bloodPressureMergeFragment"/>
+    </fragment>
+    <fragment android:id="@+id/bloodPressureMergeFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureMergeFragment"
+              android:label="fragment_bloodpressure_merge" tools:layout="@layout/fragment_bloodpressure_merge"/>
+    <fragment android:id="@+id/bloodSugarDetailsFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.bloodsugar.BloodSugarDetailsFragment"
+              android:label="fragment_bloodsugar_details" tools:layout="@layout/fragment_bloodsugar_details">
+        <action android:id="@+id/action_nav_bloodSugarDetailsFragment_to_bloodSugarMergeFragment"
+                app:destination="@id/bloodSugarMergeFragment"/>
+    </fragment>
+    <fragment android:id="@+id/bloodSugarMergeFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.bloodsugar.BloodSugarMergeFragment"
+              android:label="fragment_bloodsugar_merge" tools:layout="@layout/fragment_bloodsugar_merge"/>
+    <fragment android:id="@+id/foodDetailsFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.food.FoodDetailsFragment"
+              android:label="fragment_food_details" tools:layout="@layout/fragment_food_details">
+        <action android:id="@+id/action_nav_foodDetailsFragment_to_foodMergeFragment"
+                app:destination="@id/foodMergeFragment"/>
+    </fragment>
+    <fragment android:id="@+id/foodMergeFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.food.FoodMergeFragment"
+              android:label="fragment_food_merge" tools:layout="@layout/fragment_food_merge"/>
+</navigation>

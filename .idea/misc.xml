@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/HealthTrack/app/src/main/res/drawable/background_round_corners.xml" value="0.44907407407407407" />
+        <entry key="..\:/HealthTrack/app/src/main/res/drawable/ic_menu_bloodpressure.xml" value="0.1625" />
+        <entry key="..\:/HealthTrack/app/src/main/res/drawable/ic_menu_bloodsugar.xml" value="0.16145833333333334" />
+        <entry key="..\:/HealthTrack/app/src/main/res/drawable/ic_menu_food.xml" value="0.16145833333333334" />
+        <entry key="..\:/HealthTrack/app/src/main/res/drawable/ic_menu_weight.xml" value="0.16145833333333334" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/activity_settings.xml" value="0.14635416666666667" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/app_bar_main.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_about.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_about_credits.xml" value="0.20288753799392098" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_about_description.xml" value="0.14437689969604864" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_about_license.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_about_privacy_policy.xml" value="0.13753799392097266" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_about_terms_of_service.xml" value="0.13753799392097266" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_blood_pressure_details.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodpressure.xml" value="0.14635416666666667" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodpressure_details.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodpressure_list.xml" value="0.4619377162629758" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodpressure_merge.xml" value="0.25" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodsugar.xml" value="0.14635416666666667" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodsugar_details.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodsugar_list.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_bloodsugar_merge.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_error.xml" value="0.13753799392097266" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_export_data.xml" value="0.22" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_feedback.xml" value="0.14635416666666667" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_food.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_food_details.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_food_list.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_food_merge.xml" value="0.5359375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_home.xml" value="0.24170616113744076" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_stepcount_details.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_stepcount_list.xml" value="0.26063829787234044" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_stepcount_merge.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_stepcounter.xml" value="0.14635416666666667" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_weight.xml" value="0.14635416666666667" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_weight_create.xml" value="0.25379939209726443" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_weight_details.xml" value="0.3795289855072464" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_weight_list.xml" value="0.14437689969604864" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/fragment_weight_merge.xml" value="0.49444444444444446" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/item_bloodpressure_record.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/item_daily_summary.xml" value="0.26063829787234044" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/item_day_summary.xml" value="0.25" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/item_step_count_record.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/item_stepcount_record.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/item_weight_record.xml" value="0.33" />
+        <entry key="..\:/HealthTrack/app/src/main/res/layout/nav_header_main.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/activity_main_drawer.xml" value="0.1609375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_bloodpressure_details_actions.xml" value="0.11574074074074074" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_bloodpressure_list_actions.xml" value="0.262037037037037" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_bloodsugar_list_actions.xml" value="0.262037037037037" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_food_list_actions.xml" value="0.262037037037037" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_steps_details_actions.xml" value="0.15" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_steps_list_actions.xml" value="0.25" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_weight_details_actions.xml" value="0.3138888888888889" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/fragment_weight_list_actions.xml" value="0.262037037037037" />
+        <entry key="..\:/HealthTrack/app/src/main/res/menu/main.xml" value="0.1609375" />
+        <entry key="..\:/HealthTrack/app/src/main/res/xml/root_preferences.xml" value="0.2611111111111111" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_launcher_background.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_about.xml" value="0.3151041666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_camera.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_feedback.xml" value="0.3140625" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_home.xml" value="0.3140625" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_settings.xml" value="0.3140625" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/ic_menu_stepcounter.xml" value="0.5557291666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/drawable/side_nav_bar.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/font/bold.xml" value="0.32864583333333336" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/about_fragment.xml" value="0.5260416666666666" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/activity_main.xml" value="0.5401041666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/activity_settings.xml" value="0.2989583333333333" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/app_bar_main.xml" value="0.30027173913043476" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/content_main.xml" value="0.5401041666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/fragment_about.xml" value="0.5401041666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/fragment_feedback.xml" value="0.33" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/fragment_gallery.xml" value="0.5401041666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/fragment_home.xml" value="0.5401041666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/fragment_slideshow.xml" value="0.30027173913043476" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/fragment_stepcounter.xml" value="0.2994791666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/nav_header_main.xml" value="0.67" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/layout/settings_activity.xml" value="0.2994791666666667" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/menu/activity_main_drawer.xml" value="0.5461538461538461" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/menu/main.xml" value="0.5461538461538461" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.4935185185185185" />
+        <entry key="..\:/Users/Dominik/Android/HealthTrack/app/src/main/res/xml/root_preferences.xml" value="0.33" />
+      </map>
+    </option>
+  </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="PWA">
+    <option name="enabled" value="true" />
+    <option name="wasEnabledAtLeastOnce" value="true" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="jbr-11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name" translatable="false">Health Track</string>
+    <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_desc">Navigation Header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="WIP">Work in Progress</string>
+
+    <string name="format_date">MM/dd/yyyy</string>
+    <string name="format_time">HH:mm:ss</string>
+    <string name="format_datetime">MM/dd/yyyy HH:mm:ss</string>
+    <string name="format_int" translatable="false" formatted="true">%1$d</string>
+    <string name="format_double" translatable="false" formatted="true">%1$.1f</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_food">Food</string>
+    <string name="menu_stepcounter">Steps</string>
+    <string name="menu_weight">Weight</string>
+    <string name="menu_bloodpressure">Blood Pressure</string>
+    <string name="menu_bloodsugar">Blood Sugar</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
+    <string name="menu_send_feedback">Send Feedback</string>
+
+    <string name="fragment_feedback_header">Feedback about HealthTrack</string>
+    <string name="fragment_feedback_content">Do you have questions, suggestions or need help? Write an email to
+        healthtrack@dviererbe.de or open a GitHub Issue, and we will find a solution together. You can also search on
+        our GitHub Issue Page for answers to similar problems of other users.
+    </string>
+    <string name="fragment_feedback_button_open_github_issues">Open Github Issues</string>
+    <string name="fragment_feedback_button_send_email">Write an E-Mail</string>
+    <string name="github_issues_link" translatable="false">https://github.com/dviererbe/HealthTrack/issues</string>
+    <string name="feedback_email_address" translatable="false">healthtrack@dviererbe.de</string>
+    <string name="intent_title_send_email">Send E-Mail&#8230;</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="kilogram_short">kg</string>
+    <string name="pound_short">lb</string>
+    <string name="kilopascal_short">kPa</string>
+    <string name="millimetreofmercury_short">mmHg</string>
+    <string name="beatsperminute_short">bpm</string>
+    <string name="steps">Steps</string>
+
+    <string name="medication_state_none">none</string>
+    <string name="medication_state_taken">taken</string>
+    <string name="medication_state_not_taken">not taken</string>
+
+    <string name="weight_list_actions_create">Add</string>
+    <string name="weight_list_actions_reset">Delete all</string>
+    <string name="weight_list_notifications_delete_success">Deleted records successfully.</string>
+    <string name="weight_list_notifications_delete_failure">Failed to delete records.</string>
+    <string name="weight_list_dialog_delete_title">Delete weight records?</string>
+    <string name="weight_list_dialog_delete_message">Should all weight records be deleted? This action can\'t be reversed.</string>
+    <string name="weight_list_dialog_delete_confirm">Confirm</string>
+    <string name="weight_list_dialog_delete_cancel">Cancel</string>
+    <string name="weight_list_item_converted">(Converted)</string>
+
+    <string name="weight_details_actions_edit">Edit</string>
+    <string name="weight_details_actions_delete">Delete</string>
+    <string name="weight_details_header">Details</string>
+    <string name="weight_details_title_weight">Weight:</string>
+    <string name="weight_details_title_created">Created:</string>
+    <string name="weight_details_notifications_delete_failure">Failed to delete record due to an error.</string>
+    <string name="weight_details_dialog_delete_title">Delete record?</string>
+    <string name="weight_details_dialog_delete_message">Should the record be deleted? This action can\'t be reversed.</string>
+    <string name="weight_details_dialog_delete_confirm">Confirm</string>
+    <string name="weight_details_dialog_delete_cancel">Cancel</string>
+
+    <string name="weight_merge_header_create">Add</string>
+    <string name="weight_merge_header_update">Edit</string>
+    <string name="weight_merge_title_Value">Weight</string>
+    <string name="weight_merge_title_DateTime">Date &amp; Time</string>
+    <string name="weight_merge_error_Value">The entered value is not a valid number.</string>
+    <string name="weight_merge_button_now">Now</string>
+    <string name="weight_merge_button_pick">Pick</string>
+    <string name="weight_merge_button_create">Save</string>
+    <string name="weight_merge_button_update">Update</string>
+    <string name="weight_merge_information_loading_failed">Failed to load record.</string>
+    <string name="weight_merge_notifications_creation_failed">Failed to create record.</string>
+    <string name="weight_merge_notifications_update_failed">Failed to update record.</string>
+
+    <string name="food_list_actions_create">Add</string>
+    <string name="food_list_actions_reset">Delete all</string>
+
+    <string name="steps_list_actions_create">Add</string>
+    <string name="steps_list_actions_reset">Delete all</string>
+    <string name="steps_list_actions_change_default_stepgoal">Change default Step Goal</string>
+    <string name="steps_list_notifications_delete_success">Deleted records successfully.</string>
+    <string name="steps_list_notifications_delete_failure">Failed to delete records.</string>
+    <string name="steps_list_dialog_delete_title">Delete weight records?</string>
+    <string name="steps_list_dialog_delete_message">Should all weight records be deleted? This action can\'t be reversed.</string>
+    <string name="steps_list_dialog_delete_confirm">Confirm</string>
+    <string name="steps_list_dialog_delete_cancel">Cancel</string>
+
+    <string name="steps_details_actions_edit">Edit</string>
+    <string name="steps_details_actions_delete">Delete</string>
+    <string name="steps_details_header">Details</string>
+    <string name="stepcount_details_title_step_count">Step Count</string>
+    <string name="stepcount_details_title_goal">Goal</string>
+    <string name="steps_details_title_created">Created</string>
+    <string name="steps_details_notifications_delete_failure">Failed to delete record due to an error.</string>
+    <string name="steps_details_dialog_delete_title">Delete record?</string>
+    <string name="steps_details_dialog_delete_message">Should the record be deleted? This action can\'t be reversed.</string>
+    <string name="steps_details_dialog_delete_confirm">Confirm</string>
+    <string name="steps_details_dialog_delete_cancel">Cancel</string>
+
+    <string name="steps_merge_header_create">Create</string>
+    <string name="steps_merge_header_update">Edit</string>
+    <string name="steps_merge_title_stepcount">Steps</string>
+    <string name="steps_merge_title_goal">Goal</string>
+    <string name="steps_merge_error_stepcount">The entered value is invalid.</string>
+    <string name="steps_merge_error_Goal">The entered value is invalid.</string>
+    <string name="steps_merge_information_loading_failed">The record could not been loaded, because an error occured.</string>
+    <string name="steps_merge_title_DateTime">Date &amp; Time</string>
+    <string name="steps_merge_button_now">Now</string>
+    <string name="steps_merge_button_create">Save</string>
+    <string name="steps_merge_button_update">Update</string>
+    <string name="steps_merge_notifications_creation_failed">Record could not been created.</string>
+    <string name="steps_merge_notifications_update_failed">Record could not been updated.</string>
+
+    <string name="bloodpressure_list_actions_create">Add</string>
+    <string name="bloodpressure_list_actions_reset">Delete all</string>
+    <string name="bloodpressure_list_notifications_delete_success">Deleted records successfully.</string>
+    <string name="bloodpressure_list_notifications_delete_failure">Failed to delete records.</string>
+    <string name="bloodpressure_list_dialog_delete_title">Delete blood pressure records?</string>
+    <string name="bloodpressure_list_dialog_delete_message">Should all blood pressure records be deleted? This action can\'t be reversed.</string>
+    <string name="bloodpressure_list_dialog_delete_confirm">Confirm</string>
+    <string name="bloodpressure_list_dialog_delete_cancel">Cancel</string>
+
+    <string name="bloodpressure_details_actions_edit">Edit</string>
+    <string name="bloodpressure_details_actions_delete">Delete</string>
+    <string name="bloodpressure_details_header">Details</string>
+    <string name="bloodpressure_details_title_systolic">Systolic</string>
+    <string name="bloodpressure_details_title_diastolic">Diastolic</string>
+    <string name="bloodpressure_details_title_pulse">Pulse</string>
+    <string name="bloodpressure_details_title_medication">Medication</string>
+    <string name="bloodpressure_details_title_created">Created</string>
+    <string name="bloodpressure_details_title_note">Note</string>
+    <string name="bloodpressure_details_warning_concerted">(Converted)</string>
+    <string name="bloodpressure_details_notifications_delete_failure">Failed to delete record due to an error.</string>
+    <string name="bloodpressure_details_dialog_delete_title">Delete record?</string>
+    <string name="bloodpressure_details_dialog_delete_message">Should the record be deleted? This action can\'t be reversed.</string>
+    <string name="bloodpressure_details_dialog_delete_confirm">Confirm</string>
+    <string name="bloodpressure_details_dialog_delete_cancel">Cancel</string>
+
+    <string name="bloodpressure_merge_header_create">Add</string>
+    <string name="bloodpressure_merge_header_update">Edit</string>
+    <string name="bloodpressure_merge_button_now">Now</string>
+    <string name="bloodpressure_merge_button_create">Save</string>
+    <string name="bloodpressure_merge_button_update">Update</string>
+    <string name="bloodpressure_merge_title_systolic">Systolic</string>
+    <string name="bloodpressure_merge_title_diastolic">Diastolic</string>
+    <string name="bloodpressure_merge_title_unit">Unit</string>
+    <string name="bloodpressure_merge_title_pulse">Pulse</string>
+    <string name="bloodpressure_merge_title_medication">Medication</string>
+    <string name="bloodpressure_mrge_title_datetime">Date &amp; Time</string>
+    <string name="bloodpressure_merge_title_note">Note</string>
+    <string name="bloodpressure_merge_error_systolic_value_invalid">The entered systolic value is invalid.</string>
+    <string name="bloodpressure_merge_error_diastolic_value_invalid">The entered diastolic value is invalid.</string>
+    <string name="bloodpressure_merge_error_pulse_value_invalid">The entered pulse value is invalid.</string>
+    <string name="bloodpressure_merge_button_pick">Pick</string>
+    <string name="bloodpressure_merge_information_loading_failed">Failed to load record.</string>
+    <string name="bloodpressure_merge_notifications_creation_failed">Failed to create record.</string>
+    <string name="bloodpressure_merge_notifications_update_failed">Failed to update record.</string>
+
+    <string name="bloodsugar_list_actions_create">Add</string>
+    <string name="bloodsugar_list_actions_reset">Delete all</string>
+
+    <!-- SETTINGS -->
+
+    <string name="settings_general_header">General</string>
+
+    <string name="settings_theme_title">Design</string>
+
+    <string name="settings_widgets_header">Widgets</string>
+    <string name="settings_widgets_summary">Disable widgets you don\'t use.</string>
+    <string name="settings_widgets_stepcounter">Step Counter</string>
+    <string name="settings_widgets_weight">Weight</string>
+    <string name="settings_widgets_food">Food</string>
+    <string name="settings_widgets_bloodpressure">Blood Pressure</string>
+    <string name="settings_widgets_bloodsugar">Blood Sugar</string>
+
+    <string name="settings_units_header">Units</string>
+    <string name="settings_units_energy">Energy</string>
+    <string name="settings_units_mass">Mass</string>
+    <string name="settings_units_bloodpressure">Blood Pressure</string>
+    <string name="settings_units_bloodsugar">Blood Sugar</string>
+
+    <string name="settings_user_data_header">User Data</string>
+
+    <string name="settings_user_data_export_button">Export</string>
+    <string name="settings_user_data_export_dialog_header">Export User Data</string>
+    <string name="settings_user_data_export_dialog_description">Select the data categories you want to export.</string>
+    <string name="settings_user_data_export_dialog_checkbox_steps">Step-Count related Data</string>
+    <string name="settings_user_data_export_dialog_checkbox_weight">Weight related Data</string>
+    <string name="settings_user_data_export_dialog_checkbox_food">Food related Data</string>
+    <string name="settings_user_data_export_dialog_checkbox_bloodpressure">Blood-Pressure related Data</string>
+    <string name="settings_user_data_export_dialog_checkbox_bloodsugar">Blood-Sugar related Data</string>
+    <string name="settings_user_data_export_dialog_button_export">Export</string>
+    <string name="settings_user_data_export_dialog_button_cancel">Cancel</string>
+    <string name="settings_user_data_export_dialog_notifications_save_success">User data was exported successfully.
+    </string>
+    <string name="settings_user_data_export_dialog_notifications_save_failure">An error occurred while exporting user
+        data.
+    </string>
+
+    <string name="settings_user_data_delete_button">Delete</string>
+    <string name="settings_user_data_delete_dialog_title">Delete User Data?</string>
+    <string name="settings_user_data_delete_dialog_message">Do you really want to delete all user data? This can\'t be
+        reversed.
+    </string>
+    <string name="settings_user_data_delete_dialog_button_confirm">Confirm</string>
+    <string name="settings_user_data_delete_dialog_button_cancel">Cancel</string>
+    <string name="settings_user_data_delete_notification_success">All user data was deleted successfully.</string>
+    <string name="settings_user_data_delete_notification_failure">Failed to delete all user data.</string>
+
+    <string name="day_summary_unknown_day">Unknown Day</string>
+    <string name="day_summary_unknown_today">Today</string>
+    <string name="day_summary_food">Food</string>
+    <string name="day_summary_steps">Steps</string>
+    <string name="day_summary_weight">Weight</string>
+    <string name="day_summary_bloodpressure">Blood Pressure</string>
+    <string name="day_summary_bloodsugar">Blood Sugar</string>
+
+    <string name="about_description_tabtitle">About HealthTrack</string>
+    <string name="about_description_content">
+        "Health Track is an android app that lets you track health-related data."
+        "Here are five arguments why you should use it:\n\n"
+
+        "1. Free &amp; No ads!\n"
+        "You can use HealthTrack for free. The app does not contain ads nor "
+        "imposes internal purchases.\n\n"
+
+        "2. No online/cloud shenanigans!\n"
+        "You have complete control over your data. To use HealthTracks features, "
+        "you don't have to create an online account or use any online services. "
+        "HealthTracks works entirely offline. All your data is processed and stored "
+        "on your device, and you can edit, export or delete your data at any time.\n\n"
+
+        "3. Customizable:\n"
+        "You can configure HealthTrack's design theme and enable/disable specific "
+        "features to your liking.\n\n"
+
+        "4. Multi-Lingual:\n"
+        "HealthTrack adapts to your System locale. HealthTrack can display its user "
+        "interface in English or German.\n\n"
+
+        "5. Open-Source:\n"
+        "The Source Code for HealthTrack is available on Github at "
+        "https://github.com/dviererbe/HealthTrack and licensed under the GNU Affero "
+        "General Public License version 3. Feel free to take a look, open an issue, "
+        "make a pull request or fork the source code.\n\n"
+
+        "Track your health easily and for free with Health Track!"
+    </string>
+
+    <string name="about_privacy_policy_tabtitle">Privacy Policy</string>
+    <string name="about_privacy_policy_content">
+        "1. General provisions\n\n"
+
+        "1.1 The application does not require the user to provide personal "
+        "or confidential information. Any collected information is stored "
+        "locally on your device.\n\n"
+
+        "1.2 The collected information can be deleted partially or entirely "
+        "at the user's request.\n\n"
+
+        "1.3 The collected information can be exported at the user's request; "
+        "therefore, Permission to access the file system is required. The "
+        "application does not read, modify, move, or forward existing files.\n\n\n"
+
+
+        "2. Providing information to third parties\n\n"
+
+        "2.1 The application does not transfer the collected information to third parties.\n\n"
+
+        "2.2 Using GitHub can disclose personal information like your IP-Address "
+        "or device settings to GitHub, Inc. Read the GitHub Privacy Policy for "
+        "more details.\n\n\n"
+
+
+        "3. Contact information\n"
+        "If you have any questions, contact us at: healthtrack@dviererbe.de or "
+        "on GitHub at https://github.com/dviererbe/HealthTrack."
+    </string>
+
+    <string name="about_license_tabtitle">License</string>
+
+    <string name="about_credits_tabtitle">Credits</string>
+    <string name="about_credits_content">Credits</string>
+
+    <string name="about_unknown_tabtitle">Unknown</string>
+
+    <string name="large_text" translatable="false">
+        "Material is the metaphor.\n\n"
+
+        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "technologically advanced and open to imagination and magic.\n"
+        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
+        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
+        "flexibility of the material creates new affordances that supercede those in the physical "
+        "world, without breaking the rules of physics.\n"
+        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
+        "interact, and exist in space and in relation to each other. Realistic lighting shows "
+        "seams, divides space, and indicates moving parts.\n\n"
+
+        "Bold, graphic, intentional.\n\n"
+
+        "The foundational elements of print based design typography, grids, space, scale, color, "
+        "and use of imagery guide visual treatments. These elements do far more than please the "
+        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
+        "imagery, large scale typography, and intentional white space create a bold and graphic "
+        "interface that immerse the user in the experience.\n"
+        "An emphasis on user actions makes core functionality immediately apparent and provides "
+        "waypoints for the user.\n\n"
+
+        "Motion provides meaning.\n\n"
+
+        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
+        "inflection points that initiate motion, transforming the whole design.\n"
+        "All action takes place in a single environment. Objects are presented to the user without "
+        "breaking the continuity of experience even as they transform and reorganize.\n"
+        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
+        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
+
+        "3D world.\n\n"
+
+        "The material environment is a 3D space, which means all objects have x, y, and z "
+        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
+        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
+        "position along the z-axis and has a standard 1dp thickness.\n"
+        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
+        "emulated by manipulating the y-axis.\n\n"
+
+        "Light and shadow.\n\n"
+
+        "Within the material environment, virtual lights illuminate the scene. Key lights create "
+        "directional shadows, while ambient light creates soft shadows from all angles.\n"
+        "Shadows in the material environment are cast by these two light sources. In Android "
+        "development, shadows occur when light sources are blocked by sheets of material at "
+        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
+        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
+
+        "Resting elevation.\n\n"
+
+        "All material objects, regardless of size, have a resting elevation, or default elevation "
+        "that does not change. If an object changes elevation, it should return to its resting "
+        "elevation as soon as possible.\n\n"
+
+        "Component elevations.\n\n"
+
+        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
+        "does not vary from 6dp in one app to 16dp in another app).\n"
+        "Components may have different resting elevations across platforms, depending on the depth "
+        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
+
+        "Responsive elevation and dynamic elevation offsets.\n\n"
+
+        "Some component types have responsive elevation, meaning they change elevation in response "
+        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
+        "changes are consistently implemented using dynamic elevation offsets.\n"
+        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
+        "to the component’s resting state. They ensure that elevation changes are consistent "
+        "across actions and component types. For example, all components that lift on press have "
+        "the same elevation change relative to their resting elevation.\n"
+        "Once the input event is completed or cancelled, the component will return to its resting "
+        "elevation.\n\n"
+
+        "Avoiding elevation interference.\n\n"
+
+        "Components with responsive elevations may encounter other components as they move between "
+        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
+        "through other material, components avoid interfering with one another any number of ways, "
+        "whether on a per component basis or using the entire app layout.\n"
+        "On a component level, components can move or be removed before they cause interference. "
+        "For example, a floating action button (FAB) can disappear or move off screen before a "
+        "user picks up a card, or it can move if a snackbar appears.\n"
+        "On the layout level, design your app layout to minimize opportunities for interference. "
+        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
+        "when a user tries to pick up one of cards.\n\n"
+    </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

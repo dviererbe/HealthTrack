@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.main.bloodpressure.BloodPressureMergeFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Systolic, Diastolic, Unit -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Systolic -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bloodpressure_merge_title_systolic" />
+                <EditText
+                    android:id="@+id/editTextSystolic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:digits="0123456789"
+                    android:textSize="19sp"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <!-- Diastolic -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bloodpressure_merge_title_diastolic" />
+                <EditText
+                    android:id="@+id/editTextDiastolic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:digits="0123456789"
+                    android:textSize="19sp"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <!-- Unit -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/bloodpressure_merge_title_unit" />
+
+                <Spinner
+                    android:id="@+id/dropdownUnits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:spinnerMode="dropdown"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/errorTextSystolic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:visibility="invisible"
+            android:text="@string/bloodpressure_merge_error_systolic_value_invalid" />
+
+        <TextView
+            android:id="@+id/errorTextDiastolic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:visibility="invisible"
+            android:text="@string/bloodpressure_merge_error_diastolic_value_invalid" />
+
+        <!-- Pulse -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold"
+            android:text="@string/bloodpressure_merge_title_pulse" />
+
+        <EditText
+            android:id="@+id/editTextPulse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:digits="0123456789"
+            android:textSize="19sp"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/errorTextPulse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:visibility="invisible"
+            android:text="@string/bloodpressure_merge_error_pulse_value_invalid" />
+
+        <!-- Medication -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold"
+            android:text="@string/bloodpressure_merge_title_medication" />
+
+        <Spinner
+            android:id="@+id/dropdownMedication"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
+
+        <!-- Date Time -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold"
+            android:text="@string/bloodpressure_mrge_title_datetime" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/textShowDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="{Date} {Time}" />
+
+            <Button
+                    android:id="@+id/btnPickDateTime"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:drawableLeft="@drawable/ic_baseline_edit_24" />
+            <Button
+                    android:id="@+id/btnSetDateTimeToNow"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="@string/bloodpressure_merge_button_now" />
+        </LinearLayout>
+
+        <!-- Note -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold"
+            android:text="@string/bloodpressure_merge_title_note" />
+
+        <EditText
+            android:id="@+id/editTextNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:gravity="start|top"
+            android:ems="10" />
+
+        <!-- Save -->
+
+        <Button
+            android:id="@+id/btnSaveBloodPressureRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:enabled="false"
+            android:text="@string/weight_merge_button_create" />
+
+        <TextView
+            android:id="@+id/errorTextRecordCouldNotLoad"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:text="@string/bloodpressure_merge_information_loading_failed" />
+
+
+    </LinearLayout>
+</layout>
