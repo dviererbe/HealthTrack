@@ -38,9 +38,6 @@ Track your health easily and for free with Health Track!
 # Design Principles
 
 - Clean Code  
-For the coding style were clean code principiles featured by Bob Martin 
-
-
 - Clean Architechture
 - MVVM ([Model View ViewModel](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel))
 
