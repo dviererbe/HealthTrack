@@ -51,23 +51,24 @@ For the coding style were clean code principiles featured by Bob Martin
 
 ## Screenshots
 
-![Screenshot](photo_2022-07-16_23-41-24 (2).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (3).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (4).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (5).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (6).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (8).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (9).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (10).jpg)
-![Screenshot](photo_2022-07-16_23-41-24 (11).jpg)
-![Screenshot](photo_2022-07-16_23-41-24.jpg)
-![Screenshot](photo_2022-07-16_23-43-38.jpg)
-![Screenshot](photo_2022-07-16_23-46-28.jpg)
-![Screenshot](photo_2022-07-16_23-46-52.jpg)
-![Screenshot](photo_2022-07-16_23-46-56.jpg)
-![Screenshot](photo_2022-07-16_23-47-01.jpg)
-![Screenshot](photo_2022-07-16_23-47-52.jpg)
-![Screenshot](photo_2022-07-16_23-47-55.jpg)
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(2).jpg)
+
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(3).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(4).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(5).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(6).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(8).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(9).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(10).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24%20(11).jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-41-24.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-43-38.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-46-28.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-46-52.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-46-56.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-47-01.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-47-52.jpg)    
+![Screenshot](screenshots/photo_2022-07-16_23-47-55.jpg)    
 
 ## License
 
