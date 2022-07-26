@@ -4,7 +4,7 @@
 
 *Health Track* is an Android App that lets you track health related data.
 
-It was developed as an exam submission. The submitted commit is 5aa149423d3006edd2ad698b2335db1b0e4d3de6.
+It was developed as an exam submission. The submitted commit is https://github.com/dviererbe/HealthTrack/commit/5aa149423d3006edd2ad698b2335db1b0e4d3de6.
 
 ## About
 
