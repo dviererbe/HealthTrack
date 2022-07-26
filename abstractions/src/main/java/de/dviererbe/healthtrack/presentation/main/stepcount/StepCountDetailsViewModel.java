@@ -22,6 +22,7 @@ import android.util.Log;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.StepCountRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
@@ -37,6 +38,7 @@ public class StepCountDetailsViewModel implements IDisposable
     private static final String ErrorValue = "(error)";
 
     private final IStepCountDetailsView _view;
+    private final INavigationRouter _navigationRouter;
     private final IStepWidgetRepository _repository;
 
     private final LocalDate _day;
@@ -49,6 +51,7 @@ public class StepCountDetailsViewModel implements IDisposable
 
     public StepCountDetailsViewModel(
             final IStepCountDetailsView view,
+            final INavigationRouter navigationRouter,
             final IStepWidgetRepository repository,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
@@ -56,6 +59,7 @@ public class StepCountDetailsViewModel implements IDisposable
     {
 
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _day = day;
 
@@ -74,7 +78,7 @@ public class StepCountDetailsViewModel implements IDisposable
         }
 
         StepCount = ConversionHelper.TryConvertToString(record.StepCount, ErrorValue, numericValueConverter);
-        Goal =  ConversionHelper.TryConvertToString(record.StepCount, ErrorValue, numericValueConverter);
+        Goal =  ConversionHelper.TryConvertToString(record.Goal, ErrorValue, numericValueConverter);
         DateTime = ConversionHelper.TryConvertToString(record.TimeOfMeasurement, ErrorValue, dateTimeConverter);
 
         GoalReachedPercentage = record.CalculatePercentageOfGoalReached();
@@ -83,7 +87,7 @@ public class StepCountDetailsViewModel implements IDisposable
 
     public void Edit()
     {
-        _view.NavigateToEditView(_day);
+        _navigationRouter.TryNavigateToEditStepCountRecord(_day);
     }
 
     public void Delete()
@@ -103,7 +107,7 @@ public class StepCountDetailsViewModel implements IDisposable
                     return;
                 }
 
-                _view.GoBack();
+                _navigationRouter.TryNavigateBack();
             }
         });
     }
@@ -127,23 +131,11 @@ public class StepCountDetailsViewModel implements IDisposable
         void NotifyUserThatRecordCouldNotBeDeleted();
 
         /**
-         * Navigates the user to a UI for editing a specific step count record.
-         *
-         * @param day The day of the record that the edit view should be displayed for.
-         */
-        void NavigateToEditView(LocalDate day);
-
-        /**
          * Shows the user a dialog to confirm that the record should be deleted.
          *
          * @param callback a reference to a callback mechanism when the user made a decision.
          */
         void ShowConfirmDeleteDialog(IConfirmDeleteDialogObserver callback);
-
-        /**
-         * The view should navigate up in the navigation stack.
-         */
-        void GoBack();
 
         /**
          * Callback mechanism for when the confirm delete dialog exits.

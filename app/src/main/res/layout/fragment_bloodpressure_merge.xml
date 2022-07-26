@@ -161,11 +161,11 @@
         <!-- Date Time -->
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:textStyle="bold"
-            android:text="@string/bloodpressure_mrge_title_datetime" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:textStyle="bold"
+                android:text="@string/bloodpressure_merge_title_datetime"/>
 
         <LinearLayout
             android:layout_width="match_parent"

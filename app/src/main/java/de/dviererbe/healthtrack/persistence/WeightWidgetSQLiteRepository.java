@@ -119,6 +119,28 @@ public class WeightWidgetSQLiteRepository
     }
 
     /**
+     * Gets the name of the weight widget repository provider.
+     *
+     * @return {@link String} representation of the weight widget repository provider name.
+     */
+    @Override
+    public String GetProviderName()
+    {
+        return getClass().getName();
+    }
+
+    /**
+     * Gets the version of the weight widget repository provider.
+     *
+     * @return {@link String} representation of the weight widget repository provider version.
+     */
+    @Override
+    public String GetProviderVersion()
+    {
+        return String.valueOf(DatabaseVersion);
+    }
+
+    /**
      * Gets the count of all stored records.
      *
      * @return scalar count of all stored records.
@@ -126,7 +148,7 @@ public class WeightWidgetSQLiteRepository
      * @throws RepositoryException when an unexpected I/O error occurs.
      */
     @Override
-    public int GetRecordCount() throws RepositoryDisposed, RepositoryException
+    public long GetRecordCount() throws RepositoryDisposed, RepositoryException
     {
         ThrowWhenDatabaseStateIsBad();
 
@@ -155,7 +177,7 @@ public class WeightWidgetSQLiteRepository
      * @return the scalar value.
      * @throws RepositoryException when more thn one record was found.
      */
-    private int ReadScalar(Cursor cursor) throws RepositoryException
+    private long ReadScalar(Cursor cursor) throws RepositoryException
     {
         if (!cursor.moveToFirst())
             throw new RepositoryException("Result set has no row.");
@@ -166,7 +188,7 @@ public class WeightWidgetSQLiteRepository
         if (cursor.getColumnCount() != 1)
             throw new RepositoryException("Result set has more than one column.");
 
-        return cursor.getInt(0);
+        return cursor.getLong(0);
     }
 
     /**

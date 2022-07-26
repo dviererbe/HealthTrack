@@ -28,6 +28,7 @@ import de.dviererbe.healthtrack.domain.BloodPressureUnit;
 import de.dviererbe.healthtrack.domain.MedicationState;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IBloodPressureWidgetRepository;
 import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
@@ -40,6 +41,7 @@ public class BloodPressureMergeViewModel implements IDisposable
     private static final String TAG = "BloodPressureMergeViewModel";
 
     private final IBloodPressureMergeView _view;
+    private final INavigationRouter _navigationRouter;
     private final IBloodPressureWidgetRepository _repository;
     private final IDateTimeProvider _dateTimeProvider;
     private final IDateTimeConverter _dateTimeConverter;
@@ -68,6 +70,7 @@ public class BloodPressureMergeViewModel implements IDisposable
 
     public BloodPressureMergeViewModel(
             final IBloodPressureMergeView view,
+            final INavigationRouter navigationRouter,
             final IBloodPressureWidgetRepository repository,
             final IDateTimeProvider dateTimeProvider,
             final IDateTimeConverter dateTimeConverter,
@@ -76,6 +79,7 @@ public class BloodPressureMergeViewModel implements IDisposable
             final UUID recordIdentifier)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _dateTimeProvider = dateTimeProvider;
         _dateTimeConverter = dateTimeConverter;
@@ -375,7 +379,7 @@ public class BloodPressureMergeViewModel implements IDisposable
             return;
         }
 
-        _view.GoBack();
+        _navigationRouter.TryNavigateBack();
     }
 
     private void NotifySaveFailure()
@@ -439,11 +443,6 @@ public class BloodPressureMergeViewModel implements IDisposable
         void PullValues();
 
         /**
-         * The view should navigate up in the navigation stack.
-         */
-        void GoBack();
-
-        /**
          * Callback mechanism for when the pick date time dialog exits.
          */
         interface IPickDateTimeDialogObserver
@@ -451,7 +450,7 @@ public class BloodPressureMergeViewModel implements IDisposable
             /**
              * Called when the dialog exits.
              *
-             * @param pickedDateTime the date & time the user picked; {@code null} when dialog was cancelled.
+             * @param pickedDateTime the date &amp; time the user picked; {@code null} when dialog was cancelled.
              */
             void OnComplete(LocalDateTime pickedDateTime);
         }

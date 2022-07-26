@@ -18,7 +18,7 @@
 
 package de.dviererbe.healthtrack.application;
 
-import android.util.Log;
+import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.persistence.*;
 
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class DeleteAllUserDataOperation
     private final IFoodWidgetRepository _foodWidgetRepository;
     private final IBloodPressureWidgetRepository _bloodPressureWidgetRepository;
     private final IBloodSugarWidgetRepository _bloodSugarWidgetRepository;
+    private final ILogger _logger;
 
     /**
      * Creates a new {@link DeleteAllUserDataOperation} instance with references to all user data repositories.
@@ -45,19 +46,22 @@ public class DeleteAllUserDataOperation
      * @param foodWidgetRepository reference to a repository that holds food related data.
      * @param bloodPressureWidgetRepository reference to a repository that holds blood pressure related data.
      * @param bloodSugarWidgetRepository reference to a repository that holds blood sugar related data.
+     * @param logger reference to a logger instance.
      */
     public DeleteAllUserDataOperation(
-            IStepWidgetRepository stepWidgetRepository,
-            IWeightWidgetRepository weightWidgetRepository,
-            IFoodWidgetRepository foodWidgetRepository,
-            IBloodPressureWidgetRepository bloodPressureWidgetRepository,
-            IBloodSugarWidgetRepository bloodSugarWidgetRepository)
+            final IStepWidgetRepository stepWidgetRepository,
+            final IWeightWidgetRepository weightWidgetRepository,
+            final IFoodWidgetRepository foodWidgetRepository,
+            final IBloodPressureWidgetRepository bloodPressureWidgetRepository,
+            final IBloodSugarWidgetRepository bloodSugarWidgetRepository,
+            final ILogger logger)
     {
         _stepWidgetRepository = stepWidgetRepository;
         _weightWidgetRepository = weightWidgetRepository;
         _foodWidgetRepository = foodWidgetRepository;
         _bloodPressureWidgetRepository = bloodPressureWidgetRepository;
         _bloodSugarWidgetRepository = bloodSugarWidgetRepository;
+        _logger = logger;
     }
 
     /**
@@ -75,7 +79,7 @@ public class DeleteAllUserDataOperation
         }
         catch (Exception exception)
         {
-            Log.d(TAG, "Failed to delete step records.", exception);
+            _logger.LogError(TAG, "Failed to delete step records.", exception);
             exceptionList.add(exception);
         }
 
@@ -85,7 +89,7 @@ public class DeleteAllUserDataOperation
         }
         catch (Exception exception)
         {
-            Log.d(TAG, "Failed to delete weight records.", exception);
+            _logger.LogError(TAG, "Failed to delete weight records.", exception);
             exceptionList.add(exception);
         }
 
@@ -95,7 +99,7 @@ public class DeleteAllUserDataOperation
         }
         catch (Exception exception)
         {
-            Log.d(TAG, "Failed to delete food records.", exception);
+            _logger.LogError(TAG, "Failed to delete food records.", exception);
             exceptionList.add(exception);
         }
 
@@ -105,7 +109,7 @@ public class DeleteAllUserDataOperation
         }
         catch (Exception exception)
         {
-            Log.d(TAG, "Failed to delete blood pressure records.", exception);
+            _logger.LogError(TAG, "Failed to delete blood pressure records.", exception);
             exceptionList.add(exception);
         }
 
@@ -115,7 +119,7 @@ public class DeleteAllUserDataOperation
         }
         catch (Exception exception)
         {
-            Log.d(TAG, "Failed to delete blood sugar records.", exception);
+            _logger.LogError(TAG, "Failed to delete blood sugar records.", exception);
             exceptionList.add(exception);
         }
 

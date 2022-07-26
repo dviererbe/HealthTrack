@@ -33,13 +33,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import de.dviererbe.healthtrack.HealthTrackApp;
 import de.dviererbe.healthtrack.R;
 import de.dviererbe.healthtrack.databinding.ActivityMainBinding;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.presentation.main.MainViewViewModel.IMainView;
 import de.dviererbe.healthtrack.presentation.main.feedback.FeedbackFragment;
 import de.dviererbe.healthtrack.presentation.settings.SettingsActivity;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 public class MainActivity
         extends AppCompatActivity
-        implements IMainView
+        implements IMainView, INavigationRouter
 {
     private MainViewViewModel _viewModel;
     private ActivityMainBinding _binding;
@@ -56,7 +60,7 @@ public class MainActivity
         _viewModel = HealthTrackApp
                 .GetDependenciesViaActivity(this)
                 .GetViewModelFactory()
-                .CreateMainActivityViewModel(getLifecycle(), this);
+                .CreateMainActivityViewModel(getLifecycle(), this, this);
 
         _binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(_binding.getRoot());
@@ -148,19 +152,6 @@ public class MainActivity
     }
 
     /**
-     * Navigates the user to a UI for editing the settings of the application.
-     */
-    @Override
-    public void NavigateToSettings()
-    {
-        Intent gotoSettingsIntent = new Intent(
-                getApplicationContext(),
-                SettingsActivity.class);
-
-        startActivity(gotoSettingsIntent);
-    }
-
-    /**
      * Shows the user a UI dialog for sending feedback.
      */
     @Override
@@ -170,5 +161,162 @@ public class MainActivity
 
         FeedbackFragment fragment = FeedbackFragment.NewInstance();
         fragment.show(getSupportFragmentManager(), "Feedback");
+    }
+
+    /**
+     * Tries to navigate to the user settings UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToSettings()
+    {
+        try
+        {
+            Intent gotoSettingsIntent = new Intent(
+                    getApplicationContext(),
+                    SettingsActivity.class);
+
+            startActivity(gotoSettingsIntent);
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Tries to navigate to the create blood pressure record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateBloodPressureRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the blood pressure record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToBloodPressureRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit blood pressure record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditBloodPressureRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the default step count goal editor user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToDefaultStepCountGoalEditor()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create step count record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateStepCountRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the step count record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit step count record user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create weight record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateWeightRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the weight record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToWeightRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit weight record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditWeightRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the preceding UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateBack()
+    {
+        return false;
     }
 }

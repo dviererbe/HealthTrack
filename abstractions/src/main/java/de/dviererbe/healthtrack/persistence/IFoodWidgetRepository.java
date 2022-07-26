@@ -26,6 +26,20 @@ import de.dviererbe.healthtrack.IDisposable;
 public interface IFoodWidgetRepository extends IDisposable
 {
     /**
+     * Gets the name of the food widget repository provider.
+     *
+     * @return {@link String} representation of the food widget repository provider name.
+     */
+    String GetProviderName();
+
+    /**
+     * Gets the version of the food widget repository provider.
+     *
+     * @return {@link String} representation of the food widget repository provider version.
+     */
+    String GetProviderVersion();
+
+    /**
      * Deletes all records.
      *
      * @throws RepositoryDisposed when the repository was already disposed.

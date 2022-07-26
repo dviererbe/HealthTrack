@@ -84,7 +84,7 @@
             android:summary="%s"
             android:entries="@array/units_bloodpressure_entries"
             android:entryValues="@array/units_bloodpressure_values"
-            android:defaultValue="Kilopascal"/>
+            android:defaultValue="MillimetreOfMercury"/>
 
         <ListPreference
             android:key="unit_bloodsugar"

@@ -23,6 +23,7 @@ import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.BloodPressureRecord;
 import de.dviererbe.healthtrack.domain.BloodPressureUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IBloodPressureWidgetRepository;
 import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
@@ -34,6 +35,7 @@ public class BloodPressureListViewModel implements IDisposable
 {
     private final static String TAG = "BloodPressureListViewModel";
     private final IBloodPressureListView _view;
+    private final INavigationRouter _navigationRouter;
     private final IBloodPressureWidgetRepository _repository;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
@@ -42,12 +44,14 @@ public class BloodPressureListViewModel implements IDisposable
 
     public BloodPressureListViewModel(
             final IBloodPressureListView view,
+            final INavigationRouter navigationRouter,
             final IBloodPressureWidgetRepository repository,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final IPreferredUnitRepository preferredUnitRepository)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
@@ -73,7 +77,12 @@ public class BloodPressureListViewModel implements IDisposable
     {
         try
         {
-            return _repository.GetRecordCount();
+            final long recordCount = _repository.GetRecordCount();
+
+            if (recordCount > Integer.MAX_VALUE)
+                return Integer.MAX_VALUE;
+            else
+                return (int)recordCount;
         }
         catch (Exception exception)
         {
@@ -87,7 +96,7 @@ public class BloodPressureListViewModel implements IDisposable
         final BloodPressureRecord bloodPressureRecord = TryGetRecord(offset);
 
         return new BloodPressureListItemViewModel(
-                _view,
+                _navigationRouter,
                 _dateTimeConverter,
                 _numericValueConverter,
                 bloodPressureRecord,
@@ -111,7 +120,7 @@ public class BloodPressureListViewModel implements IDisposable
 
     public void CreateRecord()
     {
-        _view.NavigateToCreateView();
+        _navigationRouter.TryNavigateToCreateBloodPressureRecord();
     }
 
     public void DeleteAll()
@@ -155,18 +164,6 @@ public class BloodPressureListViewModel implements IDisposable
          * Notifies the {@link IBloodPressureListView} that the item list has changed.
          */
         void OnListItemsChanged();
-
-        /**
-         * Navigates the user to a UI for creating a specific record.
-         */
-        void NavigateToCreateView();
-
-        /**
-         * Navigates the user to a UI for showing the details of a specific record
-         *
-         * @param recordIdentifier identifier of record to show details for.
-         */
-        void NavigateToDetailsView(UUID recordIdentifier);
 
         /**
          * Shows the user a UI that asks for confirmation to delete all records.

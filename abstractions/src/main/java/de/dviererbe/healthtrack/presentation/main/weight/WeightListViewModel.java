@@ -23,6 +23,7 @@ import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.domain.WeightUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
 import de.dviererbe.healthtrack.persistence.IWeightWidgetRepository;
@@ -35,6 +36,7 @@ public class WeightListViewModel implements IDisposable
     private final static String TAG = "WeightListViewModel";
 
     private final IWeightListView _view;
+    private final INavigationRouter _navigationRouter;
     private final IWeightWidgetRepository _repository;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
@@ -42,11 +44,13 @@ public class WeightListViewModel implements IDisposable
 
     public WeightListViewModel(
             final IWeightListView view,
+            final INavigationRouter navigationRouter,
             final IWeightWidgetRepository repository,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final IPreferredUnitRepository preferredUnitRepository)
     {
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _view = view;
         _dateTimeConverter = dateTimeConverter;
@@ -73,7 +77,12 @@ public class WeightListViewModel implements IDisposable
     {
         try
         {
-            return _repository.GetRecordCount();
+            final long recordCount = _repository.GetRecordCount();
+
+            if (recordCount > Integer.MAX_VALUE)
+                return Integer.MAX_VALUE;
+            else
+                return (int)recordCount;
         }
         catch (Exception exception)
         {
@@ -87,7 +96,7 @@ public class WeightListViewModel implements IDisposable
         final WeightRecord weightRecord = TryGetRecord(offset);
 
         return new WeightListItemViewModel(
-                _view,
+                _navigationRouter,
                 _dateTimeConverter,
                 _numericValueConverter,
                 weightRecord,
@@ -111,7 +120,7 @@ public class WeightListViewModel implements IDisposable
 
     public void CreateRecord()
     {
-        _view.NavigateToCreateView();
+        _navigationRouter.TryNavigateToCreateWeightRecord();
     }
 
     public void DeleteAll()
@@ -155,16 +164,6 @@ public class WeightListViewModel implements IDisposable
          * Notifies the {@link IWeightListView} that the item list has changed.
          */
         void OnListItemsChanged();
-
-        /**
-         * Navigates the user to a UI for creating a specific record.
-         */
-        void NavigateToCreateView();
-
-        /**
-         * Navigates the user to a UI for showing the details of a specific record.
-         */
-        void NavigateToDetailsView(UUID recordIdentifier);
 
         /**
          * Shows the user a UI that asks for confirmation to delete all records.

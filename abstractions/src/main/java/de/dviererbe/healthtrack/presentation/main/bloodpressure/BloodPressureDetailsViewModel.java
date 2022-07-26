@@ -24,6 +24,7 @@ import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.BloodPressureRecord;
 import de.dviererbe.healthtrack.domain.BloodPressureUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IBloodPressureWidgetRepository;
 import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
@@ -39,6 +40,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
     private static final String ErrorValue = "(error)";
 
     private final IBloodPressureDetailsView _view;
+    private final INavigationRouter _navigationRouter;
     private final IBloodPressureWidgetRepository _repository;
     private final UUID _recordIdentifier;
 
@@ -80,6 +82,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
 
     public BloodPressureDetailsViewModel(
             final IBloodPressureDetailsView view,
+            final INavigationRouter navigationRouter,
             final IBloodPressureWidgetRepository repository,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
@@ -87,6 +90,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
             final UUID recordIdentifier)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _recordIdentifier = recordIdentifier;
 
@@ -189,7 +193,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
     {
         if (_recordIdentifier == null) return;
 
-        _view.NavigateToEditView(_recordIdentifier);
+        _navigationRouter.TryNavigateToEditBloodPressureRecord(_recordIdentifier);
     }
 
     public void Delete()
@@ -211,7 +215,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
                     return;
                 }
 
-                _view.GoBack();
+                _navigationRouter.TryNavigateBack();
             }
         });
     }
@@ -235,21 +239,11 @@ public class BloodPressureDetailsViewModel implements IDisposable
         void NotifyUserThatRecordCouldNotBeDeleted();
 
         /**
-         * Navigates the user to a UI for editing a specific weight record.
-         */
-        void NavigateToEditView(UUID record);
-
-        /**
          * Shows the user a dialog to pick confirm that the record should be deleted.
          *
          * @param callback a reference to a callback mechanism when the user made a decision.
          */
         void ShowConfirmDeleteDialog(IConfirmDeleteDialogObserver callback);
-
-        /**
-         * The view should navigate up in the navigation stack.
-         */
-        void GoBack();
 
         /**
          * Callback mechanism for when the confirm delete dialog exits.

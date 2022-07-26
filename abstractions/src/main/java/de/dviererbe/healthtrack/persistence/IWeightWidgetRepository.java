@@ -28,8 +28,24 @@ import java.util.UUID;
 /**
  * A storage mechanism for the weight widget data.
  */
-public interface IWeightWidgetRepository extends IDisposable
+public interface IWeightWidgetRepository extends
+        IRepository<WeightRecord, IWeightWidgetRepository.RepositoryException>,
+        IDisposable
 {
+    /**
+     * Gets the name of the weight widget repository provider.
+     *
+     * @return {@link String} representation of the weight widget repository provider name.
+     */
+    String GetProviderName();
+
+    /**
+     * Gets the version of the weight widget repository provider.
+     *
+     * @return {@link String} representation of the weight widget repository provider version.
+     */
+    String GetProviderVersion();
+
     /**
      * Gets the count of all stored records.
      *
@@ -37,7 +53,7 @@ public interface IWeightWidgetRepository extends IDisposable
      * @throws RepositoryDisposed when the repository was already disposed.
      * @throws RepositoryException when an unexpected I/O error occurs.
      */
-    int GetRecordCount() throws
+    long GetRecordCount() throws
             RepositoryDisposed,
             RepositoryException;
 

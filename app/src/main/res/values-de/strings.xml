@@ -51,6 +51,12 @@
     <string name="pound_short">lb</string>
     <string name="kilopascal_short">kPa</string>
     <string name="millimetreofmercury_short">mmHg</string>
+    <string name="beatsperminute_short">bpm</string>
+    <string name="steps">Schritte</string>
+
+    <string name="medication_state_none">keine</string>
+    <string name="medication_state_taken">eingenommen</string>
+    <string name="medication_state_not_taken">nicht eingenommen</string>
 
     <string name="weight_list_actions_create">Hinzufügen</string>
     <string name="weight_list_actions_reset">Alle löschen</string>
@@ -89,6 +95,12 @@
     <string name="food_list_actions_create">Hinzufügen</string>
     <string name="food_list_actions_reset">Alle löschen</string>
 
+    <string name="steps_editdefaultstepcountgoal_header">Ziel bearbeiten</string>
+    <string name="steps_editdefaultstepcountgoal_goal_title">Standard Schrittanzahl Ziel (pro Tag)</string>
+    <string name="steps_editdefaultstepcountgoal_goal_error">Ungültiger Wert.</string>
+    <string name="steps_editdefaultstepcountgoal_btn_save">Speichern</string>
+    <string name="steps_editdefaultstepcountgoal_notifications_saveerror">Der >Standard Schrittanzahl Ziel (pro Tag) konnte nicht gespeichert werden, weil ein Fehler aufgetreten ist.</string>
+
     <string name="steps_list_actions_create">Hinzufügen</string>
     <string name="steps_list_actions_reset">Alle löschen</string>
     <string name="steps_list_actions_change_default_stepgoal">Standard Schrittanzahl Ziel ändern</string>
@@ -99,8 +111,77 @@
     <string name="steps_list_dialog_delete_confirm">Bestätigen</string>
     <string name="steps_list_dialog_delete_cancel">Abbrechen</string>
 
+    <string name="steps_details_actions_edit">Edit</string>
+    <string name="steps_details_actions_delete">Delete</string>
+    <string name="steps_details_header">Details</string>
+    <string name="stepcount_details_title_step_count">Step Count</string>
+    <string name="stepcount_details_title_goal">Goal</string>
+    <string name="steps_details_title_created">Created</string>
+    <string name="steps_details_notifications_delete_failure">Failed to delete record due to an error.</string>
+    <string name="steps_details_dialog_delete_title">Delete record?</string>
+    <string name="steps_details_dialog_delete_message">Should the record be deleted? This action can\'t be reversed.
+    </string>
+    <string name="steps_details_dialog_delete_confirm">Bestätigen</string>
+    <string name="steps_details_dialog_delete_cancel">Abbrechen</string>
+
+    <string name="steps_merge_header_create">Erstellen</string>
+    <string name="steps_merge_header_update">Bearbeiten</string>
+    <string name="steps_merge_title_stepcount">Schritte</string>
+    <string name="steps_merge_title_goal">Tagesziel</string>
+    <string name="steps_merge_error_stepcount">Der eingegebene Wert ist ungültig.</string>
+    <string name="steps_merge_error_Goal">Der eingegebene Wert ist ungültig.</string>
+    <string name="steps_merge_information_loading_failed">Der Datensatz konnte nicht geladen werden, weil ein Fehler aufgetreten ist.</string>
+    <string name="steps_merge_title_DateTime">Datum &amp; Uhrzeit</string>
+    <string name="steps_merge_button_now">Jetzt</string>
+    <string name="steps_merge_button_create">Erstellen</string>
+    <string name="steps_merge_button_update">Speichern</string>
+    <string name="steps_merge_notifications_creation_failed">Der Datensatz konnte nicht erstellt werden.</string>
+    <string name="steps_merge_notifications_update_failed">Der Datensatz konnte nicht gespeichert werden.</string>
+
     <string name="bloodpressure_list_actions_create">Hinzufügen</string>
     <string name="bloodpressure_list_actions_reset">Alle löschen</string>
+    <string name="bloodpressure_list_notifications_delete_success">Datensätze wurden erfolgreich gelöscht</string>
+    <string name="bloodpressure_list_notifications_delete_failure">Datensätze konnten nicht gelöscht werden.</string>
+    <string name="bloodpressure_list_dialog_delete_title">Blutdruck Datensätze löschen?</string>
+    <string name="bloodpressure_list_dialog_delete_message">Sollen alle Blutdruck Datensätze gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="bloodpressure_list_dialog_delete_confirm">Bestätigen</string>
+    <string name="bloodpressure_list_dialog_delete_cancel">Abbrechen</string>
+
+    <string name="bloodpressure_details_actions_edit">Bearbeiten</string>
+    <string name="bloodpressure_details_actions_delete">Löschen</string>
+    <string name="bloodpressure_details_header">Details</string>
+    <string name="bloodpressure_details_title_systolic">Systolisch</string>
+    <string name="bloodpressure_details_title_diastolic">Diastolisch</string>
+    <string name="bloodpressure_details_title_pulse">Puls</string>
+    <string name="bloodpressure_details_title_medication">Medikamente</string>
+    <string name="bloodpressure_details_title_created">Erstellt</string>
+    <string name="bloodpressure_details_title_note">Notiz</string>
+    <string name="bloodpressure_details_warning_concerted">(umgewandelt)</string>
+    <string name="bloodpressure_details_notifications_delete_failure">Datensatz konnte nicht gelöscht werden, weiol ein Fehler aufgetreten ist.</string>
+    <string name="bloodpressure_details_dialog_delete_title">Datensatz löschen?</string>
+    <string name="bloodpressure_details_dialog_delete_message">Soll der Datensatz gelöscht werden? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="bloodpressure_details_dialog_delete_confirm">Bestätigen</string>
+    <string name="bloodpressure_details_dialog_delete_cancel">Abbrechen</string>
+
+    <string name="bloodpressure_merge_header_create">Hinzufügen</string>
+    <string name="bloodpressure_merge_header_update">Bearbeiten</string>
+    <string name="bloodpressure_merge_button_now">Jetzt</string>
+    <string name="bloodpressure_merge_button_create">Erstellen</string>
+    <string name="bloodpressure_merge_button_update">Speichern</string>
+    <string name="bloodpressure_merge_title_systolic">Systolisch</string>
+    <string name="bloodpressure_merge_title_diastolic">Diastolisch</string>
+    <string name="bloodpressure_merge_title_unit">Einheit</string>
+    <string name="bloodpressure_merge_title_pulse">Puls</string>
+    <string name="bloodpressure_merge_title_medication">Medikamente</string>
+    <string name="bloodpressure_merge_title_datetime">Datum &amp; Uhrzeit</string>
+    <string name="bloodpressure_merge_title_note">Notiz</string>
+    <string name="bloodpressure_merge_error_systolic_value_invalid">Der eingegebene systolische Wert ist ungültig.</string>
+    <string name="bloodpressure_merge_error_diastolic_value_invalid">Der eingegebene diastolische Wert ist ungültig.</string>
+    <string name="bloodpressure_merge_error_pulse_value_invalid">Der eingegebene Puls Wert ist ungültig.</string>
+    <string name="bloodpressure_merge_button_pick">Auswählen</string>
+    <string name="bloodpressure_merge_information_loading_failed">Datensatz konnte nicht geladen werden</string>
+    <string name="bloodpressure_merge_notifications_creation_failed">Datensatz konnte nicht erstellt werden.</string>
+    <string name="bloodpressure_merge_notifications_update_failed">Datensatz konnte nicht gespeichert werden.</string>
 
     <string name="bloodsugar_list_actions_create">Hinzufügen</string>
     <string name="bloodsugar_list_actions_reset">Alle löschen</string>
@@ -149,6 +230,7 @@
     <string name="settings_user_data_delete_notification_failure">Beim löschen der Benutzerdaten ist ein Fehler aufgetreten.</string>
 
     <string name="day_summary_unknown_day">Unbekannter Tag</string>
+    <string name="day_summary_unknown_today">Heute</string>
     <string name="day_summary_food">Essen</string>
     <string name="day_summary_steps">Schritte</string>
     <string name="day_summary_weight">Gewicht</string>

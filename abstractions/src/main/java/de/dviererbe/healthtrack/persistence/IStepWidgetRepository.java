@@ -28,9 +28,24 @@ import java.util.List;
 /**
  * A storage mechanism for the steps widget data.
  */
-public interface IStepWidgetRepository extends IDisposable
-
+public interface IStepWidgetRepository extends
+        IRepository<StepCountRecord, IStepWidgetRepository.RepositoryException>,
+        IDisposable
 {
+    /**
+     * Gets the name of the step widget repository provider.
+     *
+     * @return {@link String} representation of the step widget repository provider name.
+     */
+    String GetProviderName();
+
+    /**
+     * Gets the version of the step widget repository provider.
+     *
+     * @return {@link String} representation of the step widget repository provider version.
+     */
+    String GetProviderVersion();
+
     /**
      * Gets the default step count goal for a day.
      *
@@ -74,7 +89,7 @@ public interface IStepWidgetRepository extends IDisposable
      * @throws RepositoryDisposed when the repository was already disposed.
      * @throws RepositoryException when an unexpected I/O error occurs.
      */
-    int GetRecordCount() throws
+    long GetRecordCount() throws
             RepositoryDisposed,
             RepositoryException;
 

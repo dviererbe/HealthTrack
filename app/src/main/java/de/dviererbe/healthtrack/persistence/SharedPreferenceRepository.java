@@ -166,7 +166,7 @@ public class SharedPreferenceRepository implements
     @Override
     public BloodPressureUnit GetPreferredBloodPressureUnit()
     {
-        final String preferredBloodPressureUnit = GetString("unit_bloodpressure", "Kilopascal");
+        final String preferredBloodPressureUnit = GetString("unit_bloodpressure", "MillimetreOfMercury");
 
         switch (preferredBloodPressureUnit)
         {
@@ -250,7 +250,7 @@ public class SharedPreferenceRepository implements
     @Override
     public boolean IsBloodSugarWidgetEnabled()
     {
-        return GetBoolean(IsBloodSugarWidgetEnabledPreferenceKey, true);
+        return GetBoolean(IsBloodSugarWidgetEnabledPreferenceKey, false);
     }
 
     /**

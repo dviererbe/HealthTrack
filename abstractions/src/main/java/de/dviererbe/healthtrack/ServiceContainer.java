@@ -18,20 +18,20 @@
 
 package de.dviererbe.healthtrack;
 
-import de.dviererbe.healthtrack.application.SetUIThemeWhenUserPreferenceChanges;
+import de.dviererbe.healthtrack.application.SetUIThemeWhenUserPreferenceChangesBehaviour;
 import de.dviererbe.healthtrack.persistence.IPreferredThemeRepository;
 import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
 
 public class ServiceContainer
 {
-    private final SetUIThemeWhenUserPreferenceChanges _setUIThemeWhenUserPreferenceChanges;
+    private final SetUIThemeWhenUserPreferenceChangesBehaviour _setUIThemeWhenUserPreferenceChanges;
 
     public ServiceContainer(IDependencyResolver dependencyResolver)
     {
         IUIThemeSetter uiThemeSetter = dependencyResolver.GetUIThemeSetter();
         IPreferredThemeRepository preferredThemeRepository = dependencyResolver.GetPreferredThemeRepository();
 
-        _setUIThemeWhenUserPreferenceChanges = new SetUIThemeWhenUserPreferenceChanges(
+        _setUIThemeWhenUserPreferenceChanges = new SetUIThemeWhenUserPreferenceChangesBehaviour(
                 uiThemeSetter,
                 preferredThemeRepository);
     }

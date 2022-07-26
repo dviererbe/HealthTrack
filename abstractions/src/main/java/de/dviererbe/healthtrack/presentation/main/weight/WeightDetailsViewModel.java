@@ -22,6 +22,7 @@ import android.util.Log;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IWeightWidgetRepository;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
@@ -36,6 +37,7 @@ public class WeightDetailsViewModel implements IDisposable
 
     private final IWeightDetailsView _view;
 
+    private final INavigationRouter _navigationRouter;
     private final IWeightWidgetRepository _repository;
 
     private final UUID _recordIdentifier;
@@ -45,12 +47,14 @@ public class WeightDetailsViewModel implements IDisposable
 
     public WeightDetailsViewModel(
         final IWeightDetailsView view,
+        final INavigationRouter navigationRouter,
         final IWeightWidgetRepository weightWidgetRepository,
         final IDateTimeConverter dateTimeConverter,
         final INumericValueConverter numericValueConverter,
         final UUID recordIdentifier)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = weightWidgetRepository;
         _recordIdentifier = recordIdentifier;
 
@@ -74,7 +78,7 @@ public class WeightDetailsViewModel implements IDisposable
 
     public void Edit()
     {
-        _view.NavigateToEditView(_recordIdentifier);
+        _navigationRouter.TryNavigateToEditWeightRecord(_recordIdentifier);
     }
 
     public void Delete()
@@ -94,7 +98,7 @@ public class WeightDetailsViewModel implements IDisposable
                     return;
                 }
 
-                _view.GoBack();
+                _navigationRouter.TryNavigateBack();
             }
         });
     }
@@ -118,21 +122,11 @@ public class WeightDetailsViewModel implements IDisposable
         void NotifyUserThatRecordCouldNotBeDeleted();
 
         /**
-         * Navigates the user to a UI for editing a specific weight record.
-         */
-        void NavigateToEditView(UUID record);
-
-        /**
          * Shows the user a dialog to confirm that the record should be deleted.
          *
          * @param callback a reference to a callback mechanism when the user made a decision.
          */
         void ShowConfirmDeleteDialog(IConfirmDeleteDialogObserver callback);
-
-        /**
-         * The view should navigate up in the navigation stack.
-         */
-        void GoBack();
 
         /**
          * Callback mechanism for when the confirm delete dialog exits.

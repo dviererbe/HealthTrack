@@ -19,10 +19,8 @@
 package de.dviererbe.healthtrack;
 
 import de.dviererbe.healthtrack.application.DeleteAllUserDataOperation;
-import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
-import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
-import de.dviererbe.healthtrack.infrastructure.IUserDataExporter;
-import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
+import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
+import de.dviererbe.healthtrack.infrastructure.*;
 import de.dviererbe.healthtrack.persistence.*;
 import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
 
@@ -31,6 +29,13 @@ import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
  */
 public interface IDependencyResolver extends IDisposable
 {
+    /**
+     * Resolves an {@link ILogger} implementation.
+     *
+     * @return {@link ILogger} implementation
+     */
+    ILogger GetLogger();
+
     /**
      * Resolves an {@link IDateTimeProvider} implementation.
      *
@@ -53,18 +58,22 @@ public interface IDependencyResolver extends IDisposable
     INumericValueConverter GetNumericValueConverter();
 
     /**
-     * Initializes an {@link DeleteAllUserDataOperation} implementation.
+     * Initializes an {@link ExportUserDataAsJsonOperation} instance.
      *
-     * @return {@link DeleteAllUserDataOperation} implementation
+     * @param options Specifies which data should be exported.
+     * @param userDataJsonFileOutputStreamProvider Mechanism for opening a json file stream.
+     * @return Initialized {@link ExportUserDataAsJsonOperation} instance.
      */
-    DeleteAllUserDataOperation CreateDeleteAllUserDataOperation();
+    ExportUserDataAsJsonOperation CreateExportUserDataAsJsonOperation(
+            final ExportUserDataAsJsonOperation.Options options,
+            final IUserDataJsonFileOutputStreamProvider userDataJsonFileOutputStreamProvider);
 
     /**
-     * Initializes an {@link IUserDataExporter} implementation.
+     * Initializes an {@link DeleteAllUserDataOperation} instance.
      *
-     * @return {@link IUserDataExporter} implementation
+     * @return {@link DeleteAllUserDataOperation} instance
      */
-    IUserDataExporter CreateUserDataExporter();
+    DeleteAllUserDataOperation CreateDeleteAllUserDataOperation();
 
     /**
      * Resolves an {@link IPreferredThemeRepository} implementation.

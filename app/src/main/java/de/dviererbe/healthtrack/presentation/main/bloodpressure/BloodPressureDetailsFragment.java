@@ -26,15 +26,17 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.fragment.NavHostFragment;
 import de.dviererbe.healthtrack.R;
 import de.dviererbe.healthtrack.databinding.FragmentBloodpressureDetailsBinding;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.presentation.FragmentBase;
 import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureDetailsViewModel.IBloodPressureDetailsView;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class BloodPressureDetailsFragment
         extends FragmentBase
-        implements IBloodPressureDetailsView
+        implements IBloodPressureDetailsView, INavigationRouter
 {
     private static final String PARAM_Identifier = "Identifier";
 
@@ -79,7 +81,7 @@ public class BloodPressureDetailsFragment
             Bundle savedInstanceState)
     {
         _viewModel = GetViewModelFactory().CreateBloodPressureDetailsViewModel(
-                getLifecycle(), this, _recordIdentifier);
+                getLifecycle(), this, this, _recordIdentifier);
 
         _binding = FragmentBloodpressureDetailsBinding.inflate(inflater, container, false);
         _binding.setViewModel(_viewModel);
@@ -93,7 +95,7 @@ public class BloodPressureDetailsFragment
     @Override
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater)
     {
-        inflater.inflate(R.menu.fragment_weight_details_actions, menu);
+        inflater.inflate(R.menu.fragment_bloodpressure_details_actions, menu);
     }
 
     /**
@@ -104,10 +106,10 @@ public class BloodPressureDetailsFragment
     {
         switch (item.getItemId())
         {
-            case R.id.action_steps_details_edit:
+            case R.id.action_bloodpressure_details_edit:
                 _viewModel.Edit();
                 return true;
-            case R.id.action_steps_details_delete:
+            case R.id.action_bloodpressure_details_delete:
                 _viewModel.Delete();
                 return true;
             default:
@@ -122,21 +124,6 @@ public class BloodPressureDetailsFragment
     public void NotifyUserThatRecordCouldNotBeDeleted()
     {
         ShowToastWithLongDuration(R.string.steps_details_notifications_delete_failure);
-    }
-
-    /**
-     * Navigates the user to a UI for editing a specific blood pressure record.
-     *
-     * @param recordIdentifier  the identifier of the record
-     */
-    @Override
-    public void NavigateToEditView(final UUID recordIdentifier)
-    {
-        final Bundle parameter = BloodPressureMergeFragment.BundleParameter(recordIdentifier);
-
-        NavHostFragment
-                .findNavController(this)
-                .navigate(R.id.action_nav_bloodPressureDetailsFragment_to_bloodPressureMergeFragment, parameter);
     }
 
     /**
@@ -169,11 +156,159 @@ public class BloodPressureDetailsFragment
     }
 
     /**
-     * The view should navigate up in the navigation stack.
+     * Tries to navigate to the user settings UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
     @Override
-    public void GoBack()
+    public boolean TryNavigateToSettings()
     {
-        NavHostFragment.findNavController(this).popBackStack();
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create blood pressure record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateBloodPressureRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the blood pressure record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToBloodPressureRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit blood pressure record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditBloodPressureRecord(UUID recordIdentifier)
+    {
+        try
+        {
+            final Bundle parameter = BloodPressureMergeFragment.BundleParameter(recordIdentifier);
+
+            NavHostFragment
+                .findNavController(this)
+                .navigate(R.id.action_nav_bloodPressureDetailsFragment_to_bloodPressureMergeFragment, parameter);
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Tries to navigate to the default step count goal editor user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToDefaultStepCountGoalEditor()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create step count record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateStepCountRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the step count record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit step count record user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create weight record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateWeightRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the weight record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToWeightRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit weight record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditWeightRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the preceding UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateBack()
+    {
+        return TryGoBack();
     }
 }

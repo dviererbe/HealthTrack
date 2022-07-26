@@ -83,6 +83,28 @@ public class BloodSugarWidgetSQLiteRepository
     }
 
     /**
+     * Gets the name of the blood sugar widget repository provider.
+     *
+     * @return {@link String} representation of the blood sugar widget repository provider name.
+     */
+    @Override
+    public String GetProviderName()
+    {
+        return getClass().getName();
+    }
+
+    /**
+     * Gets the version of the blood sugar widget repository provider.
+     *
+     * @return {@link String} representation of the blood sugar widget repository provider version.
+     */
+    @Override
+    public String GetProviderVersion()
+    {
+        return String.valueOf(DatabaseVersion);
+    }
+
+    /**
      * Deletes all records.
      *
      * @throws RepositoryDisposed  when the repository was already disposed.

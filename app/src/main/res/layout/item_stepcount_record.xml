@@ -30,7 +30,7 @@
             android:layout_margin="8dp"
             android:padding="16dp"
             card_view:cardCornerRadius="8dp"
-            android:onClick="@{() -> ViewModel.ShowDetails()}">
+            android:onClick="@{() -> ViewModel.RunContextAction()}">
 
         <LinearLayout
                 android:layout_width="match_parent"

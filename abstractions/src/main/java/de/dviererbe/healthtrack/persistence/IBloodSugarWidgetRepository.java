@@ -19,12 +19,28 @@
 package de.dviererbe.healthtrack.persistence;
 
 import de.dviererbe.healthtrack.IDisposable;
+import de.dviererbe.healthtrack.domain.BloodPressureRecord;
+import de.dviererbe.healthtrack.domain.BloodSugarRecord;
 
 /**
  * A storage mechanism for the blood sugar widget data.
  */
 public interface IBloodSugarWidgetRepository extends IDisposable
 {
+    /**
+     * Gets the name of the blood sugar widget repository provider.
+     *
+     * @return {@link String} representation of the blood sugar widget repository provider name.
+     */
+    String GetProviderName();
+
+    /**
+     * Gets the version of the blood sugar widget repository provider.
+     *
+     * @return {@link String} representation of the blood sugar widget repository provider version.
+     */
+    String GetProviderVersion();
+
     /**
      * Deletes all records.
      *

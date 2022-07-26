@@ -22,6 +22,7 @@ import android.util.Log;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.StepCountRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
 
@@ -33,17 +34,20 @@ public class StepCountListViewModel implements IDisposable
     private final static String TAG = "StepCountListViewModel";
 
     private final IStepCountListView _view;
+    private final INavigationRouter _navigationRouter;
     private final IStepWidgetRepository _repository;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
 
     public StepCountListViewModel(
             final IStepCountListView view,
+            final INavigationRouter navigationRouter,
             final IStepWidgetRepository repository,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
@@ -53,7 +57,12 @@ public class StepCountListViewModel implements IDisposable
     {
         try
         {
-            return _repository.GetRecordCount();
+            final long recordCount = _repository.GetRecordCount();
+
+            if (recordCount > Integer.MAX_VALUE)
+                return Integer.MAX_VALUE;
+            else
+                return (int)recordCount;
         }
         catch (Exception exception)
         {
@@ -65,9 +74,10 @@ public class StepCountListViewModel implements IDisposable
     public StepCountListItemViewModel GetRecord(int offset)
     {
         final StepCountRecord stepCountRecord = TryGetRecord(offset);
+        final int defaultStepCountGoal = TryGetDefaultStepCountGoal();
 
         return new StepCountListItemViewModel(
-                _view,
+                _navigationRouter,
                 _dateTimeConverter,
                 _numericValueConverter,
                 stepCountRecord);
@@ -88,9 +98,23 @@ public class StepCountListViewModel implements IDisposable
         }
     }
 
+    private int TryGetDefaultStepCountGoal()
+    {
+        try
+        {
+            // TODO: implement caching solution
+            return _repository.GetDefaultStepCountGoal();
+        }
+        catch (Exception exception)
+        {
+            Log.d(TAG, "Failed to load default step count goal.", exception);
+            return 5000;
+        }
+    }
+
     public void CreateRecord()
     {
-        _view.NavigateToCreateView();
+        _navigationRouter.TryNavigateToCreateStepCountRecord();
     }
 
     public void DeleteAll()
@@ -116,6 +140,11 @@ public class StepCountListViewModel implements IDisposable
         });
     }
 
+    public void EditDefaultStepCountGoal()
+    {
+        _navigationRouter.TryNavigateToDefaultStepCountGoalEditor();
+    }
+
     /**
      * Performs application-defined tasks associated with freeing, releasing, or resetting resources.
      */
@@ -134,16 +163,6 @@ public class StepCountListViewModel implements IDisposable
          * Notifies the {@link IStepCountListView} that the item list has changed.
          */
         void OnListItemsChanged();
-
-        /**
-         * Navigates the user to a UI for creating a specific record.
-         */
-        void NavigateToCreateView();
-
-        /**
-         * Navigates the user to a UI for showing the details of a specific day.
-         */
-        void NavigateToDetailsView(LocalDate day);
 
         /**
          * Shows the user a UI that asks for confirmation to delete all records.

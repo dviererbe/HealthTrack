@@ -18,27 +18,213 @@
 
 package de.dviererbe.healthtrack.presentation.main.home;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import android.util.Log;
 import de.dviererbe.healthtrack.IDisposable;
+import de.dviererbe.healthtrack.domain.*;
+import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
+import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
+import de.dviererbe.healthtrack.persistence.*;
+import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureListItemViewModel;
+import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListItemViewModel;
+import de.dviererbe.healthtrack.presentation.main.weight.WeightListItemViewModel;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class HomeViewModel implements IDisposable
 {
-    private final MutableLiveData<List<DaySummaryViewModel>> _daySummaries;
+    private static final String TAG = "HomeViewModel";
+    public final BloodPressureListItemViewModel LatestBloodPressureOfToday;
+    public final StepCountListItemViewModel StepCountOfToday;
+    public final WeightListItemViewModel LatestWeightOfToday;
 
-    public HomeViewModel()
+    public HomeViewModel(
+        final INavigationRouter navigationRouter,
+        final IDateTimeProvider dateTimeProvider,
+        final IBloodPressureWidgetRepository bloodPressureWidgetRepository,
+        final IStepWidgetRepository stepWidgetRepository,
+        final IWeightWidgetRepository weightWidgetRepository,
+        final IPreferredUnitRepository preferredUnitRepository,
+        final IDateTimeConverter dateTimeConverter,
+        final INumericValueConverter numericValueConverter,
+        final IWidgetConfigurationRepository widgetConfigurationRepository)
     {
-        ArrayList<DaySummaryViewModel> daySummaries = new ArrayList<DaySummaryViewModel>();
-        daySummaries.add(new DaySummaryViewModel(new Date(), 312, 5000));
+        final LocalDate today = dateTimeProvider.Today();
 
-        DaySummaries = _daySummaries = new MutableLiveData<>(daySummaries);
+        if (widgetConfigurationRepository.IsBloodPressureWidgetEnabled())
+        {
+            final BloodPressureUnit preferredUnit = preferredUnitRepository
+                    .GetPreferredBloodPressureUnit()
+                    .ToDomainBloodPressureUnit();
+
+            final BloodPressureRecord latestBloodPressureRecordOfToday
+                = TryGetLatestBloodPressureRecordOfToday(today, bloodPressureWidgetRepository);
+
+            if (latestBloodPressureRecordOfToday == null)
+            {
+                LatestBloodPressureOfToday =
+                    new BloodPressureListItemViewModel(
+                        navigationRouter,
+                        numericValueConverter,
+                        preferredUnit);
+            }
+            else
+            {
+                LatestBloodPressureOfToday =
+                    new BloodPressureListItemViewModel(
+                        navigationRouter,
+                        dateTimeConverter,
+                        numericValueConverter,
+                        latestBloodPressureRecordOfToday,
+                        preferredUnit);
+            }
+        }
+        else
+        {
+            LatestBloodPressureOfToday = null;
+        }
+
+        if (widgetConfigurationRepository.IsStepCounterWidgetEnabled())
+        {
+            final StepCountRecord stepCountRecordOfToday
+                = TryGetStepCountRecordOfToday(today, stepWidgetRepository);
+
+            if (stepCountRecordOfToday == null)
+            {
+                final int defaultStepCountGoal = TryGetDefaultStepCountGoal(stepWidgetRepository);
+
+                StepCountOfToday =
+                    new StepCountListItemViewModel(
+                        navigationRouter,
+                        numericValueConverter,
+                        defaultStepCountGoal);
+            }
+            else
+            {
+                StepCountOfToday =
+                    new StepCountListItemViewModel(
+                        navigationRouter,
+                        dateTimeConverter,
+                        numericValueConverter,
+                        stepCountRecordOfToday);
+            }
+        }
+        else
+        {
+            StepCountOfToday = null;
+        }
+
+        if (widgetConfigurationRepository.IsWeightWidgetEnabled())
+        {
+            final WeightUnit preferredUnit = preferredUnitRepository
+                .GetPreferredMassUnit()
+                .ToDomainWeightUnit();
+
+            final WeightRecord latestWeightRecordOfToday
+                = TryGetLatestWeightRecordOfToday(today, weightWidgetRepository);
+
+            if (latestWeightRecordOfToday == null)
+            {
+                LatestWeightOfToday =
+                    new WeightListItemViewModel(
+                        navigationRouter,
+                        numericValueConverter,
+                        preferredUnit);
+            }
+            else
+            {
+                LatestWeightOfToday =
+                    new WeightListItemViewModel(
+                        navigationRouter,
+                        dateTimeConverter,
+                        numericValueConverter,
+                        latestWeightRecordOfToday,
+                        preferredUnit);
+            }
+        }
+        else
+        {
+            LatestWeightOfToday = null;
+        }
+
+
+
     }
 
-    public final LiveData<List<DaySummaryViewModel>> DaySummaries;
+    private static BloodPressureRecord TryGetLatestBloodPressureRecordOfToday(
+            final LocalDate today,
+            final IBloodPressureWidgetRepository repository)
+    {
+        try
+        {
+            final List<BloodPressureRecord> recordsOfToday =
+                    repository.GetRecordsForDayDescending(today);
+
+            return  recordsOfToday.size() >= 1
+                    ? recordsOfToday.get(0)
+                    : null;
+        }
+        catch (Exception exception)
+        {
+            Log.e(TAG, "Failed to read latest blood pressure record of today.", exception);
+            return null;
+        }
+    }
+
+    private static StepCountRecord TryGetStepCountRecordOfToday(
+            final LocalDate today,
+            final IStepWidgetRepository repository)
+    {
+        try
+        {
+            return repository.GetRecordForDay(today);
+        }
+        catch (IStepWidgetRepository.RecordNotFound exception)
+        {
+            return null;
+        }
+        catch (Exception exception)
+        {
+            Log.e(TAG, "Failed to read the step count record of today.", exception);
+            return null;
+        }
+    }
+
+    private static int TryGetDefaultStepCountGoal(final IStepWidgetRepository repository)
+    {
+        try
+        {
+            return repository.GetDefaultStepCountGoal();
+        }
+        catch (Exception exception)
+        {
+            Log.e(TAG, "Failed to read default step count goal.", exception);
+            return 5000;
+        }
+    }
+
+    private static WeightRecord TryGetLatestWeightRecordOfToday(
+            final LocalDate today,
+            final IWeightWidgetRepository repository)
+    {
+        try
+        {
+            final List<WeightRecord> recordsOfToday =
+                    repository.GetRecordsForDayDescending(today);
+
+            return  recordsOfToday.size() >= 1
+                    ? recordsOfToday.get(0)
+                    : null;
+        }
+        catch (Exception exception)
+        {
+            Log.e(TAG, "Failed to read latest weight record of today.", exception);
+            return null;
+        }
+    }
+
 
     /**
      * Performs application-defined tasks associated with freeing, releasing, or resetting resources.

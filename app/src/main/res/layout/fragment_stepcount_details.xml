@@ -55,9 +55,9 @@
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="24dp"
                     android:textSize="16sp"
-                    android:text="@{ViewModel.GoalReachedPercentageText + ` &#37;`, default=`{Percent}`}" />
+                    android:text="@{ViewModel.GoalReachedPercentageText + ` \u0025`, default=`{Percent}`}" />
         </LinearLayout>
 
         <!-- Goal -->
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="24sp"
-                android:text="@{ViewModel.StepCount + ` ` + @string/steps, default=`{StepCount}`}" />
+                android:text="@{ViewModel.Goal + ` ` + @string/steps, default=`{Goal}`}" />
 
         <!-- TimeOfMeasurement -->
         <TextView

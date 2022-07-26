@@ -20,6 +20,7 @@ package de.dviererbe.healthtrack;
 
 import android.content.Context;
 import de.dviererbe.healthtrack.application.DeleteAllUserDataOperation;
+import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
 import de.dviererbe.healthtrack.infrastructure.*;
 import de.dviererbe.healthtrack.persistence.*;
 import de.dviererbe.healthtrack.presentation.AndroidUIThemeSetter;
@@ -30,14 +31,13 @@ import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
  */
 public class ApplicationContextDependencyResolver implements IDependencyResolver
 {
+    private final AndroidUtilsLogger _logger;
     private final SystemDateTimeProvider _dateTimeProvider;
     private final ApplicationContextLocaleAwareValueConverter _valueConverter;
     private final ApplicationContextLocaleAwareDateTimeConverter _dateTimeConverter;
     private final ViewModelFactory _viewModelFactory;
     private final AndroidUIThemeSetter _androidUIThemeSetter;
     private final SharedPreferenceRepository _sharedPreferenceRepository;
-
-    private final ApplicationContextContentResolver _contentResolver;
 
     // User Data Repositories
     private final WeightWidgetSQLiteRepository _weightWidgetRepository;
@@ -53,19 +53,30 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
      */
     public ApplicationContextDependencyResolver(Context applicationContext)
     {
+        _logger = new AndroidUtilsLogger();
         _dateTimeProvider = new SystemDateTimeProvider();
         _dateTimeConverter = new ApplicationContextLocaleAwareDateTimeConverter(applicationContext);
         _valueConverter = new ApplicationContextLocaleAwareValueConverter(applicationContext);
         _viewModelFactory = new ViewModelFactory(this);
         _androidUIThemeSetter = new AndroidUIThemeSetter();
         _sharedPreferenceRepository = SharedPreferenceRepository.FromContext(applicationContext);
-        _contentResolver = new ApplicationContextContentResolver(applicationContext);
 
         _foodWidgetRepository = null; //new FoodWidgetSQLiteRepository(applicationContext);
         _weightWidgetRepository = new WeightWidgetSQLiteRepository(applicationContext);
         _stepsWidgetRepository = new StepWidgetSQLiteRepository(applicationContext);
         _bloodPressureWidgetRepository = new BloodPressureWidgetSQLiteRepository(applicationContext);
         _bloodSugarWidgetRepository = null; //new BloodSugarWidgetSQLiteRepository(applicationContext);
+    }
+
+    /**
+     * Resolves an {@link ILogger} implementation.
+     *
+     * @return {@link ILogger} implementation
+     */
+    @Override
+    public ILogger GetLogger()
+    {
+        return _logger;
     }
 
     /**
@@ -102,6 +113,31 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
     }
 
     /**
+     * Initializes an {@link ExportUserDataAsJsonOperation} instance.
+     *
+     * @param options                              Specifies which data should be exported.
+     * @param userDataJsonFileOutputStreamProvider Mechanism for opening a json file stream.
+     * @return Initialized {@link ExportUserDataAsJsonOperation} instance.
+     */
+    @Override
+    public ExportUserDataAsJsonOperation CreateExportUserDataAsJsonOperation(
+            ExportUserDataAsJsonOperation.Options options,
+            IUserDataJsonFileOutputStreamProvider userDataJsonFileOutputStreamProvider)
+    {
+        return new ExportUserDataAsJsonOperation(
+            options,
+            userDataJsonFileOutputStreamProvider,
+            CreateBloodPressureWidgetRepository(),
+            CreateBloodSugarWidgetRepository(),
+            CreateFoodWidgetRepository(),
+            CreateStepWidgetRepository(),
+            CreateWeightWidgetRepository(),
+            GetDateTimeProvider(),
+            GetLogger());
+    }
+
+
+    /**
      * Initializes an {@link DeleteAllUserDataOperation} implementation.
      *
      * @return {@link DeleteAllUserDataOperation} implementation
@@ -114,25 +150,8 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
             CreateWeightWidgetRepository(),
             CreateFoodWidgetRepository(),
             CreateBloodPressureWidgetRepository(),
-            CreateBloodSugarWidgetRepository());
-    }
-
-    /**
-     * Initializes an {@link IUserDataExporter} implementation.
-     *
-     * @return {@link IUserDataExporter} implementation
-     */
-    @Override
-    public IUserDataExporter CreateUserDataExporter()
-    {
-        return new UserDataJsonFileExporter(
-            _contentResolver,
-            CreateStepWidgetRepository(),
-            CreateWeightWidgetRepository(),
-            CreateFoodWidgetRepository(),
-            CreateBloodPressureWidgetRepository(),
             CreateBloodSugarWidgetRepository(),
-            GetDateTimeProvider());
+            GetLogger());
     }
 
     /**

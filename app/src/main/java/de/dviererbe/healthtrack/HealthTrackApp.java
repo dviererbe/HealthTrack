@@ -21,11 +21,17 @@ package de.dviererbe.healthtrack;
 import android.app.Activity;
 import android.app.Application;
 
+/**
+ * Represents the Apps entry point.
+ */
 public class HealthTrackApp extends Application
 {
     private IDependencyResolver _dependencyResolver;
     private ServiceContainer _serviceContainer;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate()
     {
@@ -46,8 +52,9 @@ public class HealthTrackApp extends Application
     }
 
     /**
+     * Gets the {@link IDependencyResolver} of the app.
      *
-     * @return
+     * @return {@link IDependencyResolver} instance of the app.
      */
     public IDependencyResolver GetDependencies()
     {
@@ -55,9 +62,10 @@ public class HealthTrackApp extends Application
     }
 
     /**
+     * Gets the dependency resolver via a activity.
      *
-     * @param activity
-     * @return
+     * @param activity The activity needed to retrieve the dependency resolver.
+     * @return The resolved {@link IDependencyResolver} instance.
      */
     public static IDependencyResolver GetDependenciesViaActivity(Activity activity)
     {

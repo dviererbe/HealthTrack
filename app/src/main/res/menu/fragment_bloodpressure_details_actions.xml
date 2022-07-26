@@ -21,6 +21,6 @@
         android:id="@+id/action_bloodpressure_details_edit"
         android:title="@string/bloodpressure_details_actions_edit"/>
     <item
-        android:id="@+id/bloodpressure_weight_details_delete"
+        android:id="@+id/action_bloodpressure_details_delete"
         android:title="@string/bloodpressure_details_actions_delete"/>
 </menu>

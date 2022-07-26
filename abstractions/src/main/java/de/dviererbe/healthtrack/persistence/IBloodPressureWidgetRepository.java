@@ -28,8 +28,24 @@ import java.util.UUID;
 /**
  * A storage mechanism for the blood pressure widget data.
  */
-public interface IBloodPressureWidgetRepository extends IDisposable
+public interface IBloodPressureWidgetRepository extends
+        IRepository<BloodPressureRecord, IBloodPressureWidgetRepository.RepositoryException>,
+        IDisposable
 {
+    /**
+     * Gets the name of the blood pressure widget repository provider.
+     *
+     * @return {@link String} representation of the blood pressure widget repository provider name.
+     */
+    String GetProviderName();
+
+    /**
+     * Gets the version of the blood pressure widget repository provider.
+     *
+     * @return {@link String} representation of the blood pressure widget repository provider version.
+     */
+    String GetProviderVersion();
+
     /**
      * Gets the count of all stored records.
      *
@@ -37,7 +53,7 @@ public interface IBloodPressureWidgetRepository extends IDisposable
      * @throws RepositoryDisposed when the repository was already disposed.
      * @throws RepositoryException when an unexpected I/O error occurs.
      */
-    int GetRecordCount() throws
+    long GetRecordCount() throws
             RepositoryDisposed,
             RepositoryException;
 

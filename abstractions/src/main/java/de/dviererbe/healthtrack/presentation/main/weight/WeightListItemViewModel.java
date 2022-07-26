@@ -22,6 +22,7 @@ import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.domain.WeightUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightListViewModel.IWeightListView;
@@ -33,28 +34,43 @@ public class WeightListItemViewModel implements IDisposable
     private static final String NullValue = "(null)";
     private static final String ErrorValue = "(error)";
 
-    private final IWeightListView _view;
     private final UUID _recordIdentifier;
 
     public final String Weight;
     public final String Unit;
     public final String DateTime;
     public final Boolean Converted;
+    private final INavigationRouter _navigationRouter;
 
     public WeightListItemViewModel(
-            IWeightListView parentView,
-            IDateTimeConverter dateTimeConverter,
-            INumericValueConverter numericValueConverter,
-            WeightRecord weightRecord,
-            WeightUnit preferredUnit)
+            final INavigationRouter navigationRouter,
+            final INumericValueConverter numericValueConverter,
+            final WeightUnit preferredUnit)
     {
-        _view = parentView;
+        _recordIdentifier = null;
+        _navigationRouter = navigationRouter;
+
+        Weight = "?";
+        Unit = ConversionHelper.TryConvertToString(preferredUnit, ErrorValue, numericValueConverter);
+        DateTime = "";
+        Converted = false;
+    }
+
+    public WeightListItemViewModel(
+            final INavigationRouter navigationRouter,
+            final IDateTimeConverter dateTimeConverter,
+            final INumericValueConverter numericValueConverter,
+            final WeightRecord weightRecord,
+            final WeightUnit preferredUnit)
+    {
+        _navigationRouter = navigationRouter;
 
         if (weightRecord == null)
         {
             _recordIdentifier = null;
 
-            Weight = Unit = DateTime = NullValue;
+            Weight = "?";
+            Unit = DateTime = "";
             Converted = false;
 
             return;
@@ -76,11 +92,16 @@ public class WeightListItemViewModel implements IDisposable
         DateTime = ConversionHelper.TryConvertToString(weightRecord.TimeOfMeasurement, ErrorValue, dateTimeConverter);
     }
 
-    public void ShowDetails()
+    public void RunContextAction()
     {
-        if (_recordIdentifier == null) return;
-
-        _view.NavigateToDetailsView(_recordIdentifier);
+        if (_recordIdentifier != null)
+        {
+            _navigationRouter.TryNavigateToWeightRecordDetails(_recordIdentifier);
+        }
+        else
+        {
+            _navigationRouter.TryNavigateToCreateWeightRecord();
+        }
     }
 
     /**

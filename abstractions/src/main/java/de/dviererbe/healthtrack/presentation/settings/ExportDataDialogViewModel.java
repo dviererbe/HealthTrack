@@ -102,6 +102,8 @@ public class ExportDataDialogViewModel implements IDisposable
 
         /**
          * Closes the user interface to export user data.
+         *
+         * @param result The result of the export user data dialog.
          */
         void Close(ExportUserDataDialogResult result);
     }

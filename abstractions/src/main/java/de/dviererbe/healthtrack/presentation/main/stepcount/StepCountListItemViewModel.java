@@ -21,6 +21,7 @@ package de.dviererbe.healthtrack.presentation.main.stepcount;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.StepCountRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 
@@ -33,7 +34,6 @@ public class StepCountListItemViewModel implements IDisposable
     private static final String NullValue = "(null)";
     private static final String ErrorValue = "(error)";
 
-    private final IStepCountListView _view;
     private final LocalDate _day;
 
     public final String StepCount;
@@ -41,19 +41,37 @@ public class StepCountListItemViewModel implements IDisposable
     public final int GoalReachedPercentage;
     public final String GoalReachedPercentageText;
     public final String Date;
+    private final INavigationRouter _navigationRouter;
 
     public StepCountListItemViewModel(
-            final IStepCountListView view,
+            final INavigationRouter navigationRouter,
+            final INumericValueConverter numericValueConverter,
+            final int defaultStepCountGoal)
+    {
+        _day = null;
+        _navigationRouter = navigationRouter;
+
+        final String zero = ConversionHelper.TryConvertToString(0, ErrorValue, numericValueConverter);
+
+        StepCount = zero;
+        Goal = ConversionHelper.TryConvertToString(defaultStepCountGoal, ErrorValue, numericValueConverter);
+        GoalReachedPercentageText = zero;
+        Date = "";
+        GoalReachedPercentage = 0;
+    }
+
+    public StepCountListItemViewModel(
+            final INavigationRouter navigationRouter,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final StepCountRecord stepCountRecord)
     {
-        _view = view;
+        _navigationRouter = navigationRouter;
 
         if (stepCountRecord == null)
         {
             _day = null;
-            StepCount = Goal = Date = GoalReachedPercentageText = NullValue;
+            StepCount = Goal = GoalReachedPercentageText = Date = NullValue;
             GoalReachedPercentage = 0;
 
             return;
@@ -69,11 +87,16 @@ public class StepCountListItemViewModel implements IDisposable
         GoalReachedPercentageText = ConversionHelper.TryConvertToString(GoalReachedPercentage, ErrorValue, numericValueConverter);
     }
 
-    public void ShowDetails()
+    public void RunContextAction()
     {
-        if (_day == null) return;
-
-        _view.NavigateToDetailsView(_day);
+        if (_day != null)
+        {
+            _navigationRouter.TryNavigateToStepCountRecordDetails(_day);
+        }
+        else
+        {
+            _navigationRouter.TryNavigateToCreateStepCountRecord();
+        }
     }
 
     /**

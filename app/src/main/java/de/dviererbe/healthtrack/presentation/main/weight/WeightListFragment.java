@@ -28,13 +28,17 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import de.dviererbe.healthtrack.R;
 import de.dviererbe.healthtrack.databinding.FragmentWeightListBinding;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.presentation.FragmentBase;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightListViewModel.IWeightListView;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
-public class WeightListFragment extends FragmentBase implements IWeightListView
+public class WeightListFragment
+        extends FragmentBase
+        implements IWeightListView, INavigationRouter
 {
     private WeightListViewModel _viewModel;
     private FragmentWeightListBinding _binding;
@@ -60,7 +64,7 @@ public class WeightListFragment extends FragmentBase implements IWeightListView
             @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState)
     {
-        _viewModel = GetViewModelFactory().CreateWeightListViewModel(getLifecycle(), this);
+        _viewModel = GetViewModelFactory().CreateWeightListViewModel(getLifecycle(), this, this);
         _binding = FragmentWeightListBinding.inflate(inflater, container, false);
 
         _adapter = new WeightListViewModelRecyclerViewAdapter(_viewModel);
@@ -120,30 +124,6 @@ public class WeightListFragment extends FragmentBase implements IWeightListView
     }
 
     /**
-     * Navigates the user to a UI for creating a specific record.
-     */
-    @Override
-    public void NavigateToCreateView()
-    {
-        NavHostFragment.findNavController(this).navigate(R.id.action_nav_weight_to_weightMergeFragment);
-    }
-
-    /**
-     * Navigates the user to a UI for showing the details of a specific record.
-     *
-     * @param recordIdentifier
-     */
-    @Override
-    public void NavigateToDetailsView(UUID recordIdentifier)
-    {
-        final Bundle parameter = WeightDetailsFragment.BundleParameter(recordIdentifier);
-
-        NavHostFragment
-            .findNavController(this)
-            .navigate(R.id.action_nav_weight_to_weightDetailsFragment, parameter);
-    }
-
-    /**
      * Shows the user a UI that asks for confirmation to delete all records.
      *
      * @param callback a reference to a callback mechanism when the user made a decision.
@@ -188,5 +168,170 @@ public class WeightListFragment extends FragmentBase implements IWeightListView
     public void NotifyUserThatRecordsCouldNotBeDeleted()
     {
         ShowToastWithLongDuration(R.string.weight_list_notifications_delete_failure);
+    }
+
+    /**
+     * Tries to navigate to the user settings UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToSettings()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create blood pressure record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateBloodPressureRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the blood pressure record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToBloodPressureRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit blood pressure record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditBloodPressureRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the default step count goal editor user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToDefaultStepCountGoalEditor()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create step count record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateStepCountRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the step count record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit step count record user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create weight record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateWeightRecord()
+    {
+        try
+        {
+            NavHostFragment.findNavController(this).navigate(R.id.action_nav_weight_to_weightMergeFragment);
+            return true;
+        }
+        catch (Exception exception)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Tries to navigate to the weight record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToWeightRecordDetails(UUID recordIdentifier)
+    {
+        try
+        {
+            final Bundle parameter = WeightDetailsFragment.BundleParameter(recordIdentifier);
+
+            NavHostFragment
+                    .findNavController(this)
+                    .navigate(R.id.action_nav_weight_to_weightDetailsFragment, parameter);
+
+            return true;
+        }
+        catch (Exception exception)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * Tries to navigate to the edit weight record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditWeightRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the preceding UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateBack()
+    {
+        return false;
     }
 }

@@ -23,10 +23,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.StepCountRecord;
-import de.dviererbe.healthtrack.domain.WeightRecord;
-import de.dviererbe.healthtrack.domain.WeightUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
 
@@ -38,6 +37,7 @@ public class StepCountMergeViewModel implements IDisposable
     private static final String TAG = "StepCountMergeViewModel";
 
     private final IStepCountMergeView _view;
+    private final INavigationRouter _navigationRouter;
     private final IStepWidgetRepository _repository;
     private final IDateTimeProvider _dateTimeProvider;
     private final IDateTimeConverter _dateTimeConverter;
@@ -61,6 +61,7 @@ public class StepCountMergeViewModel implements IDisposable
 
     public StepCountMergeViewModel(
         final IStepCountMergeView view,
+        final INavigationRouter navigationRouter,
         final IStepWidgetRepository repository,
         final IDateTimeProvider dateTimeProvider,
         final IDateTimeConverter dateTimeConverter,
@@ -68,6 +69,7 @@ public class StepCountMergeViewModel implements IDisposable
         final LocalDate day)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _dateTimeProvider = dateTimeProvider;
         _dateTimeConverter = dateTimeConverter;
@@ -183,13 +185,13 @@ public class StepCountMergeViewModel implements IDisposable
     {
         try
         {
-            _stepCount = _numericValueConverter.ToInteger(value);
+            _goal = _numericValueConverter.ToInteger(value);
             _showGoalInvalidErrorMessage.setValue(false);
         }
         catch (Exception exception)
         {
             Log.d(TAG, "Failed to convert goal value.", exception);
-            _stepCount = null;
+            _goal = null;
             _showGoalInvalidErrorMessage.setValue(true);
         }
 
@@ -255,7 +257,7 @@ public class StepCountMergeViewModel implements IDisposable
             return;
         }
 
-        _view.GoBack();
+        _navigationRouter.TryNavigateBack();
     }
 
     private void NotifySaveFailure()
@@ -309,11 +311,6 @@ public class StepCountMergeViewModel implements IDisposable
         void PullValues();
 
         /**
-         * The view should navigate up in the navigation stack.
-         */
-        void GoBack();
-
-        /**
          * Callback mechanism for when the pick date time dialog exits.
          */
         interface IPickDateTimeDialogObserver
@@ -321,7 +318,7 @@ public class StepCountMergeViewModel implements IDisposable
             /**
              * Called when the dialog exits.
              *
-             * @param pickedDateTime the date & time the user picked; {@code null} when dialog was cancelled.
+             * @param pickedDateTime the date &amp; time the user picked; {@code null} when dialog was cancelled.
              */
             void OnComplete(LocalDateTime pickedDateTime);
         }

@@ -21,6 +21,7 @@ package de.dviererbe.healthtrack.presentation.main;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import de.dviererbe.healthtrack.IDisposable;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.persistence.IWidgetConfigurationRepository;
 
 public class MainViewViewModel implements IDisposable
@@ -32,12 +33,14 @@ public class MainViewViewModel implements IDisposable
     private final MutableLiveData<Boolean> _isBloodSugarWidgetEnabled;
 
     private final IWidgetConfigurationRepository _widgetConfigurationRepository;
+    private final INavigationRouter _navigationRouter;
     private final IMainView _mainActivityNavigation;
     private final WidgetConfigurationChangeListener _widgetConfigurationChangeListener;
 
     public MainViewViewModel(
-            IWidgetConfigurationRepository widgetConfiguration,
-            IMainView mainActivityNavigation)
+            final IWidgetConfigurationRepository widgetConfiguration,
+            final IMainView mainActivityNavigation,
+            final INavigationRouter navigationRouter)
     {
         _isStepCounterWidgetEnabled = new MutableLiveData<>(widgetConfiguration.IsStepCounterWidgetEnabled());
         _isWeightWidgetEnabled = new MutableLiveData<>(widgetConfiguration.IsWeightWidgetEnabled());
@@ -47,6 +50,7 @@ public class MainViewViewModel implements IDisposable
 
         _mainActivityNavigation = mainActivityNavigation;
         _widgetConfigurationRepository = widgetConfiguration;
+        _navigationRouter = navigationRouter;
         _widgetConfigurationChangeListener = new WidgetConfigurationChangeListener();
         _widgetConfigurationRepository.RegisterOnWidgetConfigurationChangedListener(_widgetConfigurationChangeListener);
     }
@@ -54,7 +58,7 @@ public class MainViewViewModel implements IDisposable
     /**
      * Gets an observable value if the step counter widget is enabled.
      *
-     * @return {@link LiveData<Boolean>} that is true if the step counter widget is enabled; otherwise false.
+     * @return {@link LiveData} that is true if the step counter widget is enabled; otherwise false.
      */
     public LiveData<Boolean> IsStepCounterWidgetEnabled()
     {
@@ -64,7 +68,7 @@ public class MainViewViewModel implements IDisposable
     /**
      * Gets an observable value if the weight widget is enabled.
      *
-     * @return {@link LiveData<Boolean>} that is true if the weight widget is enabled; otherwise false.
+     * @return {@link LiveData} that is true if the weight widget is enabled; otherwise false.
      */
     public LiveData<Boolean> IsWeightWidgetEnabled()
     {
@@ -74,7 +78,7 @@ public class MainViewViewModel implements IDisposable
     /**
      * Gets an observable value if the food widget is enabled.
      *
-     * @return {@link LiveData<Boolean>} that is true if the food widget is enabled; otherwise false.
+     * @return {@link LiveData} that is true if the food widget is enabled; otherwise false.
      */
     public LiveData<Boolean> IsFoodWidgetEnabled()
     {
@@ -84,7 +88,7 @@ public class MainViewViewModel implements IDisposable
     /**
      * Gets an observable value if the blood pressure widget is enabled.
      *
-     * @return {@link LiveData<Boolean>} that is true if the blood pressure widget is enabled; otherwise false.
+     * @return {@link LiveData} that is true if the blood pressure widget is enabled; otherwise false.
      */
     public LiveData<Boolean> IsBloodPressureWidgetEnabled()
     {
@@ -94,7 +98,7 @@ public class MainViewViewModel implements IDisposable
     /**
      * Gets an observable value if the blood sugar widget is enabled.
      *
-     * @return {@link LiveData<Boolean>} that is true if the blood sugar widget is enabled; otherwise false.
+     * @return {@link LiveData} that is true if the blood sugar widget is enabled; otherwise false.
      */
     public LiveData<Boolean> IsBloodSugarWidgetEnabled()
     {
@@ -106,7 +110,7 @@ public class MainViewViewModel implements IDisposable
      */
     public void NavigateToSettings()
     {
-        _mainActivityNavigation.NavigateToSettings();
+        _navigationRouter.TryNavigateToSettings();
     }
 
     /**
@@ -150,11 +154,6 @@ public class MainViewViewModel implements IDisposable
      */
     public interface IMainView
     {
-        /**
-         * Navigates the user to a UI for editing the settings of the application.
-         */
-        void NavigateToSettings();
-
         /**
          * Shows the user a UI dialog for sending feedback.
          */

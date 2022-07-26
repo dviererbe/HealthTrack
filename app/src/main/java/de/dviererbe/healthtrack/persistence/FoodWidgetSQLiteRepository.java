@@ -84,6 +84,28 @@ public class FoodWidgetSQLiteRepository
     }
 
     /**
+     * Gets the name of the food widget repository provider.
+     *
+     * @return {@link String} representation of the food widget repository provider name.
+     */
+    @Override
+    public String GetProviderName()
+    {
+        return getClass().getName();
+    }
+
+    /**
+     * Gets the version of the food widget repository provider.
+     *
+     * @return {@link String} representation of the food widget repository provider version.
+     */
+    @Override
+    public String GetProviderVersion()
+    {
+        return String.valueOf(DatabaseVersion);
+    }
+
+    /**
      * Deletes all records.
      *
      * @throws RepositoryDisposed  when the repository was already disposed.

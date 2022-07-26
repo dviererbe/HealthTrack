@@ -18,12 +18,13 @@
 
 package de.dviererbe.healthtrack.presentation.settings;
 
-import android.net.Uri;
 import android.util.Log;
 import de.dviererbe.healthtrack.IDependencyResolver;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.application.DeleteAllUserDataOperation;
-import de.dviererbe.healthtrack.infrastructure.IUserDataExporter;
+import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
+
+import java.io.OutputStream;
 
 public class SettingsViewModel implements IDisposable
 {
@@ -50,35 +51,34 @@ public class SettingsViewModel implements IDisposable
             // User canceled export
             if (exportUserDataResult == null) return;
 
-            /*
             final String mediaType = "application/json";
-            final String suggestedName = "data.json";
-            */
-            final String mediaType = "text/plain";
-            final String suggestedName = "test.txt";
+            final String suggestedName = "healthtrack-data.json";
 
-            _view.ShowSelectStorageLocationDialog(mediaType, suggestedName, (Uri storagePath) ->
+            _view.ShowSelectStorageLocationDialog(mediaType, suggestedName, (OutputStream storageFile) ->
             {
                 // User canceled export
-                if (storagePath == null) return;
+                if (storageFile == null) return;
 
-                final IUserDataExporter userDataExporter = _dependencyResolver.CreateUserDataExporter();
+                final ExportUserDataAsJsonOperation.Options exportOptions =
+                    new ExportUserDataAsJsonOperation.Options(
+                        exportUserDataResult.ExportBloodPressureData,
+                        exportUserDataResult.ExportBloodSugarData,
+                        exportUserDataResult.ExportFoodData,
+                        exportUserDataResult.ExportStepsData,
+                        exportUserDataResult.ExportWeightData);
+
+                final ExportUserDataAsJsonOperation exportOperation =
+                    _dependencyResolver.CreateExportUserDataAsJsonOperation(
+                        exportOptions,
+                        () -> storageFile);
 
                 try
                 {
-                    userDataExporter.ExportUserData(
-                        storagePath,
-                        exportUserDataResult.ExportStepsData,
-                        exportUserDataResult.ExportWeightData,
-                        exportUserDataResult.ExportFoodData,
-                        exportUserDataResult.ExportBloodPressureData,
-                        exportUserDataResult.ExportBloodSugarData);
-
+                    exportOperation.Execute();
                     _view.NotifyUserThatExportingUserDataSucceeded();
                 }
                 catch (Exception exception)
                 {
-                    Log.d(TAG, "Failed to export user data (path = " + storagePath +").", exception);
                     _view.NotifyUserThatExportingUserDataFailed();
                 }
             });
@@ -250,9 +250,9 @@ public class SettingsViewModel implements IDisposable
             /**
              * Called when the select storage path dialog finishes.
              *
-             * @param storagePath the path where the user data should be stored; {@code null} when the user cancelled.
+             * @param storageFile The {@link OutputStream} to the location where the user data should be stored; {@code null} when the user cancelled.
              */
-            void OnCompleted(final Uri storagePath);
+            void OnCompleted(final OutputStream storageFile);
         }
 
         /**

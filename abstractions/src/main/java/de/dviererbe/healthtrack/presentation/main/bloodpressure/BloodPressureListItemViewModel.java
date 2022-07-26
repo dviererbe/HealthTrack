@@ -22,10 +22,13 @@ import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.BloodPressureRecord;
 import de.dviererbe.healthtrack.domain.BloodPressureUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureListViewModel.IBloodPressureListView;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class BloodPressureListItemViewModel implements IDisposable
@@ -41,21 +44,35 @@ public class BloodPressureListItemViewModel implements IDisposable
     public final boolean Converted;
 
     private final UUID _recordIdentifier;
-    private final IBloodPressureListView _view;
+    private final INavigationRouter _navigationRouter;
 
     public BloodPressureListItemViewModel(
-        final IBloodPressureListView view,
+            final INavigationRouter navigationRouter,
+            final INumericValueConverter numericValueConverter,
+            final BloodPressureUnit preferredUnit)
+    {
+        _recordIdentifier = null;
+        _navigationRouter = navigationRouter;
+
+        Systolic = Diastolic = Pulse = "?";
+        Unit = ConversionHelper.TryConvertToString(preferredUnit, ErrorValue, numericValueConverter);
+        DateTime = "";
+        Converted = false;
+    }
+
+    public BloodPressureListItemViewModel(
+        final INavigationRouter navigationRouter,
         final IDateTimeConverter dateTimeConverter,
         final INumericValueConverter numericValueConverter,
         final BloodPressureRecord bloodPressureRecord,
         final BloodPressureUnit preferredUnit)
     {
-        _view = view;
+        _navigationRouter = navigationRouter;
 
         if (bloodPressureRecord == null)
         {
             _recordIdentifier = null;
-            Systolic = Diastolic = Unit = Pulse = DateTime = NullValue;
+            Systolic = Diastolic = Pulse = Unit = DateTime = NullValue;
             Converted = false;
 
             return;
@@ -90,10 +107,15 @@ public class BloodPressureListItemViewModel implements IDisposable
     {
     }
 
-    public void ShowDetails()
+    public void RunContextAction()
     {
-        if (_recordIdentifier == null) return;
-
-        _view.NavigateToDetailsView(_recordIdentifier);
+        if (_recordIdentifier != null)
+        {
+            _navigationRouter.TryNavigateToBloodPressureRecordDetails(_recordIdentifier);
+        }
+        else
+        {
+            _navigationRouter.TryNavigateToCreateBloodPressureRecord();
+        }
     }
 }

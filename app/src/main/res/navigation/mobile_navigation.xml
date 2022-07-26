@@ -31,6 +31,22 @@
         <action android:id="@+id/action_nav_home_to_nav_food" app:destination="@id/nav_food"/>
         <action android:id="@+id/action_nav_home_to_nav_bloodsugar" app:destination="@id/nav_bloodsugar"/>
         <action android:id="@+id/action_nav_home_to_nav_bloodpressure" app:destination="@id/nav_bloodpressure"/>
+        <action android:id="@+id/action_nav_home_to_foodDetailsFragment" app:destination="@id/foodDetailsFragment"/>
+        <action android:id="@+id/action_nav_home_to_foodMergeFragment" app:destination="@id/foodMergeFragment"/>
+        <action android:id="@+id/action_nav_home_to_bloodSugarDetailsFragment"
+                app:destination="@id/bloodSugarDetailsFragment"/>
+        <action android:id="@+id/action_nav_home_to_bloodSugarMergeFragment"
+                app:destination="@id/bloodSugarMergeFragment"/>
+        <action android:id="@+id/action_nav_home_to_bloodPressureDetailsFragment"
+                app:destination="@id/bloodPressureDetailsFragment"/>
+        <action android:id="@+id/action_nav_home_to_bloodPressureMergeFragment"
+                app:destination="@id/bloodPressureMergeFragment"/>
+        <action android:id="@+id/action_nav_home_to_weightDetailsFragment" app:destination="@id/weightDetailsFragment"/>
+        <action android:id="@+id/action_nav_home_to_weightMergeFragment" app:destination="@id/weightMergeFragment"/>
+        <action android:id="@+id/action_nav_home_to_stepCountDetailsFragment"
+                app:destination="@id/stepCountDetailsFragment"/>
+        <action android:id="@+id/action_nav_home_to_stepCountMergeFragment"
+                app:destination="@id/stepCountMergeFragment"/>
     </fragment>
 
     <fragment
@@ -51,6 +67,8 @@
                 app:destination="@id/stepCountMergeFragment"/>
         <action android:id="@+id/action_nav_stepcounter_to_stepCountDetailsFragment"
                 app:destination="@id/stepCountDetailsFragment"/>
+        <action android:id="@+id/action_nav_stepcounter_to_stepCountGoalDefaultEditorFragment"
+                app:destination="@id/stepCountGoalDefaultEditorFragment"/>
     </fragment>
 
     <fragment
@@ -100,22 +118,23 @@
               tools:layout="@layout/fragment_weight_merge"/>
     <fragment android:id="@+id/stepCountDetailsFragment"
               android:name="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountDetailsFragment"
-              android:label="fragment_stepcount_details" tools:layout="@layout/fragment_stepcount_details">
+              android:label="@string/steps_details_header" tools:layout="@layout/fragment_stepcount_details">
         <action android:id="@+id/action_nav_stepCountDetailsFragment_to_stepCountMergeFragment"
                 app:destination="@id/stepCountMergeFragment"/>
     </fragment>
     <fragment android:id="@+id/stepCountMergeFragment"
               android:name="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountMergeFragment"
-              android:label="fragment_stepcount_merge" tools:layout="@layout/fragment_stepcount_merge"/>
+              tools:layout="@layout/fragment_stepcount_merge"/>
     <fragment android:id="@+id/bloodPressureDetailsFragment"
               android:name="de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureDetailsFragment"
-              android:label="fragment_bloodpressure_details" tools:layout="@layout/fragment_bloodpressure_details">
+              android:label="@string/bloodpressure_details_header"
+              tools:layout="@layout/fragment_bloodpressure_details">
         <action android:id="@+id/action_nav_bloodPressureDetailsFragment_to_bloodPressureMergeFragment"
                 app:destination="@id/bloodPressureMergeFragment"/>
     </fragment>
     <fragment android:id="@+id/bloodPressureMergeFragment"
               android:name="de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureMergeFragment"
-              android:label="fragment_bloodpressure_merge" tools:layout="@layout/fragment_bloodpressure_merge"/>
+              tools:layout="@layout/fragment_bloodpressure_merge"/>
     <fragment android:id="@+id/bloodSugarDetailsFragment"
               android:name="de.dviererbe.healthtrack.presentation.main.bloodsugar.BloodSugarDetailsFragment"
               android:label="fragment_bloodsugar_details" tools:layout="@layout/fragment_bloodsugar_details">
@@ -134,4 +153,8 @@
     <fragment android:id="@+id/foodMergeFragment"
               android:name="de.dviererbe.healthtrack.presentation.main.food.FoodMergeFragment"
               android:label="fragment_food_merge" tools:layout="@layout/fragment_food_merge"/>
+    <fragment android:id="@+id/stepCountGoalDefaultEditorFragment"
+              android:name="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountGoalDefaultEditorFragment"
+              android:label="@string/steps_editdefaultstepcountgoal_header"
+              tools:layout="@layout/fragment_stepcount_goal_default_editor"/>
 </navigation>

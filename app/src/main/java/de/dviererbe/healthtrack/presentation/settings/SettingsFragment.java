@@ -36,6 +36,8 @@ import de.dviererbe.healthtrack.persistence.SharedPreferenceRepository;
 import de.dviererbe.healthtrack.presentation.settings.SettingsViewModel.ISettingsView;
 import de.dviererbe.healthtrack.presentation.settings.SettingsViewModel.ISettingsView.IExportUserDataDialogObserver.ExportUserDataDialogResult;
 
+import java.io.OutputStream;
+
 public class SettingsFragment extends PreferenceFragmentCompat implements ISettingsView
 {
     private static final String TAG = "SettingsFragment";
@@ -239,7 +241,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements ISetti
                 }
 
                 final Uri storagePath = data.getData();
-                _selectStoragePathDialogObserver.OnCompleted(storagePath);
+                final OutputStream storageFile = getContext().getContentResolver().openOutputStream(storagePath);
+
+                _selectStoragePathDialogObserver.OnCompleted(storageFile);
             }
             catch (Exception exception)
             {

@@ -30,14 +30,18 @@ import android.widget.DatePicker;
 import android.widget.TimePicker;
 import de.dviererbe.healthtrack.R;
 import de.dviererbe.healthtrack.databinding.FragmentStepcountMergeBinding;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.presentation.FragmentBase;
 import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountMergeViewModel.IStepCountMergeView;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
-public class StepCountMergeFragment extends FragmentBase implements IStepCountMergeView
+public class StepCountMergeFragment
+        extends FragmentBase
+        implements IStepCountMergeView, INavigationRouter
 {
     private static final String PARAM_Day = "Day";
 
@@ -82,7 +86,7 @@ public class StepCountMergeFragment extends FragmentBase implements IStepCountMe
             final ViewGroup container,
             final Bundle savedInstanceState)
     {
-        _viewModel = GetViewModelFactory().CreateStepCountMergeViewModel(getLifecycle(), this, _day);
+        _viewModel = GetViewModelFactory().CreateStepCountMergeViewModel(getLifecycle(), this, this, _day);
         _binding = FragmentStepcountMergeBinding.inflate(inflater, container, false);
 
         SetUpBindingToViewModel();
@@ -269,11 +273,146 @@ public class StepCountMergeFragment extends FragmentBase implements IStepCountMe
     }
 
     /**
-     * The view should navigate up in the navigation stack.
+     * Tries to navigate to the user settings UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
     @Override
-    public void GoBack()
+    public boolean TryNavigateToSettings()
     {
-        TryGoBack();
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create blood pressure record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateBloodPressureRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the blood pressure record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToBloodPressureRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit blood pressure record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditBloodPressureRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the default step count goal editor user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToDefaultStepCountGoalEditor()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create step count record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateStepCountRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the step count record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit step count record user interface for
+     * a record with a specific identifier.
+     *
+     * @param dateOfDay The date of the day of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the create weight record user interface.
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToCreateWeightRecord()
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the weight record details user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to see the details for.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToWeightRecordDetails(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the edit weight record user interface for
+     * a record with a specific identifier.
+     *
+     * @param recordIdentifier The identifier of the record to edit.
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateToEditWeightRecord(UUID recordIdentifier)
+    {
+        return false;
+    }
+
+    /**
+     * Tries to navigate to the preceding UI (User Interface).
+     *
+     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
+     */
+    @Override
+    public boolean TryNavigateBack()
+    {
+        return TryGoBack();
     }
 }

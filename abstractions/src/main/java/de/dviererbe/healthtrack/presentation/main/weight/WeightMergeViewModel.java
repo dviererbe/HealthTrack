@@ -26,6 +26,7 @@ import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.domain.WeightUnit;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
+import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
 import de.dviererbe.healthtrack.persistence.IWeightWidgetRepository;
@@ -39,6 +40,7 @@ public class WeightMergeViewModel implements IDisposable
 
     // DEPENDENCIES
     private final IWeightMergeView _view;
+    private final INavigationRouter _navigationRouter;
     private final IWeightWidgetRepository _repository;
     private final IDateTimeProvider _dateTimeProvider;
     private final IDateTimeConverter _dateTimeConverter;
@@ -60,6 +62,7 @@ public class WeightMergeViewModel implements IDisposable
 
     public WeightMergeViewModel(
         final IWeightMergeView view,
+        final INavigationRouter navigationRouter,
         final IWeightWidgetRepository repository,
         final IPreferredUnitRepository preferredUnitRepository,
         final IDateTimeProvider dateTimeProvider,
@@ -68,6 +71,7 @@ public class WeightMergeViewModel implements IDisposable
         final UUID weightRecordIdentifier)
     {
         _view = view;
+        _navigationRouter = navigationRouter;
         _repository = repository;
         _dateTimeProvider = dateTimeProvider;
         _dateTimeConverter = dateTimeConverter;
@@ -249,7 +253,7 @@ public class WeightMergeViewModel implements IDisposable
             return;
         }
 
-        _view.GoBack();
+        _navigationRouter.TryNavigateBack();
     }
 
     private void NotifySaveFailure()
@@ -303,11 +307,6 @@ public class WeightMergeViewModel implements IDisposable
         void PullValues();
 
         /**
-         * The view should navigate up in the navigation stack.
-         */
-        void GoBack();
-
-        /**
          * Callback mechanism for when the pick date time dialog exits.
          */
         interface IPickDateTimeDialogObserver
@@ -315,7 +314,7 @@ public class WeightMergeViewModel implements IDisposable
             /**
              * Called when the dialog exits.
              *
-             * @param pickedDateTime the date & time the user picked; {@code null} when dialog was cancelled.
+             * @param pickedDateTime the date &amp; time the user picked; {@code null} when dialog was cancelled.
              */
             void OnComplete(LocalDateTime pickedDateTime);
         }

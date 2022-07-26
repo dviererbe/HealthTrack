@@ -160,6 +160,28 @@ public class StepWidgetSQLiteRepository
     }
 
     /**
+     * Gets the name of the step widget repository provider.
+     *
+     * @return {@link String} representation of the step widget repository provider name.
+     */
+    @Override
+    public String GetProviderName()
+    {
+        return getClass().getName();
+    }
+
+    /**
+     * Gets the version of the step widget repository provider.
+     *
+     * @return {@link String} representation of the step widget repository provider version.
+     */
+    @Override
+    public String GetProviderVersion()
+    {
+        return String.valueOf(DatabaseVersion);
+    }
+
+    /**
      * Gets the default step count goal for a day.
      *
      * @return scalar count of the default step count goal for a day.
@@ -184,7 +206,7 @@ public class StepWidgetSQLiteRepository
 
             try (final Cursor cursor = database.rawQuery(selectDefaultStepCountQuery, null))
             {
-                return ReadScalar(cursor);
+                return (int)ReadScalar(cursor);
             }
         }
         catch (Exception exception)
@@ -237,7 +259,7 @@ public class StepWidgetSQLiteRepository
      * @throws RepositoryException when an unexpected I/O error occurs.
      */
     @Override
-    public int GetRecordCount() throws RepositoryDisposed, RepositoryException
+    public long GetRecordCount() throws RepositoryDisposed, RepositoryException
     {
         ThrowWhenDatabaseStateIsBad();
 
@@ -266,7 +288,7 @@ public class StepWidgetSQLiteRepository
      * @return the scalar value.
      * @throws RepositoryException when more thn one record was found.
      */
-    private int ReadScalar(final Cursor cursor) throws RepositoryException
+    private long ReadScalar(final Cursor cursor) throws RepositoryException
     {
         if (!cursor.moveToFirst())
             throw new RepositoryException("Result set has no row.");
@@ -277,7 +299,7 @@ public class StepWidgetSQLiteRepository
         if (cursor.getColumnCount() != 1)
             throw new RepositoryException("Result set has more than one column.");
 
-        return cursor.getInt(0);
+        return cursor.getLong(0);
     }
 
     /**

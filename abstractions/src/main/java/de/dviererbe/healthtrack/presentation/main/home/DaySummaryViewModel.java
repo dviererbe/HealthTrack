@@ -24,59 +24,5 @@ import java.util.Date;
 
 public class DaySummaryViewModel
 {
-    public final Date DateOfSummarizedDay;
 
-    public final int StepsAchieved;
-
-    public final int StepsGoal;
-
-    public final int StepsGoalReachedPercentage;
-
-    public final boolean StepsGoalReached;
-
-    public DaySummaryViewModel(
-            Date dateOfSummarizedDay,
-            int stepsAchieved,
-            int stepsGoal)
-    {
-        DateOfSummarizedDay = dateOfSummarizedDay;
-        StepsAchieved = stepsAchieved;
-        StepsGoal = stepsGoal;
-        StepsGoalReachedPercentage = CalculatePercentage(stepsAchieved, stepsGoal);
-        StepsGoalReached = StepsGoalReachedPercentage >= 100;
-    }
-
-    private static int CalculatePercentage(final int value, final int goal)
-    {
-        if (value >= goal) return 100;
-        if (value <= 0) return 0;
-
-        int percentage = Math.floorDiv(value * 100, goal);
-        return percentage > 0 ? percentage : 1;
-    }
-
-    public void OpenStepsDetails()
-    {
-        Log.d(getClass().getSimpleName(), "Go to steps.");
-    }
-
-    public void OpenWeightDetails()
-    {
-        Log.d(getClass().getSimpleName(), "Go to weight.");
-    }
-
-    public void OpenFoodDetails()
-    {
-        Log.d(getClass().getSimpleName(), "Go to food.");
-    }
-
-    public void OpenBloodPressureDetails()
-    {
-        Log.d(getClass().getSimpleName(), "Go to blood pressure.");
-    }
-
-    public void OpenBloodSugarDetails()
-    {
-        Log.d(getClass().getSimpleName(), "Go to blood sugar.");
-    }
 }

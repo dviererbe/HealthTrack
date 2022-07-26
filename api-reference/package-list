@@ -1,0 +1,16 @@
+de.dviererbe.healthtrack
+de.dviererbe.healthtrack.application
+de.dviererbe.healthtrack.domain
+de.dviererbe.healthtrack.infrastructure
+de.dviererbe.healthtrack.persistence
+de.dviererbe.healthtrack.presentation
+de.dviererbe.healthtrack.presentation.main
+de.dviererbe.healthtrack.presentation.main.about
+de.dviererbe.healthtrack.presentation.main.bloodpressure
+de.dviererbe.healthtrack.presentation.main.bloodsugar
+de.dviererbe.healthtrack.presentation.main.feedback
+de.dviererbe.healthtrack.presentation.main.food
+de.dviererbe.healthtrack.presentation.main.home
+de.dviererbe.healthtrack.presentation.main.stepcount
+de.dviererbe.healthtrack.presentation.main.weight
+de.dviererbe.healthtrack.presentation.settings
