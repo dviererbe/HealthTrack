@@ -24,8 +24,7 @@ import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.infrastructure.EmptyLogger;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
-import de.dviererbe.healthtrack.infrastructure.IUserDataJsonFileOutputStreamProvider;
-import de.dviererbe.healthtrack.persistence.*;
+import de.dviererbe.healthtrack.infrastructure.IUserDataJsonTextWriterProvider;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -56,14 +55,14 @@ public class ExportUserDataAsJsonOperationTests
         final ExportUserDataAsJsonOperation.Options options = ExportAll;
 
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        final IUserDataJsonFileOutputStreamProvider userDataJsonFileOutputStreamProvider
-                = new IUserDataJsonFileOutputStreamProvider()
+        final IUserDataJsonTextWriterProvider userDataJsonFileOutputStreamProvider
+                = new IUserDataJsonTextWriterProvider()
         {
             private boolean called = false;
 
             @Override
-            public OutputStream ProvideUserDataJsonFileOutputStream()
-                    throws UserDataJsonFileOutputStreamCouldNotBeProvided
+            public OutputStream ProvideUserDataJsonTextWriter()
+                    throws UserDataJsonTextWriterCouldNotBeProvided
             {
                 assertFalse(called);
                 called = true;

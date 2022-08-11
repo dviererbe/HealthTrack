@@ -12,3 +12,4 @@ include ':Application'
 include ':AndroidApp'
 
 
+include ':JsonTextWriter'

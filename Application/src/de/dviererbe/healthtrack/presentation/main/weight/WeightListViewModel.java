@@ -25,8 +25,9 @@ import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
-import de.dviererbe.healthtrack.persistence.IWeightWidgetRepository;
+import de.dviererbe.healthtrack.persistence.IBulkDeletable;
+import de.dviererbe.healthtrack.persistence.IBulkQueryable;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredUnitRepository;
 
 import java.util.List;
 
@@ -36,7 +37,8 @@ public class WeightListViewModel implements IDisposable
 
     private final IWeightListView _view;
     private final INavigationRouter _navigationRouter;
-    private final IWeightWidgetRepository _repository;
+    private final IBulkQueryable _weightRecordReader;
+    private final IBulkDeletable _weightRecordDeleter;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
     private final WeightUnit _preferredWeightUnit;
@@ -45,14 +47,16 @@ public class WeightListViewModel implements IDisposable
     public WeightListViewModel(
             final IWeightListView view,
             final INavigationRouter navigationRouter,
-            final IWeightWidgetRepository repository,
+            final IBulkQueryable weightRecordReader,
+            final IBulkDeletable weightRecordDeleter,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final IPreferredUnitRepository preferredUnitRepository,
             final ILogger logger)
     {
         _navigationRouter = navigationRouter;
-        _repository = repository;
+        _weightRecordReader = weightRecordReader;
+        _weightRecordDeleter = weightRecordDeleter;
         _view = view;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
@@ -79,7 +83,7 @@ public class WeightListViewModel implements IDisposable
     {
         try
         {
-            final long recordCount = _repository.GetRecordCount();
+            final long recordCount = _weightRecordReader.GetRecordCount();
 
             if (recordCount > Integer.MAX_VALUE)
                 return Integer.MAX_VALUE;
@@ -110,7 +114,7 @@ public class WeightListViewModel implements IDisposable
         try
         {
             // TODO: implement caching solution
-            final List<WeightRecord> records = _repository.GetRecordsDescending(offset, 1);
+            final List<WeightRecord> records = _weightRecordReader.GetRecordsDescending(offset, 1);
             return records.get(0);
         }
         catch (Exception exception)
@@ -133,7 +137,7 @@ public class WeightListViewModel implements IDisposable
             {
                 try
                 {
-                    _repository.DeleteAllRecords();
+                    _weightRecordDeleter.DeleteAllRecords();
                 }
                 catch (Exception exception)
                 {

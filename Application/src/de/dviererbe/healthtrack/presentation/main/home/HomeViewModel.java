@@ -21,7 +21,9 @@ package de.dviererbe.healthtrack.presentation.main.home;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.*;
 import de.dviererbe.healthtrack.infrastructure.*;
-import de.dviererbe.healthtrack.persistence.*;
+import de.dviererbe.healthtrack.persistence.IDefaultStepCountGoalGetter;
+import de.dviererbe.healthtrack.persistence.IPerDayBulkQueryable;
+import de.dviererbe.healthtrack.persistence.repositories.*;
 import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureListItemViewModel;
 import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListItemViewModel;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightListItemViewModel;
@@ -37,16 +39,17 @@ public class HomeViewModel implements IDisposable
     public final WeightListItemViewModel LatestWeightOfToday;
 
     public HomeViewModel(
-        final INavigationRouter navigationRouter,
-        final IDateTimeProvider dateTimeProvider,
-        final IBloodPressureWidgetRepository bloodPressureWidgetRepository,
-        final IStepWidgetRepository stepWidgetRepository,
-        final IWeightWidgetRepository weightWidgetRepository,
+            final INavigationRouter navigationRouter,
+            final IDateTimeProvider dateTimeProvider,
+            final IPerDayBulkQueryable<BloodPressureRecord> bloodPressureRecordReader,
+            final IPerDayBulkQueryable<WeightRecord> weightRecordReader,
+            final IPerDayBulkQueryable<StepCountRecord> stepCountRecordReader,
+            final IDefaultStepCountGoalGetter defaultStepCountGoalGetter,
         final IPreferredUnitRepository preferredUnitRepository,
-        final IDateTimeConverter dateTimeConverter,
-        final INumericValueConverter numericValueConverter,
-        final IWidgetConfigurationRepository widgetConfigurationRepository,
-        final ILogger logger)
+            final IDateTimeConverter dateTimeConverter,
+            final INumericValueConverter numericValueConverter,
+            final IWidgetConfigurationRepository widgetConfigurationRepository,
+            final ILogger logger)
     {
         final LocalDate today = dateTimeProvider.Today();
 
@@ -57,7 +60,7 @@ public class HomeViewModel implements IDisposable
                     .ToDomainBloodPressureUnit();
 
             final BloodPressureRecord latestBloodPressureRecordOfToday
-                = TryGetLatestBloodPressureRecordOfToday(today, bloodPressureWidgetRepository, logger);
+                = TryGetLatestRecordOfToday(today, bloodPressureRecordReader, logger);
 
             if (latestBloodPressureRecordOfToday == null)
             {
@@ -86,11 +89,11 @@ public class HomeViewModel implements IDisposable
         if (widgetConfigurationRepository.IsStepCounterWidgetEnabled())
         {
             final StepCountRecord stepCountRecordOfToday
-                = TryGetStepCountRecordOfToday(today, stepWidgetRepository, logger);
+                = TryGetLatestRecordOfToday(today, stepCountRecordReader, logger);
 
             if (stepCountRecordOfToday == null)
             {
-                final int defaultStepCountGoal = TryGetDefaultStepCountGoal(stepWidgetRepository, logger);
+                final int defaultStepCountGoal = TryGetDefaultStepCountGoal(defaultStepCountGoalGetter, logger);
 
                 StepCountOfToday =
                     new StepCountListItemViewModel(
@@ -120,7 +123,7 @@ public class HomeViewModel implements IDisposable
                 .ToDomainWeightUnit();
 
             final WeightRecord latestWeightRecordOfToday
-                = TryGetLatestWeightRecordOfToday(today, weightWidgetRepository, logger);
+                = TryGetLatestRecordOfToday(today, weightRecordReader, logger);
 
             if (latestWeightRecordOfToday == null)
             {
@@ -145,44 +148,21 @@ public class HomeViewModel implements IDisposable
         {
             LatestWeightOfToday = null;
         }
-
-
-
     }
 
-    private static BloodPressureRecord TryGetLatestBloodPressureRecordOfToday(
+    private static <TRecord> TRecord TryGetLatestRecordOfToday(
             final LocalDate today,
-            final IBloodPressureWidgetRepository repository,
+            final IPerDayBulkQueryable<TRecord> repository,
             final ILogger logger)
     {
         try
         {
-            final List<BloodPressureRecord> recordsOfToday =
+            final List<TRecord> recordsOfToday =
                     repository.GetRecordsForDayDescending(today);
 
             return  recordsOfToday.size() >= 1
                     ? recordsOfToday.get(0)
                     : null;
-        }
-        catch (Exception exception)
-        {
-            logger.LogError(TAG, "Failed to read latest blood pressure record of today.", exception);
-            return null;
-        }
-    }
-
-    private static StepCountRecord TryGetStepCountRecordOfToday(
-            final LocalDate today,
-            final IStepWidgetRepository repository,
-            final ILogger logger)
-    {
-        try
-        {
-            return repository.GetRecordForDay(today);
-        }
-        catch (IStepWidgetRepository.RecordNotFound exception)
-        {
-            return null;
         }
         catch (Exception exception)
         {
@@ -192,12 +172,12 @@ public class HomeViewModel implements IDisposable
     }
 
     private static int TryGetDefaultStepCountGoal(
-            final IStepWidgetRepository repository,
+            final IDefaultStepCountGoalGetter defaultStepCountGoalGetter,
             final ILogger logger)
     {
         try
         {
-            return repository.GetDefaultStepCountGoal();
+            return defaultStepCountGoalGetter.GetDefaultStepCountGoal();
         }
         catch (Exception exception)
         {
@@ -205,28 +185,6 @@ public class HomeViewModel implements IDisposable
             return 5000;
         }
     }
-
-    private static WeightRecord TryGetLatestWeightRecordOfToday(
-            final LocalDate today,
-            final IWeightWidgetRepository repository,
-            final ILogger logger)
-    {
-        try
-        {
-            final List<WeightRecord> recordsOfToday =
-                    repository.GetRecordsForDayDescending(today);
-
-            return  recordsOfToday.size() >= 1
-                    ? recordsOfToday.get(0)
-                    : null;
-        }
-        catch (Exception exception)
-        {
-            logger.LogError(TAG, "Failed to read latest weight record of today.", exception);
-            return null;
-        }
-    }
-
 
     /**
      * Performs application-defined tasks associated with freeing, releasing, or resetting resources.

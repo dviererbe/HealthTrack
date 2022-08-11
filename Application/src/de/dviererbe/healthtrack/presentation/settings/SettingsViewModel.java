@@ -22,26 +22,29 @@ import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.application.DeleteAllUserDataOperation;
 import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
-import de.dviererbe.healthtrack.infrastructure.IUserDataJsonFileOutputStreamProvider;
+import de.dviererbe.healthtrack.infrastructure.IUserDataJsonTextWriterProvider;
+import de.dviererbe.healthtrack.infrastructure.UserDataJsonTextWriterCouldNotBeProvided;
+import de.dviererbe.healthtrack.infrastructure.json.JsonTextWriter;
 
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.function.Function;
 
 public class SettingsViewModel implements IDisposable
 {
-    public class ExportParams
+    public static class ExportParams
     {
         public final ExportUserDataAsJsonOperation.Options Options;
-        public final IUserDataJsonFileOutputStreamProvider UserDataJsonFileOutputStreamProvider;
+        public final IUserDataJsonTextWriterProvider UserDataJsonFileOutputStreamProvider;
 
         public ExportParams(
             final ExportUserDataAsJsonOperation.Options options,
-            final IUserDataJsonFileOutputStreamProvider userDataJsonFileOutputStreamProvider)
+            final IUserDataJsonTextWriterProvider userDataJsonTextWriterProvider)
         {
             Options = options;
-            UserDataJsonFileOutputStreamProvider = userDataJsonFileOutputStreamProvider;
+            UserDataJsonFileOutputStreamProvider = userDataJsonTextWriterProvider;
         }
-
     }
 
     private static final String TAG = "SettingsViewModel";
@@ -91,7 +94,21 @@ public class SettingsViewModel implements IDisposable
 
                 final ExportUserDataAsJsonOperation exportOperation =
                     _exportUserDataAsJsonOperationFactory.apply(
-                            new ExportParams(exportOptions, () -> storageFile));
+                            new ExportParams(exportOptions, () ->
+                            {
+                                Writer writer;
+
+                                try
+                                {
+                                    writer = new OutputStreamWriter(storageFile);
+                                }
+                                catch (Exception exception)
+                                {
+                                    throw new UserDataJsonTextWriterCouldNotBeProvided(exception);
+                                }
+
+                                return new JsonTextWriter(writer);
+                            }));
 
                 try
                 {

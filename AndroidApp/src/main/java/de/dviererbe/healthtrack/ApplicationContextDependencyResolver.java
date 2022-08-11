@@ -23,6 +23,7 @@ import de.dviererbe.healthtrack.application.DeleteAllUserDataOperation;
 import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
 import de.dviererbe.healthtrack.infrastructure.*;
 import de.dviererbe.healthtrack.persistence.*;
+import de.dviererbe.healthtrack.persistence.repositories.*;
 import de.dviererbe.healthtrack.presentation.AndroidUIThemeSetter;
 import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
 
@@ -122,7 +123,7 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
     @Override
     public ExportUserDataAsJsonOperation CreateExportUserDataAsJsonOperation(
             ExportUserDataAsJsonOperation.Options options,
-            IUserDataJsonFileOutputStreamProvider userDataJsonFileOutputStreamProvider)
+            IUserDataJsonTextWriterProvider userDataJsonFileOutputStreamProvider)
     {
         return new ExportUserDataAsJsonOperation(
             options,

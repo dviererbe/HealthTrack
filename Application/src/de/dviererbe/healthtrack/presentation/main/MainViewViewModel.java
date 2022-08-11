@@ -18,7 +18,7 @@
 
 package de.dviererbe.healthtrack.presentation.main;
 
-import de.dviererbe.healthtrack.persistence.IWidgetConfigurationRepository;
+import de.dviererbe.healthtrack.persistence.repositories.IWidgetConfigurationRepository;
 import de.dviererbe.healthtrack.presentation.ViewModel;
 
 public class MainViewViewModel extends ViewModel<MainViewViewModel.IMainViewViewModelEventHandler>

@@ -18,28 +18,24 @@
 
 package de.dviererbe.healthtrack.presentation.main.stepcount;
 
-import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.StepCountRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
-import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
+import de.dviererbe.healthtrack.persistence.IDeletableById;
+import de.dviererbe.healthtrack.persistence.IQueryableById;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
+import de.dviererbe.healthtrack.presentation.ViewModel;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
-public class StepCountDetailsViewModel implements IDisposable
+public class StepCountDetailsViewModel extends ViewModel<StepCountDetailsViewModel.IStepCountDetailsViewModelEventHandler>
 {
     private static final String TAG = "StepCountDetailsViewModel";
 
     private static final String NullValue = "(null)";
     private static final String ErrorValue = "(error)";
-
-    private final IStepCountDetailsView _view;
-    private final INavigationRouter _navigationRouter;
-    private final IStepWidgetRepository _repository;
+    private final IDeletableById _stepCountRecordDeleter;
 
     private final ILogger _logger;
     private final UUID _identifier;
@@ -51,17 +47,14 @@ public class StepCountDetailsViewModel implements IDisposable
     public final String DateTime;
 
     public StepCountDetailsViewModel(
-            final IStepCountDetailsView view,
-            final INavigationRouter navigationRouter,
-            final IStepWidgetRepository repository,
-            final IDateTimeConverter dateTimeConverter,
-            final INumericValueConverter numericValueConverter,
-            final ILogger logger,
-            final UUID identifier)
+        final IQueryableById<StepCountRecord> stepCountRecordReader,
+        final IDeletableById stepCountRecordDeleter,
+        final IDateTimeConverter dateTimeConverter,
+        final INumericValueConverter numericValueConverter,
+        final ILogger logger,
+        final UUID identifier)
     {
-        _view = view;
-        _navigationRouter = navigationRouter;
-        _repository = repository;
+        _stepCountRecordDeleter = stepCountRecordDeleter;
         _logger = logger;
         _identifier = identifier;
 
@@ -69,7 +62,7 @@ public class StepCountDetailsViewModel implements IDisposable
 
         try
         {
-            record = _repository.GetRecordForDay(identifier);
+            record = stepCountRecordReader.GetRecord(identifier);
         }
         catch (Exception exception)
         {
@@ -87,70 +80,36 @@ public class StepCountDetailsViewModel implements IDisposable
         GoalReachedPercentageText = ConversionHelper.TryConvertToString(GoalReachedPercentage, ErrorValue, numericValueConverter);
     }
 
-    public void Edit()
-    {
-        _navigationRouter.TryNavigateToEditStepCountRecord(_day);
-    }
-
     public void Delete()
     {
-        _view.ShowConfirmDeleteDialog(confirmDelete ->
+        try
         {
-            if (confirmDelete)
-            {
-                try
-                {
-                    _repository.DeleteRecordOfDay(_day);
-                }
-                catch (Exception exception)
-                {
-                    _logger.LogDebug(TAG, "Failed to delete record.", exception);
-                    _view.NotifyUserThatRecordCouldNotBeDeleted();
-                    return;
-                }
-
-                _navigationRouter.TryNavigateBack();
-            }
-        });
-    }
-
-    /**
-     * Performs application-defined tasks associated with freeing, releasing, or resetting resources.
-     */
-    @Override
-    public void Dispose()
-    {
-    }
-
-    /**
-     * Interface for a step count record details user interface.
-     */
-    public interface IStepCountDetailsView
-    {
-        /**
-         * Notifies the user that the record could not be deleted because of an error.
-         */
-        void NotifyUserThatRecordCouldNotBeDeleted();
-
-        /**
-         * Shows the user a dialog to confirm that the record should be deleted.
-         *
-         * @param callback a reference to a callback mechanism when the user made a decision.
-         */
-        void ShowConfirmDeleteDialog(IConfirmDeleteDialogObserver callback);
-
-        /**
-         * Callback mechanism for when the confirm delete dialog exits.
-         */
-        interface IConfirmDeleteDialogObserver
-        {
-            /**
-             * Called when the confirm delete dialog exits.
-             *
-             * @param confirmDelete the decision of the user: {@code true} when the record should
-             *                      be deleted; otherwise {@code false}.
-             */
-            void OnCompleted(boolean confirmDelete);
+            _stepCountRecordDeleter.DeleteRecord(_identifier);
         }
+        catch (Exception exception)
+        {
+            _logger.LogDebug(TAG, "Failed to delete record.", exception);
+            NotifyEventHandlers(IStepCountDetailsViewModelEventHandler::RecordCouldNotBeDeleted);
+            return;
+        }
+
+        NotifyEventHandlers(IStepCountDetailsViewModelEventHandler::RecordDeleted);
+    }
+
+    /**
+     * Represents an actor that can react to events of the {@link StepCountDetailsViewModel}.
+     */
+    public interface IStepCountDetailsViewModelEventHandler
+    {
+        /**
+         * Called when the record could not be deleted because of an error.
+         */
+        void RecordCouldNotBeDeleted();
+
+        /**
+         * Called when the record could be deleted successfully.
+         */
+        void RecordDeleted();
+
     }
 }

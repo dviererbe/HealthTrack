@@ -23,12 +23,12 @@ import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
-import de.dviererbe.healthtrack.persistence.IStepWidgetRepository.RecordNotFound;
+import de.dviererbe.healthtrack.persistence.IDefaultStepCountGoalGetter;
+import de.dviererbe.healthtrack.persistence.IMergable;
+import de.dviererbe.healthtrack.persistence.IQueryableById;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 import de.dviererbe.healthtrack.presentation.ViewModel;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -37,10 +37,8 @@ public class StepCountMergeViewModel extends ViewModel<StepCountMergeViewModel.I
 {
     private static final String TAG = "StepCountMergeViewModel";
 
-    private static final UUID NullUUID = new UUID(0,0);
-
     // DEPENDENCIES:
-    private final IStepWidgetRepository _repository;
+    private final IMergable<StepCountRecord> _stepCountRecordWriter;
     private final IDateTimeProvider _dateTimeProvider;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
@@ -60,59 +58,57 @@ public class StepCountMergeViewModel extends ViewModel<StepCountMergeViewModel.I
     private boolean _canValuesBeSaved;
 
     public StepCountMergeViewModel(
-        final IStepWidgetRepository repository,
+        final IQueryableById<StepCountRecord> stepCountRecordReader,
+        final IDefaultStepCountGoalGetter defaultStepCountGoalGetter,
+        final IMergable<StepCountRecord> stepCountRecordWriter,
         final IDateTimeProvider dateTimeProvider,
         final IDateTimeConverter dateTimeConverter,
         final INumericValueConverter numericValueConverter,
         final ILogger logger,
-        LocalDate day)
+        final UUID recordIdentifier)
     {
-        _repository = repository;
+        _stepCountRecordWriter = stepCountRecordWriter;
         _dateTimeProvider = dateTimeProvider;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
         _logger = logger;
-
-        final LocalDateTime now = _dateTimeProvider.Now();
-        if (day == null) day = now.toLocalDate();
+        _recordIdentifier = recordIdentifier;
 
         boolean recordLoaded;
-        UUID recordIdentifier;
 
-        try
-        {
-            StepCountRecord record = _repository.GetRecordForDay(day);
-
-            recordLoaded = true;
-            recordIdentifier = record.Identifier;
-
-            _stepCount = record.StepCount;
-            _goal = record.Goal;
-            _dateTimeOfMeasurement = record.TimeOfMeasurement;
-        }
-        catch (RecordNotFound exception)
+        if (recordIdentifier == null)
         {
             recordLoaded = false;
-            recordIdentifier = null;
 
             _stepCount = null;
-            _goal = TryGetDefaultStepCountGoal(_repository);
-            _dateTimeOfMeasurement = now;
+            _goal = TryGetDefaultStepCountGoal(defaultStepCountGoalGetter);
+            _dateTimeOfMeasurement = dateTimeProvider.Now();
         }
-        catch (Exception exception)
+        else
         {
-            _logger.LogDebug(TAG, "Failed to load record.", exception);
+            try
+            {
+                StepCountRecord record = stepCountRecordReader.GetRecord(recordIdentifier);
 
-            recordLoaded = false;
-            recordIdentifier = NullUUID;
+                _stepCount = record.StepCount;
+                _goal = record.Goal;
+                _dateTimeOfMeasurement = record.TimeOfMeasurement;
 
-            _stepCount = null;
-            _goal = null;
-            _dateTimeOfMeasurement = null;
+                recordLoaded = true;
+            }
+            catch (Exception exception)
+            {
+                _logger.LogDebug(TAG, "Failed to load record.", exception);
+
+                recordLoaded = false;
+
+                _stepCount = null;
+                _goal = null;
+                _dateTimeOfMeasurement = null;
+            }
         }
 
         _recordLoaded = recordLoaded;
-        _recordIdentifier = recordIdentifier;
 
         _goalText = ConvertToString(_goal);
         _stepCountText = ConvertToString(_stepCount);
@@ -121,11 +117,11 @@ public class StepCountMergeViewModel extends ViewModel<StepCountMergeViewModel.I
         _canValuesBeSaved = false;
     }
 
-    private static Integer TryGetDefaultStepCountGoal(final IStepWidgetRepository repository)
+    private static Integer TryGetDefaultStepCountGoal(final IDefaultStepCountGoalGetter defaultStepCountGoalGetter)
     {
         try
         {
-            return repository.GetDefaultStepCountGoal();
+            return defaultStepCountGoalGetter.GetDefaultStepCountGoal();
         }
         catch (Exception exception)
         {
@@ -331,7 +327,7 @@ public class StepCountMergeViewModel extends ViewModel<StepCountMergeViewModel.I
 
         try
         {
-            _repository.CreateOrUpdateRecord(record);
+            _stepCountRecordWriter.CreateOrUpdateRecord(record);
         }
         catch (Exception exception)
         {

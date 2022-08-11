@@ -24,32 +24,32 @@ import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
+import de.dviererbe.healthtrack.persistence.IBulkDeletable;
+import de.dviererbe.healthtrack.persistence.IBulkQueryable;
+import de.dviererbe.healthtrack.persistence.IDefaultStepCountGoalGetter;
+import de.dviererbe.healthtrack.presentation.ViewModel;
 
 import java.util.List;
 
-public class StepCountListViewModel implements IDisposable
+public class StepCountListViewModel extends ViewModel<StepCountListViewModel.IStepCountListViewModelEventHandler>
 {
     private final static String TAG = "StepCountListViewModel";
 
-    private final IStepCountListView _view;
-    private final INavigationRouter _navigationRouter;
-    private final IStepWidgetRepository _repository;
+    private final IBulkQueryable<StepCountRecord> _stepCountReader;
+    private final IBulkDeletable _stepCountDeleter;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
     private final ILogger _logger;
 
     public StepCountListViewModel(
-            final IStepCountListView view,
-            final INavigationRouter navigationRouter,
-            final IStepWidgetRepository repository,
+            final IBulkQueryable<StepCountRecord> stepCountReader,
+            final IBulkDeletable stepCountDeleter,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final ILogger logger)
     {
-        _view = view;
-        _navigationRouter = navigationRouter;
-        _repository = repository;
+        _stepCountReader = stepCountReader;
+        _stepCountDeleter = stepCountDeleter;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
         _logger = logger;
@@ -59,7 +59,7 @@ public class StepCountListViewModel implements IDisposable
     {
         try
         {
-            final long recordCount = _repository.GetRecordCount();
+            final long recordCount = _stepCountReader.GetRecordCount();
 
             if (recordCount > Integer.MAX_VALUE)
                 return Integer.MAX_VALUE;
@@ -76,13 +76,12 @@ public class StepCountListViewModel implements IDisposable
     public StepCountListItemViewModel GetRecord(int offset)
     {
         final StepCountRecord stepCountRecord = TryGetRecord(offset);
-        final int defaultStepCountGoal = TryGetDefaultStepCountGoal();
 
         return new StepCountListItemViewModel(
-                _navigationRouter,
-                _dateTimeConverter,
-                _numericValueConverter,
-                stepCountRecord);
+            _navigationRouter,
+            _dateTimeConverter,
+            _numericValueConverter,
+            stepCountRecord);
     }
 
     private StepCountRecord TryGetRecord(int offset)
@@ -90,27 +89,13 @@ public class StepCountListViewModel implements IDisposable
         try
         {
             // TODO: implement caching solution
-            final List<StepCountRecord> records = _repository.GetRecordsDescending(offset, 1);
+            final List<StepCountRecord> records = _stepCountReader.GetRecordsDescending(offset, 1);
             return records.get(0);
         }
         catch (Exception exception)
         {
             _logger.LogDebug(TAG, "Failed to load record.", exception);
             return null;
-        }
-    }
-
-    private int TryGetDefaultStepCountGoal()
-    {
-        try
-        {
-            // TODO: implement caching solution
-            return _repository.GetDefaultStepCountGoal();
-        }
-        catch (Exception exception)
-        {
-            _logger.LogDebug(TAG, "Failed to load default step count goal.", exception);
-            return 5000;
         }
     }
 
@@ -127,7 +112,7 @@ public class StepCountListViewModel implements IDisposable
             {
                 try
                 {
-                    _repository.DeleteAllRecords();
+                    _stepCountDeleter.DeleteAllRecords();
                 }
                 catch (Exception exception)
                 {
@@ -157,9 +142,9 @@ public class StepCountListViewModel implements IDisposable
     }
 
     /**
-     * Interface for a step count record list user interface.
+     * Represents an actor that can react to events of the {@link StepCountListViewModel}.
      */
-    public interface IStepCountListView
+    public interface IStepCountListViewModelEventHandler
     {
         /**
          * Notifies the {@link IStepCountListView} that the item list has changed.

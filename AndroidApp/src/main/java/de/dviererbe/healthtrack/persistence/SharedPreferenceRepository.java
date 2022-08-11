@@ -21,6 +21,9 @@ package de.dviererbe.healthtrack.persistence;
 import android.content.Context;
 import android.content.SharedPreferences;
 import androidx.preference.PreferenceManager;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredThemeRepository;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredUnitRepository;
+import de.dviererbe.healthtrack.persistence.repositories.IWidgetConfigurationRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +32,9 @@ import java.util.List;
  * Uses the application shared preferences as a storage mechanism.
  */
 public class SharedPreferenceRepository implements
-        IPreferredThemeRepository,
-        IPreferredUnitRepository,
-        IWidgetConfigurationRepository
+                                        IPreferredThemeRepository,
+                                        IPreferredUnitRepository,
+                                        IWidgetConfigurationRepository
 {
     private static final String ThemePreferenceKey = "theme";
     private static final String IsStepCounterWidgetEnabledPreferenceKey = "widgets_stepcounter_enabled";

@@ -18,21 +18,19 @@
 
 package de.dviererbe.healthtrack.application;
 
-//import android.util.JsonWriter;
-import de.dviererbe.healthtrack.domain.BloodPressureRecord;
-import de.dviererbe.healthtrack.domain.StepCountRecord;
-import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeProvider;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
-import de.dviererbe.healthtrack.infrastructure.IUserDataJsonFileOutputStreamProvider;
-import de.dviererbe.healthtrack.persistence.*;
+import de.dviererbe.healthtrack.infrastructure.IUserDataJsonTextWriterProvider;
+import de.dviererbe.healthtrack.infrastructure.json.IJsonTextWriter;
+import de.dviererbe.healthtrack.infrastructure.json.IRepositoryJsonTextSerializer;
+import de.dviererbe.healthtrack.infrastructure.json.JsonError;
+import de.dviererbe.healthtrack.persistence.exceptions.RepositoryException;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Encapsulates the logic to export collected user data as JSON.
@@ -42,12 +40,8 @@ public class ExportUserDataAsJsonOperation
     private static final String TAG = "ExportUserDataAsJsonOperation";
 
     private final Options _options;
-    private final IUserDataJsonFileOutputStreamProvider _userDataJsonFileOutputStreamProvider;
-    private final IBloodPressureWidgetRepository _bloodPressureWidgetRepository;
-    private final IBloodSugarWidgetRepository _bloodSugarWidgetRepository;
-    private final IFoodWidgetRepository _foodWidgetRepository;
-    private final IStepWidgetRepository _stepWidgetRepository;
-    private final IWeightWidgetRepository _weightWidgetRepository;
+    private final IUserDataJsonTextWriterProvider _userDataJsonTextWriterProvider;
+    private final Map<Widget, IRepositoryJsonTextSerializer> _widgetRepositoriesJsonTextSerializer;
     private final IDateTimeProvider _dateTimeProvider;
     private final ILogger _logger;
 
@@ -59,24 +53,13 @@ public class ExportUserDataAsJsonOperation
      *      specifies how this {@link ExportUserDataAsJsonOperation}
      *      instance should behave when {@link ExportUserDataAsJsonOperation#Execute()}
      *      is called.
-     * @param userDataJsonFileOutputStreamProvider
-     *      a mechanism that provides an {@link OutputStream}
-     *      for exporting the user data in the json format to.
-     * @param bloodPressureWidgetRepository
-     *      reference to a repository that holds blood
-     *      pressure related data.
-     * @param bloodSugarWidgetRepository
-     *      reference to a repository that holds blood
-     *      sugar related data.
-     * @param foodWidgetRepository
-     *      reference to a repository that holds food
-     *      related data.
-     * @param stepWidgetRepository
-     *      reference to a repository that holds step
-     *      count related data.
-     * @param weightWidgetRepository
-     *      reference to a repository that holds weight
-     *      related data.
+     * @param userDataJsonTextWriterProvider
+     *      a mechanism that provides an {@link IJsonTextWriter}
+     *      for exporting the user data in the json text
+     *      format to.
+     * @param widgetRepositoriesJsonTextSerializer
+     *      reference to the serializers that export the
+     *      repository data as json text.
      * @param dateTimeProvider
      *      reference to a mechanism that provides the
      *      current date and time.
@@ -85,22 +68,14 @@ public class ExportUserDataAsJsonOperation
      */
     public ExportUserDataAsJsonOperation(
             final Options options,
-            final IUserDataJsonFileOutputStreamProvider userDataJsonFileOutputStreamProvider,
-            final IBloodPressureWidgetRepository bloodPressureWidgetRepository,
-            final IBloodSugarWidgetRepository bloodSugarWidgetRepository,
-            final IFoodWidgetRepository foodWidgetRepository,
-            final IStepWidgetRepository stepWidgetRepository,
-            final IWeightWidgetRepository weightWidgetRepository,
+            final IUserDataJsonTextWriterProvider userDataJsonTextWriterProvider,
+            final Map<Widget, IRepositoryJsonTextSerializer> widgetRepositoriesJsonTextSerializer,
             final IDateTimeProvider dateTimeProvider,
             final ILogger logger)
     {
         _options = options;
-        _userDataJsonFileOutputStreamProvider = userDataJsonFileOutputStreamProvider;
-        _bloodPressureWidgetRepository = bloodPressureWidgetRepository;
-        _bloodSugarWidgetRepository = bloodSugarWidgetRepository;
-        _foodWidgetRepository = foodWidgetRepository;
-        _stepWidgetRepository = stepWidgetRepository;
-        _weightWidgetRepository = weightWidgetRepository;
+        _userDataJsonTextWriterProvider = userDataJsonTextWriterProvider;
+        _widgetRepositoriesJsonTextSerializer = widgetRepositoriesJsonTextSerializer;
         _dateTimeProvider = dateTimeProvider;
         _logger = logger;
     }
@@ -114,15 +89,9 @@ public class ExportUserDataAsJsonOperation
     {
         try
         {
-            try (final OutputStream fileStream = _userDataJsonFileOutputStreamProvider.ProvideUserDataJsonFileOutputStream())
+            try (final IJsonTextWriter jsonTextWriter = _userDataJsonTextWriterProvider.ProvideUserDataJsonTextWriter())
             {
-                try (final OutputStreamWriter streamWriter = new OutputStreamWriter(fileStream))
-                {
-                    try (final JsonWriter jsonWriter = new JsonWriter(streamWriter))
-                    {
-                        ExportUserData(jsonWriter);
-                    }
-                }
+                ExportUserData(jsonTextWriter);
             }
         }
         catch (Exception exception)
@@ -134,214 +103,31 @@ public class ExportUserDataAsJsonOperation
         }
     }
 
-    private void ExportUserData(final JsonWriter jsonWriter) throws
-        IOException,
-        IBloodPressureWidgetRepository.RepositoryException,
-        IBloodSugarWidgetRepository.RepositoryException,
-        IFoodWidgetRepository.RepositoryException,
-        IStepWidgetRepository.RepositoryException,
-        IWeightWidgetRepository.RepositoryException
+    private void ExportUserData(final IJsonTextWriter jsonTextWriter)
+        throws
+            RepositoryException,
+            JsonError,
+            IOException
     {
-        jsonWriter.beginObject();
-        jsonWriter.name("created").value(GetIsoDateTimeString(_dateTimeProvider.Now()));
+        jsonTextWriter.WriteStartObject();
+        jsonTextWriter.WritePropertyName("created").WriteValue(_dateTimeProvider.Now());
 
-        if (_options.ExportBloodPressureData)
+        for (Widget widgetToExport : _options.WidgetsToExport)
         {
-            ExportBloodPressureData(jsonWriter);
+           final IRepositoryJsonTextSerializer repositoryJsonTextSerializer =
+                   _widgetRepositoriesJsonTextSerializer.get(widgetToExport);
+
+           if (repositoryJsonTextSerializer == null)
+           {
+               _logger.LogError(TAG, "Widget-Repository JsonTextSerializer for Widget '" + widgetToExport  +"' is missing!");
+               continue;
+           }
+
+           jsonTextWriter.WritePropertyName(widgetToExport.name());
+           repositoryJsonTextSerializer.SerializeAsJson(jsonTextWriter);
         }
 
-        if (_options.ExportBloodSugarData)
-        {
-            ExportBloodSugarData(jsonWriter);
-        }
-
-        if (_options.ExportFoodData)
-        {
-            ExportFoodData(jsonWriter);
-        }
-
-        if (_options.ExportStepCountData)
-        {
-            ExportStepCountData(jsonWriter);
-        }
-
-        if (_options.ExportWeightData)
-        {
-            ExportWeightData(jsonWriter);
-        }
-
-        jsonWriter.endObject();
-    }
-
-    private void ExportBloodPressureData(final JsonWriter jsonWriter) throws
-            IOException, IBloodPressureWidgetRepository.RepositoryException
-    {
-        jsonWriter.name("bloodPressure").beginObject();
-
-        WriteRepositoryProperties(
-            _bloodPressureWidgetRepository,
-            ExportUserDataAsJsonOperation::WriteBloodPressureRecord,
-            jsonWriter);
-
-        jsonWriter.endObject();
-    }
-
-    private static void WriteBloodPressureRecord(
-            final BloodPressureRecord bloodPressureRecord,
-            final JsonWriter jsonWriter)
-            throws IOException
-    {
-        jsonWriter
-            .beginObject()
-            .name("identifier").value(bloodPressureRecord.Identifier.toString())
-            .name("systolic").value(bloodPressureRecord.Systolic)
-            .name("diastolic").value(bloodPressureRecord.Diastolic)
-            .name("unit").value(bloodPressureRecord.Unit.name())
-            .name("pulse").value(bloodPressureRecord.Pulse)
-            .name("medication").value(bloodPressureRecord.Medication.name())
-            .name("timeOfMeasurement").value(GetIsoDateTimeString(bloodPressureRecord.TimeOfMeasurement))
-            .name("note").value(bloodPressureRecord.Note)
-            .endObject();
-    }
-
-    private void ExportBloodSugarData(
-            final JsonWriter jsonWriter)
-            throws IOException
-    {
-        jsonWriter.name("bloodSugar").beginObject();
-
-        // TODO: implement blood sugar data export
-
-        jsonWriter.endObject();
-    }
-
-    private void ExportFoodData(
-            final JsonWriter jsonWriter)
-            throws IOException
-    {
-        jsonWriter.name("food").beginObject();
-
-        // TODO: implement food data export
-
-        jsonWriter.endObject();
-    }
-
-    private void ExportStepCountData(final JsonWriter jsonWriter) throws
-            IOException, IStepWidgetRepository.RepositoryException
-    {
-        jsonWriter.name("stepCount").beginObject();
-
-        WriteRepositoryProperties(
-            _stepWidgetRepository,
-            ExportUserDataAsJsonOperation::WriteStepCountRecord,
-            jsonWriter);
-
-        jsonWriter
-            .name("defaultStepCountGoal")
-            .value(_stepWidgetRepository.GetDefaultStepCountGoal());
-
-
-        jsonWriter.endObject();
-    }
-
-    private static void WriteStepCountRecord(
-            final StepCountRecord stepCountRecord,
-            final JsonWriter jsonWriter)
-            throws IOException
-    {
-        jsonWriter
-            .beginObject()
-            .name("stepCount").value(stepCountRecord.StepCount)
-            .name("goal").value(stepCountRecord.Goal)
-            .name("timeOfMeasurement").value(GetIsoDateTimeString(stepCountRecord.TimeOfMeasurement))
-            .endObject();
-    }
-
-    private void ExportWeightData(final JsonWriter jsonWriter) throws
-            IOException, IWeightWidgetRepository.RepositoryException
-    {
-        jsonWriter.name("weight").beginObject();
-
-        WriteRepositoryProperties(
-            _weightWidgetRepository,
-            ExportUserDataAsJsonOperation::WriteWeightRecord,
-            jsonWriter);
-
-        jsonWriter.endObject();
-    }
-
-    private static void WriteWeightRecord(
-            final WeightRecord weightRecord,
-            final JsonWriter jsonWriter)
-            throws IOException
-    {
-        jsonWriter
-            .beginObject()
-            .name("identifier").value(weightRecord.Identifier.toString())
-            .name("value").value(weightRecord.Value)
-            .name("unit").value(weightRecord.Unit.name())
-            .name("timeOfMeasurement").value(GetIsoDateTimeString(weightRecord.TimeOfMeasurement))
-            .endObject();
-    }
-
-    private <TRecord, TRepositoryException extends Exception>
-    void WriteRepositoryProperties(
-            final IRepository<TRecord, TRepositoryException> repository,
-            final IRecordJsonSerializer<TRecord> recordJsonSerializer,
-            final JsonWriter jsonWriter)
-            throws IOException, TRepositoryException
-    {
-        jsonWriter.name("provider")
-            .beginObject()
-                .name("name").value(repository.GetProviderName())
-                .name("version").value(repository.GetProviderVersion())
-            .endObject();
-
-        jsonWriter.name("records");
-        WriteRecords(
-            repository,
-            recordJsonSerializer,
-            jsonWriter);
-    }
-
-    private <TRecord, TRepositoryException extends Exception>
-        void WriteRecords(
-            final IRepository<TRecord, TRepositoryException> repository,
-            final IRecordJsonSerializer<TRecord> recordJsonSerializer,
-            final JsonWriter jsonWriter)
-            throws IOException, TRepositoryException
-    {
-        final long count = repository.GetRecordCount();
-        long offset = 0;
-
-        final int maxBufferSize = 128;
-        List<TRecord> buffer;
-
-        jsonWriter.beginArray();
-
-        while (offset < count)
-        {
-            buffer = repository.GetRecordsDescending(offset, maxBufferSize);
-
-            for (TRecord record : buffer)
-            {
-                recordJsonSerializer.Serialize(record, jsonWriter);
-            }
-
-            offset += buffer.size();
-        }
-
-        jsonWriter.endArray();
-    }
-
-    private interface IRecordJsonSerializer<TRecord>
-    {
-        void Serialize(TRecord record, JsonWriter jsonWriter) throws IOException;
-    }
-
-    private static String GetIsoDateTimeString(LocalDateTime dateTime)
-    {
-        return dateTime.format(DateTimeFormatter.ISO_DATE_TIME);
+        jsonTextWriter.WriteEndObject();
     }
 
     /**
@@ -352,37 +138,9 @@ public class ExportUserDataAsJsonOperation
     public static class Options
     {
         /**
-         * Gets if the blood pressure related data should be exported.
-         * {@code true} when blood pressure related user data should be
-         * exported; otherwise {@code false}.
+         * Gets an immutable List that contains the widgets that should be exported.
          */
-        public final boolean ExportBloodPressureData;
-
-        /**
-         * Gets if the blood sugar related data should be exported.
-         * {@code true} when blood sugar related user data should be
-         * exported; otherwise {@code false}.
-         */
-        public final boolean ExportBloodSugarData;
-
-        /**
-         * Gets if the food related data should be exported. {@code true}
-         * when food related user data should be exported; otherwise {@code false}.
-         */
-        public final boolean ExportFoodData;
-
-        /**
-         * Gets if the step count related data should be exported.
-         * {@code true} when step count related user data should
-         * be exported; otherwise {@code false}.
-         */
-        public final boolean ExportStepCountData;
-
-        /**
-         * Gets if the weight related data should be exported. {@code true}
-         * when food related user data should be exported; otherwise {@code false}.
-         */
-        public final boolean ExportWeightData;
+        public List<Widget> WidgetsToExport;
 
         /**
          * Initializes a new {@link Options} instance with a specific configuration.
@@ -410,11 +168,15 @@ public class ExportUserDataAsJsonOperation
             final boolean exportStepCountData,
             final boolean exportWeightData)
         {
-            ExportBloodPressureData = exportBloodPressureData;
-            ExportBloodSugarData = exportBloodSugarData;
-            ExportFoodData = exportFoodData;
-            ExportStepCountData = exportStepCountData;
-            ExportWeightData = exportWeightData;
+            final ArrayList<Widget> widgetsToExport = new ArrayList<>();
+
+            if (exportBloodPressureData) widgetsToExport.add(Widget.bloodPressure);
+            if (exportBloodSugarData) widgetsToExport.add(Widget.bloodSugar);
+            if (exportFoodData) widgetsToExport.add(Widget.food);
+            if (exportStepCountData) widgetsToExport.add(Widget.steps);
+            if (exportWeightData) widgetsToExport.add(Widget.weight);
+
+            WidgetsToExport = Collections.unmodifiableList(widgetsToExport);
         }
     }
 
@@ -459,66 +221,5 @@ public class ExportUserDataAsJsonOperation
         {
             super(cause);
         }
-    }
-}
-
-class JsonWriter implements AutoCloseable
-{
-    private final OutputStreamWriter _streamWriter;
-
-    public JsonWriter(OutputStreamWriter streamWriter)
-    {
-        _streamWriter = streamWriter;
-    }
-
-    public JsonWriter beginObject()
-    {
-        return this;
-    }
-
-    public JsonWriter endObject()
-    {
-        return this;
-    }
-
-    public JsonWriter beginArray()
-    {
-        return this;
-    }
-
-    public JsonWriter endArray()
-    {
-        return this;
-    }
-
-    public JsonWriter name(String records)
-    {
-        return this;
-    }
-
-    public JsonWriter value(boolean value)
-    {
-        return this;
-    }
-
-    public JsonWriter value(int value)
-    {
-        return this;
-    }
-
-    public JsonWriter value(double value)
-    {
-        return this;
-    }
-
-    public JsonWriter value(String value)
-    {
-        return this;
-    }
-
-    @Override
-    public void close() throws Exception
-    {
-        _streamWriter.close();
     }
 }

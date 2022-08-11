@@ -3,7 +3,8 @@ package de.dviererbe.healthtrack.presentation.main.stepcount;
 import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IStepWidgetRepository;
+import de.dviererbe.healthtrack.persistence.IDefaultStepCountGoalGetter;
+import de.dviererbe.healthtrack.persistence.IDefaultStepCountGoalSetter;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 import de.dviererbe.healthtrack.presentation.ViewModel;
 
@@ -14,7 +15,7 @@ public class StepCountGoalDefaultEditorViewModel
     implements IDisposable
 {
     private static final String TAG = "StepCountGoalDefaultEditorViewModel";
-    private final IStepWidgetRepository _repository;
+    private final IDefaultStepCountGoalSetter _defaultStepCountGoalSetter;
     private final INumericValueConverter _numericValueConverter;
     private final ILogger _logger;
 
@@ -24,17 +25,18 @@ public class StepCountGoalDefaultEditorViewModel
     private boolean _canValuesBeSaved;
 
     public StepCountGoalDefaultEditorViewModel(
-        final IStepWidgetRepository repository,
+        final IDefaultStepCountGoalGetter defaultStepCountGoalGetter,
+        final IDefaultStepCountGoalSetter defaultStepCountGoalSetter,
         final INumericValueConverter numericValueConverter,
         final ILogger logger)
     {
-        _repository = repository;
+        _defaultStepCountGoalSetter = defaultStepCountGoalSetter;
         _numericValueConverter = numericValueConverter;
         _logger = logger;
 
         try
         {
-            _goal = _repository.GetDefaultStepCountGoal();
+            _goal = defaultStepCountGoalGetter.GetDefaultStepCountGoal();
         }
         catch (Exception exception)
         {
@@ -110,7 +112,7 @@ public class StepCountGoalDefaultEditorViewModel
     {
         try
         {
-            _repository.SetDefaultStepCountGoal(_goal);
+            _defaultStepCountGoalSetter.SetDefaultStepCountGoal(_goal);
         }
         catch (Exception exception)
         {

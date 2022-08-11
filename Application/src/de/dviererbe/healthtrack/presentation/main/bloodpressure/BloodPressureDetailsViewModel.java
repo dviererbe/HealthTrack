@@ -26,8 +26,9 @@ import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IBloodPressureWidgetRepository;
-import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
+import de.dviererbe.healthtrack.persistence.IDeletableById;
+import de.dviererbe.healthtrack.persistence.IQueryableById;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredUnitRepository;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
 
     private final IBloodPressureDetailsView _view;
     private final INavigationRouter _navigationRouter;
-    private final IBloodPressureWidgetRepository _repository;
+    private final IDeletableById _bloodPressureRecordDeleter;
     private final ILogger _logger;
     private final UUID _recordIdentifier;
 
@@ -84,7 +85,8 @@ public class BloodPressureDetailsViewModel implements IDisposable
     public BloodPressureDetailsViewModel(
             final IBloodPressureDetailsView view,
             final INavigationRouter navigationRouter,
-            final IBloodPressureWidgetRepository repository,
+            final IQueryableById<BloodPressureRecord> bloodPressureRecordReader,
+            final IDeletableById bloodPressureRecordDeleter,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final IPreferredUnitRepository preferredUnitRepository,
@@ -93,7 +95,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
     {
         _view = view;
         _navigationRouter = navigationRouter;
-        _repository = repository;
+        _bloodPressureRecordDeleter = bloodPressureRecordDeleter;
         _logger = logger;
         _recordIdentifier = recordIdentifier;
 
@@ -101,7 +103,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
 
         try
         {
-            record = _repository.GetRecord(recordIdentifier);
+            record = bloodPressureRecordReader.GetRecord(recordIdentifier);
         }
         catch (Exception exception)
         {
@@ -209,7 +211,7 @@ public class BloodPressureDetailsViewModel implements IDisposable
             {
                 try
                 {
-                    _repository.DeleteRecord(_recordIdentifier);
+                    _bloodPressureRecordDeleter.DeleteRecord(_recordIdentifier);
                 }
                 catch (Exception exception)
                 {

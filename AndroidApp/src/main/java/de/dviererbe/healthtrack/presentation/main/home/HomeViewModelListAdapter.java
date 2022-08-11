@@ -23,9 +23,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 import de.dviererbe.healthtrack.databinding.ItemBloodpressureRecordBinding;
-import de.dviererbe.healthtrack.databinding.ItemDaySummaryBinding;
 import de.dviererbe.healthtrack.databinding.ItemStepcountRecordBinding;
 import de.dviererbe.healthtrack.databinding.ItemWeightRecordBinding;
 import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureListItemViewModel;
@@ -122,21 +120,5 @@ public class HomeViewModelListAdapter extends BaseAdapter
         }
 
         return view;
-    }
-
-    public static class WidgetSummaryViewHolder extends RecyclerView.ViewHolder
-    {
-        private final ItemDaySummaryBinding _binding;
-
-        public WidgetSummaryViewHolder(ItemDaySummaryBinding binding)
-        {
-            super(binding.getRoot());
-            _binding = binding;
-        }
-
-        void Bind(DaySummaryViewModel viewModel)
-        {
-            _binding.setViewModel(viewModel);
-        }
     }
 }

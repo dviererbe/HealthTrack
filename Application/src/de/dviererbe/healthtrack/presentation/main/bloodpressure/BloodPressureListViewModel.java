@@ -25,8 +25,9 @@ import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IBloodPressureWidgetRepository;
-import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
+import de.dviererbe.healthtrack.persistence.IBulkDeletable;
+import de.dviererbe.healthtrack.persistence.IBulkQueryable;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredUnitRepository;
 
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class BloodPressureListViewModel implements IDisposable
     private final static String TAG = "BloodPressureListViewModel";
     private final IBloodPressureListView _view;
     private final INavigationRouter _navigationRouter;
-    private final IBloodPressureWidgetRepository _repository;
+    private final IBulkQueryable<BloodPressureRecord> _bloodPressureRecordReader;
+    private final IBulkDeletable _bloodPressureRecordDeleter;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
 
@@ -45,7 +47,8 @@ public class BloodPressureListViewModel implements IDisposable
     public BloodPressureListViewModel(
             final IBloodPressureListView view,
             final INavigationRouter navigationRouter,
-            final IBloodPressureWidgetRepository repository,
+            final IBulkQueryable<BloodPressureRecord> bloodPressureRecordReader,
+            final IBulkDeletable bloodPressureRecordDeleter,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final IPreferredUnitRepository preferredUnitRepository,
@@ -53,7 +56,8 @@ public class BloodPressureListViewModel implements IDisposable
     {
         _view = view;
         _navigationRouter = navigationRouter;
-        _repository = repository;
+        _bloodPressureRecordReader = bloodPressureRecordReader;
+        _bloodPressureRecordDeleter = bloodPressureRecordDeleter;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
         _preferredBloodPressureUnit = GetPreferredBloodPressureUnit(preferredUnitRepository);
@@ -79,7 +83,7 @@ public class BloodPressureListViewModel implements IDisposable
     {
         try
         {
-            final long recordCount = _repository.GetRecordCount();
+            final long recordCount = _bloodPressureRecordReader.GetRecordCount();
 
             if (recordCount > Integer.MAX_VALUE)
                 return Integer.MAX_VALUE;
@@ -110,7 +114,7 @@ public class BloodPressureListViewModel implements IDisposable
         try
         {
             // TODO: implement caching solution
-            final List<BloodPressureRecord> records = _repository.GetRecordsDescending(offset, 1);
+            final List<BloodPressureRecord> records = _bloodPressureRecordReader.GetRecordsDescending(offset, 1);
             return records.get(0);
         }
         catch (Exception exception)
@@ -133,7 +137,7 @@ public class BloodPressureListViewModel implements IDisposable
             {
                 try
                 {
-                    _repository.DeleteAllRecords();
+                    _bloodPressureRecordDeleter.DeleteAllRecords();
                 }
                 catch (Exception exception)
                 {

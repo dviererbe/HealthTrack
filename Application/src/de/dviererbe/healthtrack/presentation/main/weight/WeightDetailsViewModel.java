@@ -24,7 +24,8 @@ import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
 import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
-import de.dviererbe.healthtrack.persistence.IWeightWidgetRepository;
+import de.dviererbe.healthtrack.persistence.IDeletableById;
+import de.dviererbe.healthtrack.persistence.IQueryableById;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 
 import java.util.UUID;
@@ -38,8 +39,8 @@ public class WeightDetailsViewModel implements IDisposable
     private final IWeightDetailsView _view;
 
     private final INavigationRouter _navigationRouter;
-    private final IWeightWidgetRepository _repository;
 
+    private final IDeletableById _weightRecordDeleter;
     private final ILogger _logger;
     private final UUID _recordIdentifier;
     public final String Value;
@@ -49,7 +50,8 @@ public class WeightDetailsViewModel implements IDisposable
     public WeightDetailsViewModel(
         final IWeightDetailsView view,
         final INavigationRouter navigationRouter,
-        final IWeightWidgetRepository weightWidgetRepository,
+        final IQueryableById<WeightRecord> weightRecordReader,
+        final IDeletableById weightRecordDeleter,
         final IDateTimeConverter dateTimeConverter,
         final INumericValueConverter numericValueConverter,
         final ILogger logger,
@@ -57,7 +59,7 @@ public class WeightDetailsViewModel implements IDisposable
     {
         _view = view;
         _navigationRouter = navigationRouter;
-        _repository = weightWidgetRepository;
+        _weightRecordDeleter = weightRecordDeleter;
         _logger = logger;
         _recordIdentifier = recordIdentifier;
 
@@ -65,7 +67,7 @@ public class WeightDetailsViewModel implements IDisposable
 
         try
         {
-            record = _repository.GetRecord(recordIdentifier);
+            record = weightRecordReader.GetRecord(recordIdentifier);
         }
         catch (Exception exception)
         {
@@ -92,7 +94,7 @@ public class WeightDetailsViewModel implements IDisposable
             {
                 try
                 {
-                    _repository.DeleteRecord(_recordIdentifier);
+                    _weightRecordDeleter.DeleteRecord(_recordIdentifier);
                 }
                 catch (Exception exception)
                 {

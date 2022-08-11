@@ -18,7 +18,7 @@
 
 package de.dviererbe.healthtrack.application;
 
-import de.dviererbe.healthtrack.persistence.IPreferredThemeRepository;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredThemeRepository;
 import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
 
 /**

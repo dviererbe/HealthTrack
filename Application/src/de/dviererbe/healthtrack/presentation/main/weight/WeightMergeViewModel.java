@@ -21,14 +21,11 @@ package de.dviererbe.healthtrack.presentation.main.weight;
 import de.dviererbe.healthtrack.domain.WeightRecord;
 import de.dviererbe.healthtrack.domain.WeightUnit;
 import de.dviererbe.healthtrack.infrastructure.*;
-import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
-import de.dviererbe.healthtrack.persistence.IWeightWidgetRepository;
+import de.dviererbe.healthtrack.persistence.IMergable;
+import de.dviererbe.healthtrack.persistence.IQueryableById;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredUnitRepository;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
-import de.dviererbe.healthtrack.presentation.MutableObservableValue;
-import de.dviererbe.healthtrack.presentation.ObservableValue;
 import de.dviererbe.healthtrack.presentation.ViewModel;
-import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureMergeViewModel;
-import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountMergeViewModel;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -39,7 +36,7 @@ public class WeightMergeViewModel extends ViewModel<WeightMergeViewModel.IWeight
     private static final String TAG = "WeightMergeViewModel";
 
     // DEPENDENCIES:
-    private final IWeightWidgetRepository _repository;
+    private final IMergable<WeightRecord> _weightRecordWriter;
     private final IDateTimeProvider _dateTimeProvider;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
@@ -58,7 +55,8 @@ public class WeightMergeViewModel extends ViewModel<WeightMergeViewModel.IWeight
     private boolean _canValuesBeSaved;
 
     public WeightMergeViewModel(
-        final IWeightWidgetRepository repository,
+        final IQueryableById<WeightRecord> weightRecordReader,
+        final IMergable<WeightRecord> weightRecordWriter,
         final IPreferredUnitRepository preferredUnitRepository,
         final IDateTimeProvider dateTimeProvider,
         final IDateTimeConverter dateTimeConverter,
@@ -66,7 +64,7 @@ public class WeightMergeViewModel extends ViewModel<WeightMergeViewModel.IWeight
         final ILogger logger,
         final UUID weightRecordIdentifier)
     {
-        _repository = repository;
+        _weightRecordWriter = weightRecordWriter;
         _dateTimeProvider = dateTimeProvider;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
@@ -85,7 +83,7 @@ public class WeightMergeViewModel extends ViewModel<WeightMergeViewModel.IWeight
         {
             try
             {
-                WeightRecord record = _repository.GetRecord(weightRecordIdentifier);
+                WeightRecord record = weightRecordReader.GetRecord(weightRecordIdentifier);
 
                 _weightValue = record.Value;
                 _weightUnit = record.Unit;
@@ -289,7 +287,7 @@ public class WeightMergeViewModel extends ViewModel<WeightMergeViewModel.IWeight
 
         try
         {
-            _repository.CreateOrUpdateRecord(record);
+            _weightRecordWriter.CreateOrUpdateRecord(record);
         }
         catch (Exception exception)
         {

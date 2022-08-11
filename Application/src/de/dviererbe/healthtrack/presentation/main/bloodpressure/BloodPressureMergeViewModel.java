@@ -22,8 +22,9 @@ import de.dviererbe.healthtrack.domain.BloodPressureRecord;
 import de.dviererbe.healthtrack.domain.BloodPressureUnit;
 import de.dviererbe.healthtrack.domain.MedicationState;
 import de.dviererbe.healthtrack.infrastructure.*;
-import de.dviererbe.healthtrack.persistence.IBloodPressureWidgetRepository;
-import de.dviererbe.healthtrack.persistence.IPreferredUnitRepository;
+import de.dviererbe.healthtrack.persistence.IMergable;
+import de.dviererbe.healthtrack.persistence.IQueryableById;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredUnitRepository;
 import de.dviererbe.healthtrack.presentation.ConversionHelper;
 import de.dviererbe.healthtrack.presentation.ViewModel;
 
@@ -35,13 +36,13 @@ public class BloodPressureMergeViewModel extends ViewModel<BloodPressureMergeVie
 {
     private static final String TAG = "BloodPressureMergeViewModel";
 
-    private final IBloodPressureWidgetRepository _repository;
     private final IDateTimeProvider _dateTimeProvider;
     private final IDateTimeConverter _dateTimeConverter;
     private final INumericValueConverter _numericValueConverter;
     private final ILogger _logger;
     private final UUID _recordIdentifier;
     private final boolean _recordLoaded;
+    private final IMergable<BloodPressureRecord> _bloodPressureRecordWriter;
 
     private Integer _systolicValue;
     private String _systolicText;
@@ -60,7 +61,8 @@ public class BloodPressureMergeViewModel extends ViewModel<BloodPressureMergeVie
     private boolean _canValuesBeSaved;
 
     public BloodPressureMergeViewModel(
-            final IBloodPressureWidgetRepository repository,
+            final IQueryableById<BloodPressureRecord> bloodPressureRecordReader,
+            final IMergable<BloodPressureRecord> bloodPressureRecordWriter,
             final IDateTimeProvider dateTimeProvider,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
@@ -68,7 +70,7 @@ public class BloodPressureMergeViewModel extends ViewModel<BloodPressureMergeVie
             final ILogger logger,
             final UUID recordIdentifier)
     {
-        _repository = repository;
+        _bloodPressureRecordWriter = bloodPressureRecordWriter;
         _dateTimeProvider = dateTimeProvider;
         _dateTimeConverter = dateTimeConverter;
         _numericValueConverter = numericValueConverter;
@@ -91,7 +93,7 @@ public class BloodPressureMergeViewModel extends ViewModel<BloodPressureMergeVie
         {
             try
             {
-                BloodPressureRecord record = _repository.GetRecord(recordIdentifier);
+                BloodPressureRecord record = bloodPressureRecordReader.GetRecord(recordIdentifier);
 
                 _systolicValue = record.Systolic;
                 _diastolicValue = record.Diastolic;
@@ -460,7 +462,7 @@ public class BloodPressureMergeViewModel extends ViewModel<BloodPressureMergeVie
 
         try
         {
-            _repository.CreateOrUpdateRecord(record);
+            _bloodPressureRecordWriter.CreateOrUpdateRecord(record);
         }
         catch (Exception exception)
         {

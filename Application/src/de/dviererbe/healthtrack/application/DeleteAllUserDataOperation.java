@@ -19,7 +19,8 @@
 package de.dviererbe.healthtrack.application;
 
 import de.dviererbe.healthtrack.infrastructure.ILogger;
-import de.dviererbe.healthtrack.persistence.*;
+import de.dviererbe.healthtrack.persistence.IBulkDeletable;
+import de.dviererbe.healthtrack.persistence.repositories.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,11 +32,11 @@ public class DeleteAllUserDataOperation
 {
     private static final String TAG = "DeleteAllUserDataOperation";
 
-    private final IStepWidgetRepository _stepWidgetRepository;
-    private final IWeightWidgetRepository _weightWidgetRepository;
-    private final IFoodWidgetRepository _foodWidgetRepository;
-    private final IBloodPressureWidgetRepository _bloodPressureWidgetRepository;
-    private final IBloodSugarWidgetRepository _bloodSugarWidgetRepository;
+    private final IBulkDeletable _stepWidgetRepository;
+    private final IBulkDeletable _weightWidgetRepository;
+    private final IBulkDeletable _foodWidgetRepository;
+    private final IBulkDeletable _bloodPressureWidgetRepository;
+    private final IBulkDeletable _bloodSugarWidgetRepository;
     private final ILogger _logger;
 
     /**
@@ -49,11 +50,11 @@ public class DeleteAllUserDataOperation
      * @param logger reference to a logger instance.
      */
     public DeleteAllUserDataOperation(
-            final IStepWidgetRepository stepWidgetRepository,
-            final IWeightWidgetRepository weightWidgetRepository,
-            final IFoodWidgetRepository foodWidgetRepository,
-            final IBloodPressureWidgetRepository bloodPressureWidgetRepository,
-            final IBloodSugarWidgetRepository bloodSugarWidgetRepository,
+            final IBulkDeletable stepWidgetRepository,
+            final IBulkDeletable weightWidgetRepository,
+            final IBulkDeletable foodWidgetRepository,
+            final IBulkDeletable bloodPressureWidgetRepository,
+            final IBulkDeletable bloodSugarWidgetRepository,
             final ILogger logger)
     {
         _stepWidgetRepository = stepWidgetRepository;

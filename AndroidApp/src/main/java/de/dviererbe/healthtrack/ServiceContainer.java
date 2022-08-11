@@ -19,7 +19,7 @@
 package de.dviererbe.healthtrack;
 
 import de.dviererbe.healthtrack.application.SetUIThemeWhenUserPreferenceChangesBehaviour;
-import de.dviererbe.healthtrack.persistence.IPreferredThemeRepository;
+import de.dviererbe.healthtrack.persistence.repositories.IPreferredThemeRepository;
 import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
 
 public class ServiceContainer
