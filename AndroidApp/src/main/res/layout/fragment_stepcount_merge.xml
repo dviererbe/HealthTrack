@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Health Track
+    Copyright (C) 2022  Dominik Viererbe
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".presentation.main.stepcount.StepCountMergeFragment">
+
+    <data>
+        <variable name="ViewModel" type="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountMergeFragment.StepCountMergeViewModelDataBindingAdapter"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="@string/steps_merge_title_stepcount" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:digits="0123456789"
+            android:textSize="19sp"
+            android:inputType="number"
+            android:text="@={ViewModel.stepCount}"
+            android:enabled="@{ViewModel.IsEditable, default=false}" />
+
+        <TextView
+            android:visibility="@{ViewModel.stepCountErrorMessageVisibility, default=invisible}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:text="@string/steps_merge_error_stepcount"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:text="@string/steps_merge_title_goal" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:digits="0123456789"
+            android:textSize="19sp"
+            android:inputType="number"
+            android:text="@={ViewModel.goal}"
+            android:enabled="@{ViewModel.IsEditable, default=false}" />
+
+        <TextView
+            android:visibility="@{ViewModel.goalErrorMessageVisibility, default=invisible}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:text="@string/steps_merge_error_Goal"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textStyle="bold"
+            android:text="@string/steps_merge_title_DateTime" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="19sp"
+                android:text="@{ViewModel.dateTimeOfMeasurement, default=`{Date} {Time}`}" />
+
+            <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:drawableLeft="@drawable/ic_baseline_edit_24"
+                android:onClick="@{() -> ViewModel.OnPickDateTimeOfMeasurementButtonClicked()}"
+                android:enabled="@{ViewModel.IsEditable, default=false}" />
+            <Button
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="@string/steps_merge_button_now"
+                android:onClick="@{() -> ViewModel.OnSetDateTimeOfMeasurementToNowButtonClicked()}"
+                android:enabled="@{ViewModel.IsEditable, default=false}" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:enabled="@{ViewModel.isSaveButtonEnabled, default=false}"
+            android:text="@{ViewModel.SaveButtonLabel, default=@string/steps_merge_button_create}"
+            android:onClick="@{() -> ViewModel.OnSaveButtonClicked()}"/>
+
+        <TextView
+            android:visibility="@{ViewModel.RecordCouldNotLoadedErrorMessageVisibility, default=visible}"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#F00"
+            android:text="@string/steps_merge_information_loading_failed" />
+    </LinearLayout>
+</layout>
