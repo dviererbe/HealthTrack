@@ -12,7 +12,6 @@ import de.dviererbe.healthtrack.persistence.exceptions.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class SQLiteRepositoryBase<TRecord>
     extends

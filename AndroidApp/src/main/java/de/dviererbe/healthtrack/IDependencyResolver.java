@@ -97,41 +97,6 @@ public interface IDependencyResolver extends IDisposable
     IWidgetConfigurationRepository GetWidgetConfigurationRepository();
 
     /**
-     * Initializes an {@link IStepWidgetRepository} implementation.
-     *
-     * @return {@link IStepWidgetRepository} implementation
-     */
-    IStepWidgetRepository CreateStepWidgetRepository();
-
-    /**
-     * Initializes an {@link } implementation.
-     *
-     * @return {@link } implementation
-     */
-    IFoodWidgetRepository CreateFoodWidgetRepository();
-
-    /**
-     * Initializes an {@link IWeightWidgetRepository} implementation.
-     *
-     * @return {@link IWeightWidgetRepository} implementation
-     */
-    IWeightWidgetRepository CreateWeightWidgetRepository();
-
-    /**
-     * Initializes an {@link IBloodPressureWidgetRepository} implementation.
-     *
-     * @return {@link IBloodPressureWidgetRepository} implementation
-     */
-    IBloodPressureWidgetRepository CreateBloodPressureWidgetRepository();
-
-    /**
-     * Initializes an {@link IBloodSugarWidgetRepository} implementation.
-     *
-     * @return {@link IBloodSugarWidgetRepository} implementation
-     */
-    IBloodSugarWidgetRepository CreateBloodSugarWidgetRepository();
-
-    /**
      * Resolves an {@link IUIThemeSetter} implementation.
      *
      * @return {@link IUIThemeSetter} implementation

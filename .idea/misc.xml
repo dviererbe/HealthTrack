@@ -3,11 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/activity_main.xml" value="0.26266464032421477" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/content_main.xml" value="0.20018115942028986" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_about_privacy_policy.xml" value="0.26266464032421477" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_bloodpressure_details.xml" value="0.26266464032421477" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_bloodpressure_list.xml" value="0.26266464032421477" />
         <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_bloodpressure_merge.xml" value="0.1" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_export_data.xml" value="0.246875" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_food_merge.xml" value="0.26266464032421477" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_stepcount_details.xml" value="0.26266464032421477" />
         <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_stepcount_goal_default_editor.xml" value="0.15830800405268491" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_stepcount_list.xml" value="0.26266464032421477" />
         <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_stepcount_merge.xml" value="0.1" />
         <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/fragment_weight_merge.xml" value="0.1" />
         <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/item_day_summary.xml" value="0.17552083333333332" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/item_stepcount_record.xml" value="0.26266464032421477" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/item_weight_record.xml" value="0.26266464032421477" />
+        <entry key="..\:/HealthTrack/AndroidApp/src/main/res/layout/nav_header_main.xml" value="0.26266464032421477" />
         <entry key="..\:/HealthTrack/app/src/main/res/drawable/background_round_corners.xml" value="0.44907407407407407" />
         <entry key="..\:/HealthTrack/app/src/main/res/drawable/ic_menu_bloodpressure.xml" value="0.1625" />
         <entry key="..\:/HealthTrack/app/src/main/res/drawable/ic_menu_bloodsugar.xml" value="0.16145833333333334" />

@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.LifecycleOwner;
 import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
+import de.dviererbe.healthtrack.infrastructure.IUserDataJsonTextWriterProvider;
 import de.dviererbe.healthtrack.presentation.main.MainViewViewModel;
 import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureDetailsViewModel;
 import de.dviererbe.healthtrack.presentation.main.bloodpressure.BloodPressureDetailsViewModel.IBloodPressureDetailsView;
@@ -33,30 +34,24 @@ import de.dviererbe.healthtrack.presentation.main.bloodsugar.BloodSugarListViewM
 import de.dviererbe.healthtrack.presentation.main.food.FoodListViewModel;
 import de.dviererbe.healthtrack.presentation.main.home.HomeViewModel;
 import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountDetailsViewModel;
-import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountDetailsViewModel.IStepCountDetailsView;
 import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountGoalDefaultEditorViewModel;
 import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListViewModel;
-import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListViewModel.IStepCountListView;
 import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountMergeViewModel;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightDetailsViewModel;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightDetailsViewModel.IWeightDetailsView;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightListViewModel;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightListViewModel.IWeightListView;
 import de.dviererbe.healthtrack.presentation.main.weight.WeightMergeViewModel;
-import de.dviererbe.healthtrack.presentation.settings.ExportDataDialogViewModel;
-import de.dviererbe.healthtrack.presentation.settings.ExportDataDialogViewModel.IExportDataDialogView;
 import de.dviererbe.healthtrack.presentation.settings.SettingsViewModel;
-import de.dviererbe.healthtrack.presentation.settings.SettingsViewModel.ISettingsView;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 public class ViewModelFactory
 {
-    private final IDependencyResolver DependencyResolver;
+    private final ApplicationContextDependencyResolver DependencyResolver;
 
-    public ViewModelFactory(IDependencyResolver dependencyResolver)
+    public ViewModelFactory(ApplicationContextDependencyResolver dependencyResolver)
     {
         DependencyResolver = dependencyResolver;
     }
@@ -69,7 +64,8 @@ public class ViewModelFactory
         final BloodPressureListViewModel viewModel = new BloodPressureListViewModel(
             view,
             navigationRouter,
-            DependencyResolver.CreateBloodPressureWidgetRepository(),
+            DependencyResolver._bloodPressureWidgetRepository,
+            DependencyResolver._bloodPressureWidgetRepository,
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
             DependencyResolver.GetPreferredUnitRepository(),
@@ -89,7 +85,8 @@ public class ViewModelFactory
         final BloodPressureDetailsViewModel viewModel = new BloodPressureDetailsViewModel(
             view,
             navigationRouter,
-            DependencyResolver.CreateBloodPressureWidgetRepository(),
+            DependencyResolver._bloodPressureWidgetRepository,
+            DependencyResolver._bloodPressureWidgetRepository,
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
             DependencyResolver.GetPreferredUnitRepository(),
@@ -105,7 +102,8 @@ public class ViewModelFactory
             final UUID recordIdentifier)
     {
         return new BloodPressureMergeViewModel(
-            DependencyResolver.CreateBloodPressureWidgetRepository(),
+            DependencyResolver._bloodPressureWidgetRepository,
+            DependencyResolver._bloodPressureWidgetRepository,
             DependencyResolver.GetDateTimeProvider(),
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
@@ -117,16 +115,6 @@ public class ViewModelFactory
     public BloodSugarListViewModel CreateBloodSugarListViewModel(final Lifecycle viewModelLifecycle)
     {
         final BloodSugarListViewModel viewModel = new BloodSugarListViewModel(DependencyResolver.GetLogger());
-        DisposeViewModelWhenLifecycleEnds(viewModel, viewModelLifecycle);
-
-        return viewModel;
-    }
-
-    public ExportDataDialogViewModel CreateExportDataViewModel(
-            final Lifecycle viewModelLifecycle,
-            final IExportDataDialogView exportDataView)
-    {
-        final ExportDataDialogViewModel viewModel = new ExportDataDialogViewModel(exportDataView);
         DisposeViewModelWhenLifecycleEnds(viewModel, viewModelLifecycle);
 
         return viewModel;
@@ -147,9 +135,10 @@ public class ViewModelFactory
         final HomeViewModel viewModel = new HomeViewModel(
             navigationRouter,
             DependencyResolver.GetDateTimeProvider(),
-            DependencyResolver.CreateBloodPressureWidgetRepository(),
-            DependencyResolver.CreateStepWidgetRepository(),
-            DependencyResolver.CreateWeightWidgetRepository(),
+            DependencyResolver._bloodPressureWidgetRepository,
+            DependencyResolver._weightWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
             DependencyResolver.GetPreferredUnitRepository(),
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
@@ -162,75 +151,55 @@ public class ViewModelFactory
     }
 
     public SettingsViewModel CreatSettingsViewModel(
-            final Lifecycle viewModelLifecycle,
-            final ISettingsView view)
+        final IUserDataJsonTextWriterProvider userDataJsonTextWriterProvider)
     {
-        final SettingsViewModel viewModel = new SettingsViewModel(
-            view,
-            (params) -> DependencyResolver.CreateExportUserDataAsJsonOperation(params.Options, params.UserDataJsonFileOutputStreamProvider),
+        return new SettingsViewModel(
+            (options) -> DependencyResolver.CreateExportUserDataAsJsonOperation(options, userDataJsonTextWriterProvider),
             (params) -> DependencyResolver.CreateDeleteAllUserDataOperation(),
             DependencyResolver.GetLogger());
-
-        DisposeViewModelWhenLifecycleEnds(viewModel, viewModelLifecycle);
-
-        return viewModel;
     }
 
     public StepCountGoalDefaultEditorViewModel CreateStepCountGoalDefaultEditorViewModel()
     {
         return new StepCountGoalDefaultEditorViewModel(
-            DependencyResolver.CreateStepWidgetRepository(),
+            DependencyResolver._stepsWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
             DependencyResolver.GetNumericValueConverter(),
             DependencyResolver.GetLogger());
     }
 
-    public StepCountListViewModel CreateStepCountListViewModel(
-            final Lifecycle viewModelLifecycle,
-            final IStepCountListView view,
-            final INavigationRouter navigationRouter)
+    public StepCountListViewModel CreateStepCountListViewModel()
     {
-        final StepCountListViewModel viewModel = new StepCountListViewModel(
-            view,
-            navigationRouter,
-            DependencyResolver.CreateStepWidgetRepository(),
+        return new StepCountListViewModel(
+            DependencyResolver._stepsWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
             DependencyResolver.GetLogger());
-
-        DisposeViewModelWhenLifecycleEnds(viewModel, viewModelLifecycle);
-
-        return viewModel;
     }
 
-    public StepCountDetailsViewModel CreateStepCountDetailsViewModel(
-            final Lifecycle viewModelLifecycle,
-            final IStepCountDetailsView view,
-            final INavigationRouter navigationRouter,
-            final LocalDate day)
+    public StepCountDetailsViewModel CreateStepCountDetailsViewModel(final UUID identifier)
     {
-        final StepCountDetailsViewModel viewModel = new StepCountDetailsViewModel(
-            view,
-            navigationRouter,
-            DependencyResolver.CreateStepWidgetRepository(),
+        return new StepCountDetailsViewModel(
+            DependencyResolver._stepsWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
             DependencyResolver.GetLogger(),
-            day);
-
-        DisposeViewModelWhenLifecycleEnds(viewModel, viewModelLifecycle);
-
-        return viewModel;
+            identifier);
     }
 
-    public StepCountMergeViewModel CreateStepCountMergeViewModel(final LocalDate day)
+    public StepCountMergeViewModel CreateStepCountMergeViewModel(final UUID identifier)
     {
         return new StepCountMergeViewModel(
-            DependencyResolver.CreateStepWidgetRepository(),
+            DependencyResolver._stepsWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
+            DependencyResolver._stepsWidgetRepository,
             DependencyResolver.GetDateTimeProvider(),
             DependencyResolver.GetDateTimeConverter(),
             DependencyResolver.GetNumericValueConverter(),
             DependencyResolver.GetLogger(),
-            day);
+            identifier);
     }
 
     public WeightListViewModel CreateWeightListViewModel(
@@ -241,7 +210,8 @@ public class ViewModelFactory
         final WeightListViewModel viewModel = new WeightListViewModel(
                 view,
                 navigationRouter,
-                DependencyResolver.CreateWeightWidgetRepository(),
+                DependencyResolver._weightWidgetRepository,
+                DependencyResolver._weightWidgetRepository,
                 DependencyResolver.GetDateTimeConverter(),
                 DependencyResolver.GetNumericValueConverter(),
                 DependencyResolver.GetPreferredUnitRepository(),
@@ -261,7 +231,8 @@ public class ViewModelFactory
         final WeightDetailsViewModel viewModel = new WeightDetailsViewModel(
                 view,
                 navigationRouter,
-                DependencyResolver.CreateWeightWidgetRepository(),
+                DependencyResolver._weightWidgetRepository,
+                DependencyResolver._weightWidgetRepository,
                 DependencyResolver.GetDateTimeConverter(),
                 DependencyResolver.GetNumericValueConverter(),
                 DependencyResolver.GetLogger(),
@@ -276,7 +247,8 @@ public class ViewModelFactory
         final UUID recordIdentifier)
     {
         return new WeightMergeViewModel(
-            DependencyResolver.CreateWeightWidgetRepository(),
+            DependencyResolver._weightWidgetRepository,
+            DependencyResolver._weightWidgetRepository,
             DependencyResolver.GetPreferredUnitRepository(),
             DependencyResolver.GetDateTimeProvider(),
             DependencyResolver.GetDateTimeConverter(),

@@ -22,6 +22,5 @@ sourceSets {
 
 dependencies {
     api project(path: ":Domain")
-    api project(path: ":JsonTextWriter")
     testImplementation 'junit:junit:4.+'
 }

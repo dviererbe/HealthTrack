@@ -244,11 +244,11 @@ public class WeightListFragment
      * Tries to navigate to the step count record details user interface for
      * a record with a specific identifier.
      *
-     * @param dateOfDay The date of the day of the record to see the details for.
+     * @param recordIdentifier The identifier of the record to see the details for.
      * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
     @Override
-    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    public boolean TryNavigateToStepCountRecordDetails(final UUID recordIdentifier)
     {
         return false;
     }
@@ -257,11 +257,11 @@ public class WeightListFragment
      * Tries to navigate to the edit step count record user interface for
      * a record with a specific identifier.
      *
-     * @param dateOfDay The date of the day of the record to edit.
+     * @param recordIdentifier The identifier of the record to edit.
      * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
     @Override
-    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    public boolean TryNavigateToEditStepCountRecord(final UUID recordIdentifier)
     {
         return false;
     }

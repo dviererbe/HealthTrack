@@ -25,14 +25,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import de.dviererbe.healthtrack.databinding.ItemStepcountRecordBinding;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+import java.util.function.Function;
+
 public class StepCountListViewRecyclerViewAdapter
         extends RecyclerView.Adapter<StepCountListViewRecyclerViewAdapter.StepCountRecordItemViewHolder>
 {
     private final StepCountListViewModel _viewModel;
+    private final Function<UUID, Runnable> _showDetailsCommandFactory;
 
-    public StepCountListViewRecyclerViewAdapter(final StepCountListViewModel viewModel)
+    public StepCountListViewRecyclerViewAdapter(
+            final StepCountListViewModel viewModel,
+            final Function<UUID, Runnable> showDetailsCommandFactory)
     {
         _viewModel = viewModel;
+        _showDetailsCommandFactory = showDetailsCommandFactory;
     }
 
     /**
@@ -55,7 +62,9 @@ public class StepCountListViewRecyclerViewAdapter
     @Override
     public void onBindViewHolder(@NonNull @NotNull StepCountRecordItemViewHolder holder, int position)
     {
-        holder.Bind(_viewModel.GetRecord(position));
+        final StepCountListItemViewModel record = _viewModel.GetRecord(position);
+
+        holder.Bind(record, _showDetailsCommandFactory.apply(record.Identifier));
     }
 
     /**
@@ -78,9 +87,10 @@ public class StepCountListViewRecyclerViewAdapter
             _binding = binding;
         }
 
-        void Bind(StepCountListItemViewModel viewModel)
+        void Bind(StepCountListItemViewModel viewModel, Runnable showDetailsCommand)
         {
             _binding.setViewModel(viewModel);
+            _binding.setShowDetailsCommand(showDetailsCommand);
         }
     }
 }

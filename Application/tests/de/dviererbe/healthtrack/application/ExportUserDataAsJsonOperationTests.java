@@ -40,6 +40,7 @@ import static org.junit.Assert.*;
 
 public class ExportUserDataAsJsonOperationTests
 {
+    /*
     private final static ExportUserDataAsJsonOperation.Options ExportAll =
             new ExportUserDataAsJsonOperation.Options(
                 true,
@@ -328,4 +329,6 @@ public class ExportUserDataAsJsonOperationTests
         final String expectedValue = "{}";
         assertEquals(expectedValue, actualValue);
     }
+    */
+
 }

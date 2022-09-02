@@ -67,11 +67,11 @@ public class ExportUserDataAsJsonOperation
      *      reference to a mechanism to write logs.
      */
     public ExportUserDataAsJsonOperation(
-            final Options options,
-            final IUserDataJsonTextWriterProvider userDataJsonTextWriterProvider,
-            final Map<Widget, IRepositoryJsonTextSerializer> widgetRepositoriesJsonTextSerializer,
-            final IDateTimeProvider dateTimeProvider,
-            final ILogger logger)
+        final Options options,
+        final IUserDataJsonTextWriterProvider userDataJsonTextWriterProvider,
+        final Map<Widget, IRepositoryJsonTextSerializer> widgetRepositoriesJsonTextSerializer,
+        final IDateTimeProvider dateTimeProvider,
+        final ILogger logger)
     {
         _options = options;
         _userDataJsonTextWriterProvider = userDataJsonTextWriterProvider;
@@ -82,25 +82,42 @@ public class ExportUserDataAsJsonOperation
 
     /**
      * Executes the operation to export the user data as specified.
-     *
-     * @throws ExportError When an error occurred during the export operation.
      */
-    public void Execute() throws ExportError
+    public void Execute(final ExportUserDataAsJsonOperationFinishedCallback callback)
     {
-        try
+        _userDataJsonTextWriterProvider.ProvideUserDataJsonTextWriter(new IUserDataJsonTextWriterProvider.ProvideUserDataJsonTextWriterRequestCallback()
         {
-            try (final IJsonTextWriter jsonTextWriter = _userDataJsonTextWriterProvider.ProvideUserDataJsonTextWriter())
+            @Override
+            public void UserDataJsonTextWriterProvided(final IJsonTextWriter jsonTextWriter)
             {
-                ExportUserData(jsonTextWriter);
+                try
+                {
+                    ExportUserData(jsonTextWriter);
+                    callback.ExportUserDataAsJsonOperationFinished(null);
+                }
+                catch (Exception exception)
+                {
+                    callback.ExportUserDataAsJsonOperationFinished(exception);
+                }
+                finally
+                {
+                    try
+                    {
+                        jsonTextWriter.close();
+                    }
+                    catch (Exception exception)
+                    {
+                        _logger.LogError(TAG, "Failed to close jsonTextWriter.", exception);
+                    }
+                }
             }
-        }
-        catch (Exception exception)
-        {
-            final String errorMessage = "Failed to create user data json file.";
 
-            _logger.LogError(TAG, errorMessage, exception);
-            throw new ExportError(errorMessage, exception);
-        }
+            @Override
+            public void UserDataJsonTextWriterCouldNotBeProvided(final Exception exception)
+            {
+                callback.ExportUserDataAsJsonOperationFinished(exception);
+            }
+        });
     }
 
     private void ExportUserData(final IJsonTextWriter jsonTextWriter)
@@ -180,46 +197,8 @@ public class ExportUserDataAsJsonOperation
         }
     }
 
-    /**
-     * The exception that is thrown when an error occurred during the export user data operation.
-     */
-    public static class ExportError extends Exception
+    public interface ExportUserDataAsJsonOperationFinishedCallback
     {
-        /**
-         * Constructs a new exception with the specified detail message. The cause is not initialized, and
-         * may subsequently be initialized by a call to {@code Throwable.initCause(java.lang.Throwable)}.
-         *
-         * @param message the detail message. The detail message is saved for later retrieval by the {@code Throwable.getMessage()} method.
-         */
-        public ExportError(String message)
-        {
-            super(message);
-        }
-
-        /**
-         * Constructs a new exception with the specified detail message and cause.
-         *
-         * Note that the detail message associated with cause is not automatically incorporated in this exception's detail message.
-         *
-         * @param message the detail message (which is saved for later retrieval by the {@code Throwable.getMessage()} method).
-         * @param cause  the cause (which is saved for later retrieval by the {@code Throwable.getCause()} method). (A null value is permitted, and indicates that the cause is nonexistent or unknown.)
-         */
-        public ExportError(String message, Throwable cause)
-        {
-            super(message, cause);
-        }
-
-        /**
-         * Constructs a new exception with the specified cause and a detail message of
-         * {@code (cause==null ? null : cause.toString())} (which typically contains the
-         * class and detail message of cause). This constructor is useful for exceptions
-         * that are little more than wrappers for other throwables (for example, {@code PrivilegedActionException}).
-         *
-         * @param cause the cause (which is saved for later retrieval by the {@code Throwable.getCause()} method). (A {@code null} value is permitted, and indicates that the cause is nonexistent or unknown.)
-         */
-        public ExportError(Throwable cause)
-        {
-            super(cause);
-        }
+        void ExportUserDataAsJsonOperationFinished(Exception exception);
     }
 }

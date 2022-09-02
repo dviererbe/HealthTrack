@@ -33,6 +33,7 @@ import de.dviererbe.healthtrack.presentation.main.weight.WeightListItemViewModel
 public class HomeViewModelListAdapter extends BaseAdapter
 {
     private final Object[] _viewModels;
+    private final Runnable _stepCountContextAction;
     private final Context _context;
 
     public HomeViewModelListAdapter(
@@ -54,6 +55,8 @@ public class HomeViewModelListAdapter extends BaseAdapter
             viewModels[i] = homeViewModel.StepCountOfToday;
             i++;
         }
+
+        _stepCountContextAction = homeViewModel.StepCountContextCommand;
 
         if (homeViewModel.LatestWeightOfToday != null)
         {
@@ -107,6 +110,7 @@ public class HomeViewModelListAdapter extends BaseAdapter
         {
             ItemStepcountRecordBinding binding =  ItemStepcountRecordBinding.inflate(inflater, viewGroup, false);
             binding.setViewModel((StepCountListItemViewModel)_viewModels[position]);
+            binding.setShowDetailsCommand(_stepCountContextAction);
 
             return binding.getRoot();
         }

@@ -168,7 +168,7 @@ public class BloodPressureWidgetSQLiteRepository extends SQLiteRepositoryBase<Bl
                 /* GROUP BY */ null,
                 /* HAVING */ null,
                 /* ORDER BY */ TableBloodPressure_Key_TimeOfMeasurementDate + " DESC," +
-                                   TableBloodPressure_Key_TimeOfMeasurementDate + " DESC");
+                               TableBloodPressure_Key_TimeOfMeasurementTime + " DESC");
     }
 
     @Override

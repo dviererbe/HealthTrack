@@ -38,6 +38,8 @@ public class HomeViewModel implements IDisposable
     public final StepCountListItemViewModel StepCountOfToday;
     public final WeightListItemViewModel LatestWeightOfToday;
 
+    public final Runnable StepCountContextCommand;
+
     public HomeViewModel(
             final INavigationRouter navigationRouter,
             final IDateTimeProvider dateTimeProvider,
@@ -45,7 +47,7 @@ public class HomeViewModel implements IDisposable
             final IPerDayBulkQueryable<WeightRecord> weightRecordReader,
             final IPerDayBulkQueryable<StepCountRecord> stepCountRecordReader,
             final IDefaultStepCountGoalGetter defaultStepCountGoalGetter,
-        final IPreferredUnitRepository preferredUnitRepository,
+            final IPreferredUnitRepository preferredUnitRepository,
             final IDateTimeConverter dateTimeConverter,
             final INumericValueConverter numericValueConverter,
             final IWidgetConfigurationRepository widgetConfigurationRepository,
@@ -97,23 +99,26 @@ public class HomeViewModel implements IDisposable
 
                 StepCountOfToday =
                     new StepCountListItemViewModel(
-                        navigationRouter,
                         numericValueConverter,
                         defaultStepCountGoal);
+
+                StepCountContextCommand = navigationRouter::TryNavigateToCreateStepCountRecord;
             }
             else
             {
                 StepCountOfToday =
                     new StepCountListItemViewModel(
-                        navigationRouter,
                         dateTimeConverter,
                         numericValueConverter,
                         stepCountRecordOfToday);
+
+                StepCountContextCommand = () -> navigationRouter.TryNavigateToStepCountRecordDetails(StepCountOfToday.Identifier);
             }
         }
         else
         {
             StepCountOfToday = null;
+            StepCountContextCommand = () -> {};
         }
 
         if (widgetConfigurationRepository.IsWeightWidgetEnabled())

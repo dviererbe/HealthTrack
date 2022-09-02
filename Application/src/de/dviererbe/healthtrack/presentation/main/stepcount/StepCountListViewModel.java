@@ -18,15 +18,12 @@
 
 package de.dviererbe.healthtrack.presentation.main.stepcount;
 
-import de.dviererbe.healthtrack.IDisposable;
 import de.dviererbe.healthtrack.domain.StepCountRecord;
 import de.dviererbe.healthtrack.infrastructure.IDateTimeConverter;
 import de.dviererbe.healthtrack.infrastructure.ILogger;
-import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.infrastructure.INumericValueConverter;
 import de.dviererbe.healthtrack.persistence.IBulkDeletable;
 import de.dviererbe.healthtrack.persistence.IBulkQueryable;
-import de.dviererbe.healthtrack.persistence.IDefaultStepCountGoalGetter;
 import de.dviererbe.healthtrack.presentation.ViewModel;
 
 import java.util.List;
@@ -78,7 +75,6 @@ public class StepCountListViewModel extends ViewModel<StepCountListViewModel.ISt
         final StepCountRecord stepCountRecord = TryGetRecord(offset);
 
         return new StepCountListItemViewModel(
-            _navigationRouter,
             _dateTimeConverter,
             _numericValueConverter,
             stepCountRecord);
@@ -99,46 +95,21 @@ public class StepCountListViewModel extends ViewModel<StepCountListViewModel.ISt
         }
     }
 
-    public void CreateRecord()
-    {
-        _navigationRouter.TryNavigateToCreateStepCountRecord();
-    }
-
     public void DeleteAll()
     {
-        _view.ShowConfirmDeleteAllDialog(confirmedDelete ->
+        try
         {
-            if (confirmedDelete)
-            {
-                try
-                {
-                    _stepCountDeleter.DeleteAllRecords();
-                }
-                catch (Exception exception)
-                {
-                    _logger.LogDebug(TAG, "Failed to delete records.", exception);
-                    _view.NotifyUserThatRecordsCouldNotBeDeleted();
-                    return;
-                }
+            _stepCountDeleter.DeleteAllRecords();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogDebug(TAG, "Failed to delete records.", exception);
+            NotifyEventHandlers(IStepCountListViewModelEventHandler::RecordsCouldNotBeDeleted);
+            return;
+        }
 
-                _view.OnListItemsChanged();
-                _view.NotifyUserThatRecordsHaveBeenDeleted();
-            }
-        });
-    }
-
-    public void EditDefaultStepCountGoal()
-    {
-        _navigationRouter.TryNavigateToDefaultStepCountGoalEditor();
-    }
-
-    /**
-     * Performs application-defined tasks associated with freeing, releasing, or resetting resources.
-     */
-    @Override
-    public void Dispose()
-    {
-        // Nothing to do here.
+        NotifyEventHandlers(IStepCountListViewModelEventHandler::RecordsHaveBeenDeleted);
+        NotifyEventHandlers(IStepCountListViewModelEventHandler::ListItemsChanged);
     }
 
     /**
@@ -147,38 +118,18 @@ public class StepCountListViewModel extends ViewModel<StepCountListViewModel.ISt
     public interface IStepCountListViewModelEventHandler
     {
         /**
-         * Notifies the {@link IStepCountListView} that the item list has changed.
+         * Called when the item list has changed.
          */
-        void OnListItemsChanged();
+        void ListItemsChanged();
 
         /**
-         * Shows the user a UI that asks for confirmation to delete all records.
-         *
-         * @param callback a reference to a callback mechanism when the user made a decision.
+         * Called when the step count records have been deleted successfully.
          */
-        void ShowConfirmDeleteAllDialog(IConfirmDeleteAllDialogObserver callback);
+        void RecordsHaveBeenDeleted();
 
         /**
-         * Notifies the user that the step count records have been deleted successfully.
+         * Called when the step count records could not be deleted because of an error.
          */
-        void NotifyUserThatRecordsHaveBeenDeleted();
-
-        /**
-         * Notifies the user that the step count records could not be deleted because of an error.
-         */
-        void NotifyUserThatRecordsCouldNotBeDeleted();
-
-        /**
-         * Callback mechanism for when the confirm delete all dialog exited.
-         */
-        interface IConfirmDeleteAllDialogObserver
-        {
-            /**
-             * Called when the user made a decision and the confirm delete all dialog exited.
-             *
-             * @param confirmedDelete {@code true} when all step count records should be deleted; otherweise {@code false}.
-             */
-            void OnCompleted(boolean confirmedDelete);
-        }
+        void RecordsCouldNotBeDeleted();
     }
 }

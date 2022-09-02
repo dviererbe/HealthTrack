@@ -55,7 +55,24 @@ public class BloodPressureListFragment
     }
 
     /**
-     * {@inheritDoc}
+     * Called to have the fragment instantiate its user interface view. This is optional, and non-graphical
+     * fragments can return null. This will be called between {@link Fragment#onCreate(Bundle)} and
+     * {@link Fragment#onActivityCreated(Bundle)}. A default View can be returned by calling
+     * {@link Fragment#Fragment(int)} in your constructor. Otherwise, this method returns null.
+     * It is recommended to only inflate the layout in this method and move logic that operates on the returned
+     * View to {@link Fragment#onViewCreated(View, Bundle)}.
+     * If you return a View from here, you will later be called in {@link Fragment#onDestroyView} when the view
+     * is being released.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return Instantiate user interface view.
      */
     @Override
     public View onCreateView(
@@ -267,11 +284,11 @@ public class BloodPressureListFragment
      * Tries to navigate to the step count record details user interface for
      * a record with a specific identifier.
      *
-     * @param dateOfDay The date of the day of the record to see the details for.
+     * @param recordIdentifier The identifier of the record to see the details for.
      * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
     @Override
-    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    public boolean TryNavigateToStepCountRecordDetails(final UUID recordIdentifier)
     {
         return false;
     }
@@ -280,11 +297,11 @@ public class BloodPressureListFragment
      * Tries to navigate to the edit step count record user interface for
      * a record with a specific identifier.
      *
-     * @param dateOfDay The date of the day of the record to edit.
+     * @param recordIdentifier The identifier of the record to edit.
      * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
     @Override
-    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    public boolean TryNavigateToEditStepCountRecord(final UUID recordIdentifier)
     {
         return false;
     }

@@ -23,44 +23,39 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.*;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.navigation.fragment.NavHostFragment;
 import de.dviererbe.healthtrack.R;
 import de.dviererbe.healthtrack.databinding.FragmentStepcountDetailsBinding;
-import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.presentation.FragmentBase;
-import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountDetailsViewModel.IStepCountDetailsView;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-public class StepCountDetailsFragment
-        extends FragmentBase
-        implements IStepCountDetailsView, INavigationRouter
+public class StepCountDetailsFragment extends FragmentBase
 {
-    private static final String PARAM_Day = "Day";
+    private static final String PARAM_Identifier = "Identifier";
 
     private StepCountDetailsViewModel _viewModel;
 
     private FragmentStepcountDetailsBinding _binding;
 
-    private LocalDate _day;
+    private UUID _identifier;
 
-    public static Bundle BundleParameter(final LocalDate day)
+    public static Bundle BundleParameter(final UUID identifier)
     {
         final Bundle parameter = new Bundle();
-        parameter.putString(PARAM_Day, day.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        parameter.putString(PARAM_Identifier, identifier.toString());
 
         return parameter;
     }
 
     private void UnbundleParameter(Bundle parameter)
     {
-        if (parameter == null || !parameter.containsKey(PARAM_Day)) return;
+        if (parameter == null || !parameter.containsKey(PARAM_Identifier)) return;
 
-        _day = LocalDate.parse(parameter.getString(PARAM_Day), DateTimeFormatter.ISO_LOCAL_DATE);
+        _identifier = UUID.fromString(parameter.getString(PARAM_Identifier));
     }
 
     @Override
@@ -76,14 +71,32 @@ public class StepCountDetailsFragment
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState)
     {
-        _viewModel = GetViewModelFactory()
-                .CreateStepCountDetailsViewModel(getLifecycle(), this, this, _day);
-
-        _binding = FragmentStepcountDetailsBinding
-                .inflate(inflater, container, false);
-        _binding.setViewModel(_viewModel);
-
+        _binding = FragmentStepcountDetailsBinding.inflate(inflater, container, false);
         return _binding.getRoot();
+    }
+
+    /**
+     * Called immediately after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * has returned, but before any saved state has been restored in to the view.
+     * This gives subclasses a chance to initialize themselves once
+     * they know their view hierarchy has been completely created.  The fragment's
+     * view hierarchy is not however attached to its parent at this point.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here.
+     */
+    @Override
+    public void onViewCreated(
+            @NonNull @NotNull View view,
+            @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState)
+    {
+        _viewModel = GetViewModelFactory().CreateStepCountDetailsViewModel(_identifier);
+
+        _binding.setViewModel(_viewModel);
+        _binding.setLifecycleOwner(this.getViewLifecycleOwner());
+
+        _viewModel.RegisterEventHandler(new ViewModelEventListener());
     }
 
     /**
@@ -93,8 +106,10 @@ public class StepCountDetailsFragment
     public void onDestroyView()
     {
         super.onDestroyView();
-        _binding = null;
+
+        _viewModel.Dispose();
         _viewModel = null;
+        _binding = null;
     }
 
     /**
@@ -115,10 +130,10 @@ public class StepCountDetailsFragment
         switch (item.getItemId())
         {
             case R.id.action_steps_details_edit:
-                _viewModel.Edit();
+                TryNavigateToEditStepCountRecord();
                 return true;
             case R.id.action_steps_details_delete:
-                _viewModel.Delete();
+                ShowConfirmDeleteDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -126,21 +141,9 @@ public class StepCountDetailsFragment
     }
 
     /**
-     * Notifies the user that the record could not be deleted because of an error.
-     */
-    @Override
-    public void NotifyUserThatRecordCouldNotBeDeleted()
-    {
-        ShowToastWithLongDuration(R.string.steps_details_notifications_delete_failure);
-    }
-
-    /**
      * Shows the user a dialog to confirm that the record should be deleted.
-     *
-     * @param callback a reference to a callback mechanism when the user made a decision.
      */
-    @Override
-    public void ShowConfirmDeleteDialog(IConfirmDeleteDialogObserver callback)
+    private void ShowConfirmDeleteDialog()
     {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle(R.string.steps_details_dialog_delete_title);
@@ -150,172 +153,49 @@ public class StepCountDetailsFragment
                 R.string.steps_details_dialog_delete_confirm,
                 (DialogInterface dialog, int which) ->
                 {
-                    callback.OnCompleted(true);
+                    _viewModel.Delete();
                 });
 
         dialogBuilder.setNegativeButton(
                 R.string.steps_details_dialog_delete_cancel,
-                (DialogInterface dialog, int which) ->
-                {
-                    callback.OnCompleted(false);
-                });
+                (DialogInterface dialog, int which) -> {});
 
         dialogBuilder.show();
     }
 
-    /**
-     * Tries to navigate to the user settings UI (User Interface).
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToSettings()
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the create blood pressure record user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToCreateBloodPressureRecord()
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the blood pressure record details user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to see the details for.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToBloodPressureRecordDetails(UUID recordIdentifier)
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the edit blood pressure record user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to edit.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToEditBloodPressureRecord(UUID recordIdentifier)
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the default step count goal editor user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToDefaultStepCountGoalEditor()
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the create step count record user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToCreateStepCountRecord()
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the step count record details user interface for
-     * a record with a specific identifier.
-     *
-     * @param dateOfDay The date of the day of the record to see the details for.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the edit step count record user interface for
-     * a record with a specific identifier.
-     *
-     * @param dateOfDay The date of the day of the record to edit.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    private void TryNavigateToEditStepCountRecord()
     {
         try
         {
-            Bundle parameter = StepCountMergeFragment.BundleParameter(dateOfDay);
+            Bundle parameter = StepCountMergeFragment.BundleParameter(_identifier);
             NavHostFragment
                 .findNavController(this)
                 .navigate(R.id.action_nav_stepCountDetailsFragment_to_stepCountMergeFragment, parameter);
-
-            return true;
         }
         catch (Exception exception)
         {
-            return false;
         }
     }
 
-    /**
-     * Tries to navigate to the create weight record user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToCreateWeightRecord()
+    private class ViewModelEventListener implements StepCountDetailsViewModel.IStepCountDetailsViewModelEventHandler
     {
-        return false;
-    }
 
-    /**
-     * Tries to navigate to the weight record details user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to see the details for.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToWeightRecordDetails(UUID recordIdentifier)
-    {
-        return false;
-    }
+        /**
+         * Called when the record could not be deleted because of an error.
+         */
+        @Override
+        public void RecordCouldNotBeDeleted()
+        {
+            ShowToastWithLongDuration(R.string.steps_details_notifications_delete_failure);
+        }
 
-    /**
-     * Tries to navigate to the edit weight record user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to edit.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToEditWeightRecord(UUID recordIdentifier)
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the preceding UI (User Interface).
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateBack()
-    {
-        return TryGoBack();
+        /**
+         * Called when the record could be deleted successfully.
+         */
+        @Override
+        public void RecordDeleted()
+        {
+            TryGoBack();
+        }
     }
 }

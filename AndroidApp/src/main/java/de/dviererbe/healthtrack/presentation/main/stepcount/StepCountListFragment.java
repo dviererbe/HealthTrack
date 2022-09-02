@@ -28,17 +28,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import de.dviererbe.healthtrack.R;
 import de.dviererbe.healthtrack.databinding.FragmentStepcountListBinding;
-import de.dviererbe.healthtrack.infrastructure.INavigationRouter;
 import de.dviererbe.healthtrack.presentation.FragmentBase;
-import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListViewModel.IStepCountListView;
+import de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListViewModel.IStepCountListViewModelEventHandler;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
-public class StepCountListFragment
-        extends FragmentBase
-        implements IStepCountListView, INavigationRouter
+public class StepCountListFragment extends FragmentBase
 {
     private StepCountListViewModel _viewModel;
     private FragmentStepcountListBinding _binding;
@@ -64,15 +60,37 @@ public class StepCountListFragment
             ViewGroup container,
             Bundle savedInstanceState)
     {
-        _viewModel = GetViewModelFactory().CreateStepCountListViewModel(getLifecycle(), this,this);
         _binding = FragmentStepcountListBinding.inflate(inflater, container, false);
+        return _binding.getRoot();
+    }
 
-        _adapter = new StepCountListViewRecyclerViewAdapter(_viewModel);
+    /**
+     * Called immediately after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * has returned, but before any saved state has been restored in to the view.
+     * This gives subclasses a chance to initialize themselves once
+     * they know their view hierarchy has been completely created.  The fragment's
+     * view hierarchy is not however attached to its parent at this point.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here.
+     */
+    @Override
+    public void onViewCreated(
+            @NonNull @NotNull View view,
+            @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        _viewModel = GetViewModelFactory().CreateStepCountListViewModel();
+        _adapter = new StepCountListViewRecyclerViewAdapter(_viewModel, (final UUID uuid) -> () -> TryNavigateToStepCountRecordDetails(uuid));
         _binding.StepCountListRecyclerView.setAdapter(_adapter);
         _binding.StepCountListRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        return _binding.getRoot();
+        _viewModel.RegisterEventHandler(new StepCountListViewModelEventListener());
     }
+
+
 
     /**
      * {@inheritDoc}
@@ -81,7 +99,10 @@ public class StepCountListFragment
     public void onDestroyView()
     {
         super.onDestroyView();
+
+        _viewModel.Dispose();
         _viewModel = null;
+
         _binding = null;
         _adapter = null;
     }
@@ -106,13 +127,13 @@ public class StepCountListFragment
         switch (item.getItemId())
         {
             case R.id.action_steps_record_create:
-                _viewModel.CreateRecord();
+                TryNavigateToCreateStepCountRecord();
                 return true;
             case R.id.action_steps_record_reset:
-                _viewModel.DeleteAll();
+                ShowConfirmDeleteAllDialog();
                 return true;
             case R.id.action_steps_change_default_stepgoal:
-                _viewModel.EditDefaultStepCountGoal();
+                TryNavigateToDefaultStepCountGoalEditor();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -120,21 +141,9 @@ public class StepCountListFragment
     }
 
     /**
-     * Notifies the {@link IStepCountListView} that the item list has changed.
-     */
-    @Override
-    public void OnListItemsChanged()
-    {
-        _adapter.notifyDataSetChanged();
-    }
-
-    /**
      * Shows the user a UI that asks for confirmation to delete all records.
-     *
-     * @param callback a reference to a callback mechanism when the user made a decision.
      */
-    @Override
-    public void ShowConfirmDeleteAllDialog(IConfirmDeleteAllDialogObserver callback)
+    public void ShowConfirmDeleteAllDialog()
     {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
         dialogBuilder.setTitle(R.string.steps_list_dialog_delete_title);
@@ -144,126 +153,45 @@ public class StepCountListFragment
             R.string.steps_list_dialog_delete_confirm,
             (DialogInterface dialog, int which) ->
             {
-                callback.OnCompleted(true);
+                _viewModel.DeleteAll();
             });
 
         dialogBuilder.setNegativeButton(
             R.string.steps_list_dialog_delete_cancel,
-            (DialogInterface dialog, int which) ->
-            {
-                callback.OnCompleted(false);
-            });
+            (DialogInterface dialog, int which) -> {});
 
         dialogBuilder.show();
     }
 
     /**
-     * Notifies the user that the step count records have been deleted successfully.
-     */
-    @Override
-    public void NotifyUserThatRecordsHaveBeenDeleted()
-    {
-        MakeToastWithShortDuration(R.string.steps_list_notifications_delete_success);
-    }
-
-    /**
-     * Notifies the user that the step count records could not be deleted because of an error.
-     */
-    @Override
-    public void NotifyUserThatRecordsCouldNotBeDeleted()
-    {
-        MakeToastWithShortDuration(R.string.steps_list_notifications_delete_failure);
-    }
-
-    /**
-     * Tries to navigate to the user settings UI (User Interface).
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToSettings()
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the create blood pressure record user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToCreateBloodPressureRecord()
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the blood pressure record details user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to see the details for.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToBloodPressureRecordDetails(UUID recordIdentifier)
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the edit blood pressure record user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to edit.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToEditBloodPressureRecord(UUID recordIdentifier)
-    {
-        return false;
-    }
-
-    /**
      * Tries to navigate to the default step count goal editor user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
-    @Override
-    public boolean TryNavigateToDefaultStepCountGoalEditor()
+    public void TryNavigateToDefaultStepCountGoalEditor()
     {
         try
         {
             NavHostFragment
                 .findNavController(this)
                 .navigate(R.id.action_nav_stepcounter_to_stepCountGoalDefaultEditorFragment);
-
-            return true;
         }
         catch (Exception exception)
         {
-            return false;
         }
     }
 
     /**
      * Tries to navigate to the create step count record user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
-    @Override
-    public boolean TryNavigateToCreateStepCountRecord()
+    private void TryNavigateToCreateStepCountRecord()
     {
         try
         {
             NavHostFragment
                 .findNavController(this)
                 .navigate(R.id.action_nav_stepcounter_to_stepCountMergeFragment);
-
-            return true;
         }
         catch (Exception exception)
         {
-            return false;
         }
     }
 
@@ -271,86 +199,52 @@ public class StepCountListFragment
      * Tries to navigate to the step count record details user interface for
      * a record with a specific identifier.
      *
-     * @param dateOfDay The date of the day of the record to see the details for.
+     * @param recordIdentifier The identifier of the record to see the details for.
      * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
      */
-    @Override
-    public boolean TryNavigateToStepCountRecordDetails(LocalDate dateOfDay)
+    private void TryNavigateToStepCountRecordDetails(final UUID recordIdentifier)
     {
         try
         {
-            final Bundle parameter = StepCountDetailsFragment.BundleParameter(dateOfDay);
+            final Bundle parameter = StepCountDetailsFragment.BundleParameter(recordIdentifier);
 
             NavHostFragment
                     .findNavController(this)
                     .navigate(R.id.action_nav_stepcounter_to_stepCountDetailsFragment, parameter);
-
-            return true;
         }
         catch (Exception exception)
         {
-            return false;
         }
     }
 
-    /**
-     * Tries to navigate to the edit step count record user interface for
-     * a record with a specific identifier.
-     *
-     * @param dateOfDay The date of the day of the record to edit.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToEditStepCountRecord(LocalDate dateOfDay)
+    private class StepCountListViewModelEventListener implements IStepCountListViewModelEventHandler
     {
-        return false;
-    }
 
-    /**
-     * Tries to navigate to the create weight record user interface.
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToCreateWeightRecord()
-    {
-        return false;
-    }
+        /**
+         * Called when the item list has changed.
+         */
+        @Override
+        public void ListItemsChanged()
+        {
+            _adapter.notifyDataSetChanged();
+        }
 
-    /**
-     * Tries to navigate to the weight record details user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to see the details for.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToWeightRecordDetails(UUID recordIdentifier)
-    {
-        return false;
-    }
+        /**
+         * Called when the step count records have been deleted successfully.
+         */
+        @Override
+        public void RecordsHaveBeenDeleted()
+        {
+            MakeToastWithShortDuration(R.string.steps_list_notifications_delete_success);
+        }
 
-    /**
-     * Tries to navigate to the edit weight record user interface for
-     * a record with a specific identifier.
-     *
-     * @param recordIdentifier The identifier of the record to edit.
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateToEditWeightRecord(UUID recordIdentifier)
-    {
-        return false;
-    }
-
-    /**
-     * Tries to navigate to the preceding UI (User Interface).
-     *
-     * @return {@code true} if the navigation attempt was successfully; otherwise {@code false}.
-     */
-    @Override
-    public boolean TryNavigateBack()
-    {
-        return false;
+        /**
+         * Called when the step count records could not be deleted because of an error.
+         */
+        @Override
+        public void RecordsCouldNotBeDeleted()
+        {
+            MakeToastWithShortDuration(R.string.steps_list_notifications_delete_failure);
+        }
     }
 }

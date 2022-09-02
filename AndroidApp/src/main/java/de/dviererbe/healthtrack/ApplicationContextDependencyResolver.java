@@ -19,13 +19,22 @@
 package de.dviererbe.healthtrack;
 
 import android.content.Context;
+import androidx.annotation.Nullable;
 import de.dviererbe.healthtrack.application.DeleteAllUserDataOperation;
 import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
+import de.dviererbe.healthtrack.application.Widget;
 import de.dviererbe.healthtrack.infrastructure.*;
+import de.dviererbe.healthtrack.infrastructure.json.BloodPressureWidgetRepositoryJsonTextSerializer;
+import de.dviererbe.healthtrack.infrastructure.json.IRepositoryJsonTextSerializer;
+import de.dviererbe.healthtrack.infrastructure.json.StepWidgetRepositoryJsonTextSerializer;
+import de.dviererbe.healthtrack.infrastructure.json.WeightWidgetRepositoryJsonTextSerializer;
 import de.dviererbe.healthtrack.persistence.*;
 import de.dviererbe.healthtrack.persistence.repositories.*;
 import de.dviererbe.healthtrack.presentation.AndroidUIThemeSetter;
 import de.dviererbe.healthtrack.presentation.IUIThemeSetter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Resolves the dependencies using the application context.
@@ -41,11 +50,9 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
     private final SharedPreferenceRepository _sharedPreferenceRepository;
 
     // User Data Repositories
-    private final WeightWidgetSQLiteRepository _weightWidgetRepository;
-    private final FoodWidgetSQLiteRepository _foodWidgetRepository;
-    private final StepWidgetSQLiteRepository _stepsWidgetRepository;
-    private final BloodPressureWidgetSQLiteRepository _bloodPressureWidgetRepository;
-    private final BloodSugarWidgetSQLiteRepository _bloodSugarWidgetRepository;
+    public final WeightWidgetSQLiteRepository _weightWidgetRepository;
+    public final StepWidgetSQLiteRepository _stepsWidgetRepository;
+    public final BloodPressureWidgetSQLiteRepository _bloodPressureWidgetRepository;
 
     /**
      * Creates a new {@link ApplicationContextDependencyResolver} instance from a given application {@link Context}.
@@ -62,11 +69,9 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
         _androidUIThemeSetter = new AndroidUIThemeSetter();
         _sharedPreferenceRepository = SharedPreferenceRepository.FromContext(applicationContext);
 
-        _foodWidgetRepository = null; //new FoodWidgetSQLiteRepository(applicationContext);
         _weightWidgetRepository = new WeightWidgetSQLiteRepository(applicationContext);
         _stepsWidgetRepository = new StepWidgetSQLiteRepository(applicationContext);
         _bloodPressureWidgetRepository = new BloodPressureWidgetSQLiteRepository(applicationContext);
-        _bloodSugarWidgetRepository = null; //new BloodSugarWidgetSQLiteRepository(applicationContext);
     }
 
     /**
@@ -128,11 +133,12 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
         return new ExportUserDataAsJsonOperation(
             options,
             userDataJsonFileOutputStreamProvider,
-            CreateBloodPressureWidgetRepository(),
-            CreateBloodSugarWidgetRepository(),
-            CreateFoodWidgetRepository(),
-            CreateStepWidgetRepository(),
-            CreateWeightWidgetRepository(),
+            new HashMap<Widget, IRepositoryJsonTextSerializer>()
+            {{
+                put(Widget.bloodPressure, new BloodPressureWidgetRepositoryJsonTextSerializer(_bloodPressureWidgetRepository, _bloodPressureWidgetRepository));
+                put(Widget.steps, new StepWidgetRepositoryJsonTextSerializer(_stepsWidgetRepository, _stepsWidgetRepository, _stepsWidgetRepository));
+                put(Widget.weight, new WeightWidgetRepositoryJsonTextSerializer(_weightWidgetRepository, _weightWidgetRepository));
+            }},
             GetDateTimeProvider(),
             GetLogger());
     }
@@ -147,11 +153,11 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
     public DeleteAllUserDataOperation CreateDeleteAllUserDataOperation()
     {
         return new DeleteAllUserDataOperation(
-            CreateStepWidgetRepository(),
-            CreateWeightWidgetRepository(),
-            CreateFoodWidgetRepository(),
-            CreateBloodPressureWidgetRepository(),
-            CreateBloodSugarWidgetRepository(),
+            _stepsWidgetRepository,
+            _weightWidgetRepository,
+            null,
+            _bloodPressureWidgetRepository,
+            null,
             GetLogger());
     }
 
@@ -199,61 +205,6 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
     }
 
     /**
-     * Initializes an {@link IStepWidgetRepository} implementation.
-     *
-     * @return {@link IStepWidgetRepository} implementation
-     */
-    @Override
-    public IStepWidgetRepository CreateStepWidgetRepository()
-    {
-        return _stepsWidgetRepository;
-    }
-
-    /**
-     * Initializes an {@link } implementation.
-     *
-     * @return {@link } implementation
-     */
-    @Override
-    public IFoodWidgetRepository CreateFoodWidgetRepository()
-    {
-        return _foodWidgetRepository;
-    }
-
-    /**
-     * Initializes an {@link IWeightWidgetRepository} implementation.
-     *
-     * @return {@link IWeightWidgetRepository} implementation
-     */
-    @Override
-    public IWeightWidgetRepository CreateWeightWidgetRepository()
-    {
-        return _weightWidgetRepository;
-    }
-
-    /**
-     * Initializes an {@link IBloodPressureWidgetRepository} implementation.
-     *
-     * @return {@link IBloodPressureWidgetRepository} implementation
-     */
-    @Override
-    public IBloodPressureWidgetRepository CreateBloodPressureWidgetRepository()
-    {
-        return _bloodPressureWidgetRepository;
-    }
-
-    /**
-     * Initializes an {@link IBloodSugarWidgetRepository} implementation.
-     *
-     * @return {@link IBloodSugarWidgetRepository} implementation
-     */
-    @Override
-    public IBloodSugarWidgetRepository CreateBloodSugarWidgetRepository()
-    {
-        return _bloodSugarWidgetRepository;
-    }
-
-    /**
      * Resolves an {@link IUIThemeSetter} implementation.
      *
      * @return {@link IUIThemeSetter} implementation
@@ -283,8 +234,6 @@ public class ApplicationContextDependencyResolver implements IDependencyResolver
     {
         _stepsWidgetRepository.Dispose();
         _weightWidgetRepository.Dispose();
-        _foodWidgetRepository.Dispose();
         _bloodPressureWidgetRepository.Dispose();
-        _bloodSugarWidgetRepository.Dispose();
     }
 }

@@ -22,6 +22,7 @@
 
     <data>
         <variable name="ViewModel" type="de.dviererbe.healthtrack.presentation.main.stepcount.StepCountListItemViewModel"/>
+        <variable name="ShowDetailsCommand" type="Runnable"/>
     </data>
 
     <androidx.cardview.widget.CardView
@@ -30,7 +31,7 @@
             android:layout_margin="8dp"
             android:padding="16dp"
             card_view:cardCornerRadius="8dp"
-            android:onClick="@{() -> ViewModel.RunContextAction()}">
+            android:onClick="@{() -> ShowDetailsCommand.run()}">
 
         <LinearLayout
                 android:layout_width="match_parent"

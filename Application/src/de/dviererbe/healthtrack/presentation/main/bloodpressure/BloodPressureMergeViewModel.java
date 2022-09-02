@@ -185,7 +185,7 @@ public class BloodPressureMergeViewModel extends ViewModel<BloodPressureMergeVie
 
     public boolean IsSystolicValueInvalid()
     {
-        return _systolicValue == null;
+        return _isSystolicValueInvalid;
     }
 
     private void SetSystolicInvalid(final boolean isInvalid)

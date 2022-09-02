@@ -24,17 +24,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import de.dviererbe.healthtrack.HealthTrackApp;
+import androidx.fragment.app.Fragment;
+import de.dviererbe.healthtrack.application.ExportUserDataAsJsonOperation;
 import de.dviererbe.healthtrack.databinding.FragmentExportDataBinding;
-import de.dviererbe.healthtrack.presentation.settings.ExportDataDialogViewModel.IExportDataDialogView;
-import de.dviererbe.healthtrack.presentation.settings.SettingsViewModel.ISettingsView.IExportUserDataDialogObserver.ExportUserDataDialogResult;
+import org.jetbrains.annotations.NotNull;
 
-public class ExportDataFragment
-        extends DialogFragment
-        implements IExportDataDialogView
+public class ExportDataFragment extends DialogFragment
 {
-    private ExportDataDialogViewModel _viewModel;
     private FragmentExportDataBinding _binding;
 
     /**
@@ -48,8 +47,50 @@ public class ExportDataFragment
         return new ExportDataFragment();
     }
 
+    private Bundle PackBundle()
+    {
+        final Bundle bundle = new Bundle();
+        bundle.putBooleanArray("ExportUserDataDialogResult", new boolean[]
+        {
+            _binding.checkboxExportBloodpressureData.isChecked(),
+            _binding.checkboxExportBloodsugarData.isChecked(),
+            _binding.checkboxExportFoodData.isChecked(),
+            _binding.checkboxExportStepsData.isChecked(),
+            _binding.checkboxExportWeightData.isChecked()
+        });
+
+        return bundle;
+    }
+
+    public static ExportUserDataAsJsonOperation.Options UnpackBundle(final Bundle bundle)
+    {
+        boolean[] values = bundle.getBooleanArray("ExportUserDataDialogResult");
+
+        return new ExportUserDataAsJsonOperation.Options(values[0],values[1],values[2],values[3],values[4]);
+    }
+
     /**
-     * {@inheritDoc}
+     * Called to have the fragment instantiate its user interface view. This is optional, and non-graphical
+     * fragments can return null. This will be called between {@link Fragment#onCreate(Bundle)} and
+     * {@link Fragment#onActivityCreated(Bundle)}. A default View can be returned by calling
+     * {@link Fragment#Fragment(int)} in your constructor. Otherwise, this method returns null.
+     * It is recommended to only inflate the layout in this method and move logic that operates on the returned
+     * View to {@link Fragment#onViewCreated(View, Bundle)}.
+     * If you return a View from here, you will later be called in {@link Fragment#onDestroyView} when the view
+     * is being released.
+     *
+     * @param inflater
+     *      The LayoutInflater object that can be used to inflate
+     *      any views in the fragment,
+     * @param container
+     *      If non-null, this is the parent view that the fragment's
+     *      UI should be attached to.  The fragment should not add the view itself,
+     *      but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState
+     *      If non-null, this fragment is being re-constructed
+     *      from a previous saved state as given here.
+     *
+     * @return Instantiate user interface view.
      */
     @Override
     public View onCreateView(
@@ -57,15 +98,34 @@ public class ExportDataFragment
             ViewGroup container,
             Bundle savedInstanceState)
     {
-        _viewModel = HealthTrackApp
-                .GetDependenciesViaActivity(getActivity())
-                .GetViewModelFactory()
-                .CreateExportDataViewModel(getLifecycle(), this);
-
         _binding = FragmentExportDataBinding.inflate(inflater, container, false);
-        _binding.setViewModel(_viewModel);
+        _binding.setLifecycleOwner(getViewLifecycleOwner());
 
         return _binding.getRoot();
+    }
+
+    /**
+     * Called immediately after {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+     * has returned, but before any saved state has been restored in to the view.
+     * This gives subclasses a chance to initialize themselves once
+     * they know their view hierarchy has been completely created.  The fragment's
+     * view hierarchy is not however attached to its parent at this point.
+     *
+     * @param view               The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state as given here.
+     */
+    @Override
+    public void onViewCreated(
+            @NonNull @NotNull
+            final View view,
+            @Nullable @org.jetbrains.annotations.Nullable
+            final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+
+        _binding.setViewModel(new ExportDataFragmentViewModel());
+        _binding.setLifecycleOwner(getViewLifecycleOwner());
     }
 
     /**
@@ -78,95 +138,28 @@ public class ExportDataFragment
         _binding = null;
     }
 
-    /**
-     * Gets if the user wants to export steps data.
-     *
-     * @return {@code true} if the user wants to export steps data; otherwise {@code false}.
-     */
-    @Override
-    public boolean GetExportStepsData()
+    public class ExportDataFragmentViewModel
     {
-        return _binding.checkboxExportStepsData.isChecked();
-    }
-
-    /**
-     * Gets if the user wants to export weight data.
-     *
-     * @return {@code true} if the user wants to export weight data; otherwise {@code false}.
-     */
-    @Override
-    public boolean GetExportWeightData()
-    {
-        return _binding.checkboxExportWeightData.isChecked();
-    }
-
-    /**
-     * Gets if the user wants to export food data.
-     *
-     * @return {@code true} if the user wants to export food data; otherwise {@code false}.
-     */
-    @Override
-    public boolean GetExportFoodData()
-    {
-        return _binding.checkboxExportFoodData.isChecked();
-    }
-
-    /**
-     * Gets if the user wants to export blood pressure data.
-     *
-     * @return {@code true} if the user wants to export blood pressure data; otherwise {@code false}.
-     */
-    @Override
-    public boolean GetExportBloodPressureData()
-    {
-        return _binding.checkboxExportBloodpressureData.isChecked();
-    }
-
-    /**
-     * Gets if the user wants to export blood sugar data.
-     *
-     * @return {@code true} if the user wants to export blood sugar data; otherwise {@code false}.
-     */
-    @Override
-    public boolean GetExportBloodSugarData()
-    {
-        return _binding.checkboxExportBloodsugarData.isChecked();
-    }
-
-    /**
-     * Closes the user interface to export user data.
-     *
-     * @param result the user selected data that should be exported.
-     */
-    @Override
-    public void Close(ExportUserDataDialogResult result)
-    {
-        int resultCode;
-        final Intent intent = new Intent();
-
-        if (result != null)
+        public void ExportData()
         {
-            resultCode = Activity.RESULT_OK;
+            final Intent intent = new Intent();
 
-            Bundle bundle = new Bundle();
-            bundle.putBooleanArray("ExportUserDataDialogResult", new boolean[]
-                {
-                    result.ExportStepsData,
-                    result.ExportFoodData,
-                    result.ExportWeightData,
-                    result.ExportBloodPressureData,
-                    result.ExportBloodSugarData,
-                });
-
+            Bundle bundle = PackBundle();
             intent.putExtras(bundle);
-        }
-        else
-        {
-            resultCode = Activity.RESULT_CANCELED;
+
+            Close(Activity.RESULT_OK, intent);
         }
 
-        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
-        dismiss();
+        public void Close()
+        {
+            Close(Activity.RESULT_CANCELED, new Intent());
+        }
+
+        private void Close(final int resultCode, final Intent intent)
+        {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
+            dismiss();
+        }
     }
 
 }

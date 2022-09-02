@@ -39,30 +39,31 @@ import org.jetbrains.annotations.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class StepCountMergeFragment extends FragmentBase
 {
-    private static final String PARAM_Day = "Day";
+    private static final String PARAM_Identifier = "Identifier";
 
     private StepCountMergeViewModelDataBindingAdapter _viewModelAdapter;
 
     private FragmentStepcountMergeBinding _binding;
 
-    private LocalDate _day;
+    private UUID _identifier;
 
-    public static Bundle BundleParameter(final LocalDate day)
+    public static Bundle BundleParameter(final UUID identifier)
     {
         final Bundle parameter = new Bundle();
-        parameter.putString(PARAM_Day, day.format(DateTimeFormatter.ISO_LOCAL_DATE));
+        parameter.putString(PARAM_Identifier, identifier.toString());
 
         return parameter;
     }
 
     private void UnbundleParameter(Bundle parameter)
     {
-        if (parameter == null || !parameter.containsKey(PARAM_Day)) return;
+        if (parameter == null || !parameter.containsKey(PARAM_Identifier)) return;
 
-        _day = LocalDate.parse(parameter.getString(PARAM_Day), DateTimeFormatter.ISO_LOCAL_DATE);
+        _identifier = UUID.fromString(parameter.getString(PARAM_Identifier));
     }
 
     /**
@@ -139,7 +140,7 @@ public class StepCountMergeFragment extends FragmentBase
     {
         super.onViewCreated(view, savedInstanceState);
 
-        final StepCountMergeViewModel viewModel = GetViewModelFactory().CreateStepCountMergeViewModel(_day);
+        final StepCountMergeViewModel viewModel = GetViewModelFactory().CreateStepCountMergeViewModel(_identifier);
 
         _viewModelAdapter = new StepCountMergeViewModelDataBindingAdapter(viewModel);
 

@@ -28,11 +28,23 @@ public interface IUserDataJsonTextWriterProvider
 {
     /**
      * Provides an {@link IJsonTextWriter} where the user data can be exported to.
-     *
-     * @return
-     *      An {@link IJsonTextWriter} where the user data can be written to as json text.
-     * @throws UserDataJsonTextWriterCouldNotBeProvided
-     *      When an {@link IJsonTextWriter} could not be provided.
      */
-    IJsonTextWriter ProvideUserDataJsonTextWriter() throws UserDataJsonTextWriterCouldNotBeProvided;
+    void ProvideUserDataJsonTextWriter(final ProvideUserDataJsonTextWriterRequestCallback callback);
+
+    interface ProvideUserDataJsonTextWriterRequestCallback
+    {
+        /**
+         * Called when an {@link IJsonTextWriter} could be provided where the user data can be written to as json text
+         *
+         * @param jsonTextWriter The {@link IJsonTextWriter} where the user data can be written to as json text
+         */
+        void UserDataJsonTextWriterProvided(final IJsonTextWriter jsonTextWriter);
+
+        /**
+         * Called when an {@link IJsonTextWriter} could not be provided.
+         *
+         * @param exception An exception that describes the occurred error.
+         */
+        void UserDataJsonTextWriterCouldNotBeProvided(final Exception exception);
+    }
 }

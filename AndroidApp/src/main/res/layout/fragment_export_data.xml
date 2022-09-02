@@ -22,7 +22,7 @@
     tools:context=".presentation.settings.ExportDataFragment">
 
     <data>
-        <variable name="ViewModel" type="de.dviererbe.healthtrack.presentation.settings.ExportDataDialogViewModel"/>
+        <variable name="ViewModel" type="de.dviererbe.healthtrack.presentation.settings.ExportDataFragment.ExportDataFragmentViewModel"/>
     </data>
 
     <LinearLayout
@@ -82,6 +82,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/button_export_bloodsugar_data"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

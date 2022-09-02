@@ -361,7 +361,15 @@ public class StepWidgetSQLiteRepository
     @Override
     protected Cursor QueryRecordsForDayDescending(SQLiteDatabase database, LocalDate day)
     {
-        return null;
+        return database.query(
+                /* FROM */ TableSteps_Name,
+                /* SELECT */ TableSteps_Columns,
+                /* WHERE */ TableSteps_Key_TimeOfMeasurementDate + " = ?",
+                /* WHERE parameter */ new String[] { TimeStringConversion.ConvertDateToDateString(day) },
+                /* GROUP BY */ null,
+                /* HAVING */ null,
+                /* ORDER BY */ TableSteps_Key_TimeOfMeasurementDate + " DESC," +
+                               TableSteps_Key_TimeOfMeasurementTime + " DESC");
     }
 
     @Override
